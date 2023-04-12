@@ -1,6 +1,7 @@
 TEMPLATE = lib
 DEPENDPATH += .
 INCLUDEPATH += .
+CONFIG += staticlib
 
 CONFIG(debug, debug|release) {
     DESTDIR = $$PWD/../plugins/script_debug

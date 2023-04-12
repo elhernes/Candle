@@ -1,5 +1,6 @@
 CONFIG += plugin
 TEMPLATE = lib
+CONFIG += staticlib
 QT += widgets uiplugin multimedia multimediawidgets
 
 TARGET = cameraplugin

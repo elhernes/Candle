@@ -10,6 +10,12 @@
 
 #ifdef GLES
 #include <GLES/gl.h>
+#else
+#ifdef __linux__
+#include <GL/gl.h>
+#include <GL/glext.h>
+#include <QtGui/qopenglext.h>
+#endif
 #endif
 
 #define ZOOMSTEP 1.1

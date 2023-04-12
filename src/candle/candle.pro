@@ -26,12 +26,12 @@ unix:!macx {
     QMAKE_LFLAGS += "-Wl,-rpath,\'\$$ORIGIN/libs\'"
 }
 
-contains(QT_CONFIG, opengles.) {
-    warning("GL ES detected. VAO will be disabled.")
-    DEFINES += GLES
-    INSTALLS += target
-    target.path = /home/pi
-}
+#contains(QT_CONFIG, opengles.) {
+#    warning("GL ES detected. VAO will be disabled.")
+#    DEFINES += GLES
+#    INSTALLS += target
+#    target.path = /home/pi
+#}
 
 TARGET = Candle
 TEMPLATE = app
@@ -110,7 +110,7 @@ RESOURCES += \
 
 INCLUDEPATH += ../designerplugins/customwidgetsplugin
 
-LIBS += -L../designerplugins/customwidgetsplugin/release -lcustomwidgets
+LIBS += -L$$OUT_PWD/../designerplugins/customwidgetsplugin -lcustomwidgets
 
 qtPrepareTool(LRELEASE, lrelease)
 for(tsfile, TRANSLATIONS) {
