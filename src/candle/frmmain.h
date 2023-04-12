@@ -16,7 +16,9 @@
 #include <QDragEnterEvent>
 #include <QDropEvent>
 #include <QProgressDialog>
+#ifdef WITH_QSCRIPT
 #include <QScriptEngine>
+#endif
 #include <QGroupBox>
 #include <exception>
 
@@ -211,7 +213,9 @@ private slots:
     void onCboCommandReturnPressed();
     void onDockTopLevelChanged(bool topLevel);
     void onScroolBarAction(int action);
+#ifdef WITH_QSCRIPT
     void onScriptException(const QScriptValue &exception);
+#endif
 
     void updateHeightMapInterpolationDrawer(bool reset = false);
 
@@ -365,7 +369,9 @@ private:
     QVector3D m_jogVector;
 
     // Script
+#ifdef WITH_QSCRIPT
     QScriptEngine m_scriptEngine;
+#endif
     ScriptVars m_storedVars;
     ScriptFunctions m_scriptFunctions;
 
@@ -445,7 +451,9 @@ private:
 
     static bool actionLessThan(const QAction *a1, const QAction *a2);
     static bool actionTextLessThan(const QAction *a1, const QAction *a2);
+#ifdef WITH_QSCRIPT
     static QScriptValue importExtension(QScriptContext *context, QScriptEngine *engine);
+#endif
 };
 
 typedef QMap<QString, QList<QKeySequence>> ShortcutsMap;

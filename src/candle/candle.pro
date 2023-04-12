@@ -4,7 +4,13 @@
 #
 #-------------------------------------------------
 
-QT       = core gui opengl serialport script uitools
+QT       = core gui opengl serialport uitools
+
+#QT+=script
+contains(QT,script) {
+  DEFINES+=WITH_QSCRIPT
+}
+
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 win32: {

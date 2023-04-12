@@ -16,7 +16,9 @@
 #include <QDrag>
 #include <QMimeData>
 #include <QTranslator>
+#ifdef WITH_QSCRIPT
 #include <QScriptValueIterator>
+#endif
 #include "frmmain.h"
 #include "ui_frmmain.h"
 #include "ui_frmsettings.h"
@@ -308,6 +310,7 @@ frmMain::frmMain(QWidget* parent)
         loadFile(qApp->arguments().last());
     }
     
+#ifdef WITH_QSCRIPT
     // Delegate vars to script engine
     QScriptValue vars = m_scriptEngine.newQObject(&m_storedVars);
     m_scriptEngine.globalObject().setProperty("vars", vars);
@@ -316,13 +319,13 @@ frmMain::frmMain(QWidget* parent)
     QScriptValue sv = m_scriptEngine.newObject();
     sv.setProperty("importExtension", m_scriptEngine.newFunction(frmMain::importExtension));
     m_scriptEngine.globalObject().setProperty("script", sv);
-
+    connect(&m_scriptEngine, &QScriptEngine::signalHandlerException, this, &frmMain::onScriptException);
+#endif
     // Signals/slots
     connect(&m_serialPort, SIGNAL(readyRead()), this, SLOT(onSerialPortReadyRead()), Qt::QueuedConnection);
     connect(&m_serialPort, SIGNAL(error(QSerialPort::SerialPortError)), this, SLOT(onSerialPortError(QSerialPort::SerialPortError)));
     connect(&m_timerConnection, SIGNAL(timeout()), this, SLOT(onTimerConnection()));
     connect(&m_timerStateQuery, SIGNAL(timeout()), this, SLOT(onTimerStateQuery()));
-    connect(&m_scriptEngine, &QScriptEngine::signalHandlerException, this, &frmMain::onScriptException);
 
     // Event filter
     qApp->installEventFilter(this);
@@ -2506,10 +2509,12 @@ void frmMain::onScroolBarAction(int action)
         ui->chkAutoScroll->setChecked(false);
 }
 
+#ifdef WITH_QSCRIPT
 void frmMain::onScriptException(const QScriptValue &exception)
 {
     qDebug() << "Script exception:" << exception.toString();
 }
+#endif
 
 void frmMain::updateHeightMapInterpolationDrawer(bool reset)
 {
@@ -2772,6 +2777,7 @@ void frmMain::loadSettings()
     m_settings->restoreGeometry(set.value("formSettingsGeometry", m_settings->saveGeometry()).toByteArray());
 
 
+#ifdef WITH_QSCRIPT
     // Loading stored script variables
     QScriptValue g = m_scriptEngine.globalObject();
     set.beginGroup("script");
@@ -2780,7 +2786,7 @@ void frmMain::loadSettings()
         g.setProperty(k, m_scriptEngine.newVariant(set.value(k)));
     }
     set.endGroup();
-
+#endif
     m_settingsLoading = false;
 }
 
@@ -2918,6 +2924,7 @@ void frmMain::saveSettings()
     set.setValue("lockWindows", ui->actViewLockWindows->isChecked());
     set.setValue("lockPanels", ui->actViewLockPanels->isChecked());
 
+#ifdef WITH_QSCRIPT
     // Save script variables
     QScriptEngine e;
     QScriptValue d = e.globalObject();
@@ -2938,7 +2945,7 @@ void frmMain::saveSettings()
             }
         }
     }
-
+#endif
     emit settingsSaved();
 }
 
@@ -3053,6 +3060,7 @@ void frmMain::loadPlugins()
             else delete translator;
         }        
 
+#ifdef WITH_QSCRIPT
         // Script
         QFile f;
         f.setFileName(pluginsDir + p + "/script.js");
@@ -3183,6 +3191,7 @@ void frmMain::loadPlugins()
 
             f.close();
         }
+#endif // WITH_QSCRIPT
     }
 }
 
@@ -3325,6 +3334,7 @@ void frmMain::sendNextFileCommands() {
 
 QString frmMain::evaluateCommand(QString command)
 {
+#ifdef WITH_QSCRIPT
     // Evaluate script  
     QRegExp sx("\\{([^\\}]+)\\}");
     QScriptValue v;
@@ -3335,6 +3345,7 @@ QString frmMain::evaluateCommand(QString command)
         command.replace(sx.cap(0), vs);
     }
     return command;
+#endif
 }
 
 void frmMain::updateParser()
@@ -4484,7 +4495,9 @@ bool frmMain::actionTextLessThan(const QAction *a1, const QAction *a2)
     return a1->text() < a2->text();
 }
 
+#ifdef WITH_QSCRIPT
 QScriptValue frmMain::importExtension(QScriptContext *context, QScriptEngine *engine)
 {
     return engine->importExtension(context->argument(0).toString());
 }
+#endif
