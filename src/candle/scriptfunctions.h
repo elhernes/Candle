@@ -19,21 +19,10 @@ public:
 
 public slots:
     void sendCommands(QString commands, int index = -100);
-    void sendCommand(QString command, int index = -100, bool showInConsole = true);
-    
-    void newFile();
-    void loadFile(QString fileName);
-    void loadFile(QVariantList data);
-    bool saveFile();
-    void saveFile(QString fileName);
-    
-    int bufferLength();
-    int commandsLength();
-    int queueLength();
-
+    void sendCommand(QString command, int index = -100);
     int buttonSize();
     void addAction(QAction *action);
-    void removeAction(QAction *action);    
+    void removeAction(QAction *action);
 
 signals:
     void responseReceived(QString command, int tableIndex, QString response);

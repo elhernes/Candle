@@ -57,7 +57,7 @@ function createSettingsWidget()
         t.setItemDelegateForColumn(1, new IconDelegate(t));
         var d = new CodeDelegate(t);
         d.alignment = Qt.AlignLeft | Qt.AlignTop;
-        d.adjustHeight = false;
+        d.adjustHeight = true;
         t.setItemDelegateForColumn(2, d);
         t.minimumHeight = t.verticalHeader().defaultSectionSize * 4 + t.horizontalHeader().height + t.frameWidth * 2;
 
@@ -385,10 +385,6 @@ CodeDelegate.prototype.createEditor = function(parent, option, index)
 CodeDelegate.prototype.setEditorData = function(editor, index)
 {
     editor.plainText = index.data();
-
-    var c = editor.textCursor();
-    c.movePosition(QTextCursor.End);
-    editor.setTextCursor(c);    
 }
 
 CodeDelegate.prototype.setModelData = function(editor, model, index)

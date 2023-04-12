@@ -554,16 +554,6 @@ void frmSettings::setAutoLine(bool value)
     ui->chkAutoLine->setChecked(value);
 }
 
-bool frmSettings::useStartCommands()
-{
-    return ui->chkUseStartCommands->isChecked();
-}
-
-void frmSettings::setUseStartCommands(bool value)
-{
-    ui->chkUseStartCommands->setChecked(value);
-}
-
 QString frmSettings::startCommands()
 {
     return ui->txtStartCommands->toPlainText();
@@ -572,16 +562,6 @@ QString frmSettings::startCommands()
 void frmSettings::setStartCommands(QString commands)
 {
     ui->txtStartCommands->setPlainText(commands);
-}
-
-bool frmSettings::useEndCommands()
-{
-    return ui->chkUseEndCommands->isChecked();
-}
-
-void frmSettings::setUseEndCommands(bool value)
-{
-    ui->chkUseEndCommands->setChecked(value);
 }
 
 QString frmSettings::endCommands()
@@ -604,34 +584,14 @@ void frmSettings::setToolChangeCommands(QString commands)
     ui->txtToolChangeCommands->setPlainText(commands);
 }
 
-bool frmSettings::toolChangeUseCommands()
+bool frmSettings::pauseToolChange()
 {
-    return ui->chkToolChangeUseCommands->isChecked();
+    return ui->chkPauseToolChange->isChecked();
 }
 
-void frmSettings::setToolChangeUseCommands(bool value)
+void frmSettings::setPauseToolChange(bool pause)
 {
-    ui->chkToolChangeUseCommands->setChecked(value);
-}
-
-bool frmSettings::toolChangeUseCommandsConfirm()
-{
-    return ui->chkToolChangeUseCommandsConfirm->isChecked();
-}
-
-void frmSettings::setToolChangeUseCommandsConfirm(bool value)
-{
-    ui->chkToolChangeUseCommandsConfirm->setChecked(value);
-}
-
-bool frmSettings::toolChangePause()
-{
-    return ui->chkToolChangePause->isChecked();
-}
-
-void frmSettings::setToolChangePause(bool pause)
-{
-    ui->chkToolChangePause->setChecked(pause);
+    ui->chkPauseToolChange->setChecked(pause);
 }
 
 QString frmSettings::language()
@@ -673,36 +633,6 @@ bool frmSettings::softLimitsEnabled()
 void frmSettings::setSoftLimitsEnabled(bool softLimits)
 {
     m_softLimitsEnabled = softLimits;
-}
-
-bool frmSettings::referenceXPlus()
-{
-    return ui->radReferenceXPlus->isChecked();
-}
-
-void frmSettings::setReferenceXPlus(bool value)
-{
-    ui->radReferenceXPlus->setChecked(value);
-}
-
-bool frmSettings::referenceYPlus()
-{
-    return ui->radReferenceYPlus->isChecked();
-}
-
-void frmSettings::setReferenceYPlus(bool value)
-{
-    ui->radReferenceYPlus->setChecked(value);
-}
-
-bool frmSettings::referenceZPlus()
-{
-    return ui->radReferenceZPlus->isChecked();
-}
-
-void frmSettings::setReferenceZPlus(bool value)
-{
-    ui->radReferenceZPlus->setChecked(value);
 }
 
 void frmSettings::showEvent(QShowEvent *se)
@@ -828,9 +758,7 @@ void frmSettings::on_cmdDefaults_clicked()
     ui->txtStartCommands->clear();
     ui->txtEndCommands->clear();
     ui->txtToolChangeCommands->clear();
-    ui->chkToolChangePause->setChecked(false);
-    ui->chkToolChangeUseCommands->setChecked(false);
-    ui->chkToolChangeUseCommandsConfirm->setChecked(false);
+    ui->chkPauseToolChange->setChecked(true);
     setLanguage("en");
 
     emit settingsSetByDefault();

@@ -2,8 +2,7 @@ TEMPLATE = subdirs
 
 TRANSLATIONS =  camera/translation_ru.ts \
                 usercommands/translation_ru.ts \
-                coordinatesystem/translation_ru.ts \
-                emergencybutton/translation_ru.ts
+                coordinatesystem/translation_ru.ts
 
 qtPrepareTool(LRELEASE, lrelease)
 for(tsfile, TRANSLATIONS) {

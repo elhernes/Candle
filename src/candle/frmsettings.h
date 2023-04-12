@@ -51,14 +51,10 @@ class frmSettings : public QDialog
     Q_PROPERTY(bool drawModeVectors READ drawModeVectors WRITE setDrawModeVectors)
     Q_PROPERTY(bool ignoreErrors READ ignoreErrors WRITE setIgnoreErrors)
     Q_PROPERTY(bool autoLine READ autoLine WRITE setAutoLine)
-    Q_PROPERTY(bool useStartCommands READ useStartCommands WRITE setUseStartCommands)
     Q_PROPERTY(QString startCommands READ startCommands WRITE setStartCommands)
-    Q_PROPERTY(bool useEndCommands READ useEndCommands WRITE setUseEndCommands)
     Q_PROPERTY(QString endCommands READ endCommands WRITE setEndCommands)
     Q_PROPERTY(QString toolChangeCommands READ toolChangeCommands WRITE setToolChangeCommands)
-    Q_PROPERTY(bool toolChangePause READ toolChangePause WRITE setToolChangePause)
-    Q_PROPERTY(bool toolChangeUseCommands READ toolChangeUseCommands WRITE setToolChangeUseCommands)
-    Q_PROPERTY(bool toolChangeUseCommandsConfirm READ toolChangeUseCommandsConfirm WRITE setToolChangeUseCommandsConfirm)
+    Q_PROPERTY(bool pauseToolChange READ pauseToolChange WRITE setPauseToolChange)
     Q_PROPERTY(QString language READ language WRITE setLanguage)
     Q_PROPERTY(bool units READ units WRITE setUnits)
     Q_PROPERTY(int rapidSpeed READ rapidSpeed WRITE setRapidSpeed)
@@ -149,22 +145,14 @@ public:
     void setIgnoreErrors(bool value);
     bool autoLine();
     void setAutoLine(bool value);
-    bool useStartCommands();
-    void setUseStartCommands(bool value);
     QString startCommands();
     void setStartCommands(QString commands);
-    bool useEndCommands();
-    void setUseEndCommands(bool value);
     QString endCommands();
     void setEndCommands(QString commands);
     QString toolChangeCommands();
     void setToolChangeCommands(QString commands);
-    bool toolChangePause();
-    void setToolChangePause(bool pause);
-    bool toolChangeUseCommands();
-    void setToolChangeUseCommands(bool value);
-    bool toolChangeUseCommandsConfirm();
-    void setToolChangeUseCommandsConfirm(bool value);
+    bool pauseToolChange();
+    void setPauseToolChange(bool pause);
     QString language();
     void setLanguage(QString language);
     QVector3D machineBounds();
@@ -173,12 +161,6 @@ public:
     void setHomingEnabled(bool homing);
     bool softLimitsEnabled();
     void setSoftLimitsEnabled(bool softLimits);    
-    bool referenceXPlus();
-    void setReferenceXPlus(bool value);
-    bool referenceYPlus();
-    void setReferenceYPlus(bool value);
-    bool referenceZPlus();
-    void setReferenceZPlus(bool value);
 
 signals:
     void settingsSetByDefault();
