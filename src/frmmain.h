@@ -39,6 +39,7 @@
 
 #include "frmsettings.h"
 #include "frmabout.h"
+#include "pendant/whb04b.h"
 
 #ifdef WINDOWS
     #include <QtWinExtras/QtWinExtras>
@@ -193,7 +194,9 @@ private slots:
 
     void on_cmdStop_clicked();
 
-protected:
+    void on_pendant_event(int, int, int, int, int);
+
+ protected:
     void showEvent(QShowEvent *se);
     void hideEvent(QHideEvent *he);
     void resizeEvent(QResizeEvent *re);
@@ -377,6 +380,8 @@ private:
     void updateOverride(SliderBox *slider, int value, char command);
     void jogStep();
     void updateJogTitle();
+
+    WHB04B m_pendant;
 };
 
 #endif // FRMMAIN_H

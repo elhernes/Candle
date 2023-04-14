@@ -32,8 +32,10 @@
 #include <QAction>
 #include <QLayout>
 #include <QMimeData>
+#include <QThread>
 #include "frmmain.h"
 #include "ui_frmmain.h"
+
 
 frmMain::frmMain(QWidget *parent) :
     QMainWindow(parent),
@@ -284,11 +286,21 @@ frmMain::frmMain(QWidget *parent) :
     if (qApp->arguments().count() > 1 && isGCodeFile(qApp->arguments().last())) {
         loadFile(qApp->arguments().last());
     }
+
+    auto co = connect(&m_pendant, SIGNAL(event(int, int, int, int, int)),
+		      this, SLOT(on_pendant_event(int, int, int, int, int)));
+
+    qDebug() << co;
+    m_pendant.start();
 }
 
 frmMain::~frmMain()
 {    
     saveSettings();
+    m_pendant.stop();
+    if(!m_pendant.wait(5000)) {
+      qDebug() << "couldn't stop pendant";
+    }
 
     delete m_senderErrorBox;
     delete ui;
@@ -862,6 +874,13 @@ void frmMain::onSerialPortReadyRead()
                 ui->txtMPosX->setText(mpx.cap(1));
                 ui->txtMPosY->setText(mpx.cap(2));
                 ui->txtMPosZ->setText(mpx.cap(3));
+
+		m_pendant.display(0,
+				  ui->txtMPosX->text().toDouble(),
+				  ui->txtMPosY->text().toDouble(),
+				  ui->txtMPosZ->text().toDouble(),
+				  ui->cboJogFeed->currentText().toInt(),
+				  ui->slbSpindle->value());
             }
 
             // Status
@@ -3976,4 +3995,226 @@ void frmMain::on_cmdStop_clicked()
 {
     m_queue.clear();
     m_serialPort.write(QByteArray(1, char(0x85)));
+}
+
+#define keychord(b1,b2) ((b1<<8)|(b2<<0))
+
+void frmMain::on_pendant_event(int button1, int button2, int axis, int stepcon, int count)
+{
+  printf("frmMain::%s [b1 0x%02x] [b2 0x%02x] [stepcon %02x] [axis %02x] [count %d]\n", __func__,
+	 button1, button2, stepcon, axis, count);
+
+  bool handled = false;
+
+  if (button1 != WHB04B::key_none ||
+      button2 != WHB04B::key_none) {
+
+    /*
+     * we have a valid keypress, so process it
+     * doing it this way also allows us to combine
+     * the rotary steps with a keypress
+     * such as change feed by holding the feed+ button and
+     * turning the knob.
+     */
+    handled = true;
+
+    switch(keychord(button1,button2)) {
+
+      /*
+       * single keypresses
+       */
+    case keychord(WHB04B::key_reset,WHB04B::key_none): {
+      on_cmdUnlock_clicked();
+    }
+      break;
+
+    case keychord(WHB04B::key_stop,WHB04B::key_none): {
+      on_cmdStop_clicked();
+    }
+      break;
+
+    case keychord(WHB04B::key_start_pause,WHB04B::key_none): {
+      //      on_cmdFilePause_clicked();
+    }
+      break;
+
+    case keychord(WHB04B::key_feed_up,WHB04B::key_none): {
+    }
+      break;
+
+    case keychord(WHB04B::key_feed_down,WHB04B::key_none): {
+    }
+      break;
+
+    case keychord(WHB04B::key_spindle_up,WHB04B::key_none): {
+    }
+      break;
+
+    case keychord(WHB04B::key_spindle_down,WHB04B::key_none): {
+    }
+      break;
+
+    case keychord(WHB04B::key_m_home,WHB04B::key_none): {
+    }
+      break;
+
+    case keychord(WHB04B::key_safe_z,WHB04B::key_none): {
+      on_cmdSafePosition_clicked();
+	}
+      break;
+
+    case keychord(WHB04B::key_w_home,WHB04B::key_none): {
+    }
+      break;
+
+    case keychord(WHB04B::key_s_on_off,WHB04B::key_none): {
+    }
+      break;
+
+    case keychord(WHB04B::key_fn,WHB04B::key_none): {
+    }
+      break;
+
+    case keychord(WHB04B::key_probe_z,WHB04B::key_none): {
+    }
+      break;
+
+    case keychord(WHB04B::key_continuous,WHB04B::key_none): {
+    }
+      break;
+
+    case keychord(WHB04B::key_step,WHB04B::key_none): {
+    }
+      break;
+
+      /*
+       * The function-chorded keys.  Note that button press order does matter
+       *  FN+key is not the same as key+FN
+       */
+
+    case keychord(WHB04B::key_fn,WHB04B::key_reset): {
+      on_cmdReset_clicked();
+    }
+      break;
+
+    case keychord(WHB04B::key_fn,WHB04B::key_stop): {
+    }
+      break;
+
+    case keychord(WHB04B::key_fn,WHB04B::key_start_pause): {
+    }
+      break;
+
+    case keychord(WHB04B::key_fn,WHB04B::key_feed_up): {
+    }
+      break;
+
+    case keychord(WHB04B::key_fn,WHB04B::key_feed_down): {
+    }
+      break;
+
+    case keychord(WHB04B::key_fn,WHB04B::key_spindle_up): {
+    }
+      break;
+
+    case keychord(WHB04B::key_fn,WHB04B::key_spindle_down): {
+    }
+      break;
+
+    case keychord(WHB04B::key_fn,WHB04B::key_m_home): {
+    }
+      break;
+
+    case keychord(WHB04B::key_fn,WHB04B::key_safe_z): {
+    }
+      break;
+
+    case keychord(WHB04B::key_fn,WHB04B::key_w_home): {
+    }
+      break;
+
+    case keychord(WHB04B::key_fn,WHB04B::key_s_on_off): {
+    }
+      break;
+
+    case keychord(WHB04B::key_fn,WHB04B::key_probe_z): {
+    }
+      break;
+
+    case keychord(WHB04B::key_fn,WHB04B::key_continuous): {
+    }
+      break;
+
+    case keychord(WHB04B::key_fn,WHB04B::key_step): {
+    }
+      break;
+
+    }
+  }
+
+  if (!handled) {
+    /*
+     * not handled by a keypress,
+     * we'll try for an axis jog
+     */
+
+    /*
+     * I wonder if we should use the UI Jog settings for this.
+     */
+    QVector3D jv;
+    
+    static const std::map<uint8_t,double> skStepConMultiplier = {
+      { WHB04B::stepcon_0_001, 0.5 },  // 0.5mm ~0.020"
+      { WHB04B::stepcon_0_01, 1.0  }, //  1.0mm ~0.039"
+      { WHB04B::stepcon_0_1, 2.0   },
+      { WHB04B::stepcon_1, 3.0   },
+      { WHB04B::stepcon_60, 5.0   },
+      { WHB04B::stepcon_100, 10.0   },
+      { WHB04B::stepcon_load, 20.0   },
+    };
+    const auto scmi = skStepConMultiplier.find(stepcon);
+    if (scmi == skStepConMultiplier.end()) {
+      // hmmm...
+    }
+    double distance = scmi->second * count;
+    int speed = ui->cboJogFeed->currentText().toInt();
+    switch (axis) {
+    case WHB04B::axis_off: {
+    }
+      break;
+
+    case WHB04B::axis_x: {
+      jv = QVector3D(distance, 0, 0);
+    }
+      break;
+
+    case WHB04B::axis_y: {
+      jv = QVector3D(0, distance, 0);
+    }
+      break;
+
+    case WHB04B::axis_z: {
+      jv = QVector3D(0, 0, distance);
+    }
+      break;
+
+    case WHB04B::axis_a: {
+    }
+      break;
+
+    case WHB04B::axis_clr: {
+    }
+      break;
+    }
+
+    if (jv != QVector3D(0,0,0)) {
+      sendCommand(QString("$J=G21G91X%1Y%2Z%3F%4")
+		  .arg(jv.x(), 0, 'g', 4)
+		  .arg(jv.y(), 0, 'g', 4)
+		  .arg(jv.z(), 0, 'g', 4)
+		  .arg(speed), -2, m_settings->showUICommands());
+      handled = true;
+    }
+  }
+
 }

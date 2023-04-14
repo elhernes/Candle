@@ -66,7 +66,18 @@ SOURCES += main.cpp\
     widgets/slider.cpp \
     widgets/sliderbox.cpp \
     drawers/selectiondrawer.cpp \
-    widgets/comboboxkey.cpp
+    widgets/comboboxkey.cpp \
+    pendant/whb04b.cpp
+
+unix:!macx { # linux
+SOURCES += pendant/hidapi/linux/hid.c
+}
+
+macx: {
+SOURCES += pendant/hidapi/mac/hid.c
+}
+
+# QMAKE_APPLE_DEVICE_ARCHS=arm64
 
 HEADERS  += frmmain.h \
     frmsettings.h \
@@ -84,6 +95,7 @@ HEADERS  += frmmain.h \
     parser/gcodeviewparse.h \
     parser/linesegment.h \
     parser/pointsegment.h \
+    pendant/whb04b.h \
     tables/gcodetablemodel.h \
     tables/heightmaptablemodel.h \
     utils/interpolation.h \
