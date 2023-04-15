@@ -1,0 +1,6 @@
+[submodule "src/pendant/hidapi"]
+	path = src/pendant/hidapi
+	url = ../hidapi.git
+[submodule "src/libs/libMathExpr"]
+	path = src/libs/libMathExpr
+	url = ../libMathExpr.git
