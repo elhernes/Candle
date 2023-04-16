@@ -197,7 +197,7 @@ private slots:
 
     void on_cmdStop_clicked();
 
-    void on_pendant_event(int, int, int, int, int);
+    void on_pendant_event(quint8 b1, quint8 b2, quint8 asix, quint8 stepcon, int count);
 
  protected:
     void showEvent(QShowEvent *se);

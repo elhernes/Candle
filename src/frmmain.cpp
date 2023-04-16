@@ -4063,10 +4063,10 @@ void frmMain::on_cmdStop_clicked()
 
 #define keychord(b1,b2) ((b1<<8)|(b2<<0))
 
-void frmMain::on_pendant_event(int button1, int button2, int axis, int stepcon, int count)
+void frmMain::on_pendant_event(quint8 button1, quint8 button2, quint8 axis, quint8 stepcon, int count)
 {
-  printf("frmMain::%s [b1 0x%02x] [b2 0x%02x] [stepcon %02x] [axis %02x] [count %d]\n", __func__,
-	 button1, button2, stepcon, axis, count);
+  //  printf("frmMain::%s [b1 0x%02x] [b2 0x%02x] [stepcon %02x] [axis %02x] [count %d]\n", __func__,
+  //	 button1, button2, stepcon, axis, count);
 
   bool handled = false;
 
