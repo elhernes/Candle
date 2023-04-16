@@ -4088,12 +4088,16 @@ void frmMain::on_pendant_event(quint8 button1, quint8 button2, quint8 axis, quin
        * single keypresses
        */
     case keychord(WHB04B::key_reset,WHB04B::key_none): {
-      on_cmdUnlock_clicked();
+      if (!m_processingFile) {
+	on_cmdUnlock_clicked();
+      }
     }
       break;
 
     case keychord(WHB04B::key_stop,WHB04B::key_none): {
-      on_cmdStop_clicked();
+      if (!m_processingFile) {
+	on_cmdStop_clicked();
+      }
     }
       break;
 
@@ -4119,11 +4123,16 @@ void frmMain::on_pendant_event(quint8 button1, quint8 button2, quint8 axis, quin
       break;
 
     case keychord(WHB04B::key_m_home,WHB04B::key_none): {
+      if (!m_processingFile) {
+	on_cmdHome_clicked();
+      }
     }
       break;
 
     case keychord(WHB04B::key_safe_z,WHB04B::key_none): {
-      on_cmdSafePosition_clicked();
+      if (!m_processingFile) {
+	on_cmdSafePosition_clicked();
+      }
 	}
       break;
 
