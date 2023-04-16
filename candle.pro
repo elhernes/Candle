@@ -2,11 +2,11 @@ TEMPLATE = subdirs
  
 SUBDIRS =   src/designerplugins \
             src/candle \
-            src/candleplugins \
-            src/scriptbindings
+            src/candleplugins
+#            src/scriptbindings
             
 # Make plugins translations
-system(qmake src/candleplugins/candleplugins.pro)
+#system(qmake src/candleplugins/candleplugins.pro)
 
 install_main.path = bin
 install_main.files += src/candle/release/candle.exe
