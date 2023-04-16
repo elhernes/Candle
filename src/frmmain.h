@@ -6,6 +6,7 @@
 
 #include <QMainWindow>
 #include <QtSerialPort/QSerialPort>
+#include <QTcpSocket>
 #include <QSettings>
 #include <QTimer>
 #include <QBasicTimer>
@@ -92,6 +93,8 @@ private slots:
 
     void onSerialPortReadyRead();
     void onSerialPortError(QSerialPort::SerialPortError);
+    void onSerialSocketConnected();
+    void onSerialSocketError(QAbstractSocket::SocketError socketError);
     void onTimerConnection();
     void onTimerStateQuery();
     void onVisualizatorRotationChanged();
@@ -235,6 +238,8 @@ private:
     bool m_settingsLoading;
 
     QSerialPort m_serialPort;
+    QTcpSocket m_serialSocket;
+    QIODevice& getIODevice();
 
     frmSettings *m_settings;
     frmAbout m_frmAbout;
