@@ -36,10 +36,12 @@
 #include "frmmain.h"
 #include "ui_frmmain.h"
 
+#include "libs/libMathExpr/MathExpr.h"
 
 frmMain::frmMain(QWidget *parent) :
     QMainWindow(parent),
-    ui(new Ui::frmMain)
+    ui(new Ui::frmMain),
+    m_expr(nullptr)
 {
     m_status << "Unknown"
              << "Idle"

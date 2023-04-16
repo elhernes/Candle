@@ -77,6 +77,13 @@ macx: {
 SOURCES += pendant/hidapi/mac/hid.c
 }
 
+SOURCES += \
+    libs/libMathExpr/error.cpp \
+    libs/libMathExpr/functions.cpp \
+    libs/libMathExpr/parser.cpp \
+    libs/libMathExpr/variablelist.cpp
+
+
 # QMAKE_APPLE_DEVICE_ARCHS=arm64
 
 HEADERS  += frmmain.h \

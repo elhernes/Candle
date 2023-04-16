@@ -382,6 +382,7 @@ private:
     void updateJogTitle();
 
     WHB04B m_pendant;
+    class MathExpr *m_expr;
 };
 
 #endif // FRMMAIN_H
