@@ -2,6 +2,14 @@ Candle
 -----------
 GRBL controller application with G-Code visualizer written in Qt.
 
+Changes from upstream denvi/Candle
+* Added support for WHB04B pendant (https://a.co/d/ac5HEBN)
+* Added macro processor inspired by cncjs macros
+* merged in changes from a number of PR's in denvi/Candle
+  * fedya/master (preference paths on mac/linux)
+  * garuma/tcp-support (connect over TCP)
+  * dorkable-forkable/yoiang-MacOS (macOS fixes)
+
 Supported functions:
 * Controlling GRBL-based cnc-machine via console commands, buttons on form, numpad.
 * Monitoring cnc-machine state.
@@ -10,17 +18,53 @@ Supported functions:
 
 System requirements for running "Candle":
 -------------------
-* Windows/Linux x86/MacOS ??
-* CPU with SSE2 instruction set support
+* Qt5
+* macOS/Linux
+* x86, arm - Apple Silicon, Intel, Raspberry PI, probably others
 * Graphics card with OpenGL 2.0 support
 * 120 MB free storage space
 
 Build requirements:
 ------------------
-Qt 5.4.2 with MinGW/GCC compiler
+Qt 5.4.2 (with MinGW/GCC compiler??)
 
-Additionally for MacOS: 
-CMake
+Macro Support:
+-------------
+
+Macro support inspired by cncjs macro support and roughly follows that
+syntax.  Probe commands and User Commands as saved through the
+Settings panel are processed through the macro processor.  When the
+macro processing is active, all g-code lines are first sent to the
+processor for evaluation or variable expansion.   Lines that start
+with a `%` character are evaluated as follows.
+
+  1. First the lines are checked against keywords for special
+ functions
+  2. If a keyword is not matched, the line is sent to the math parser for variable
+assignment and mathematical expressions
+
+Lines that do not start with a `%` character are evaluated for
+variable expansion.  Any sequence like `%{var}`  is expanded to the
+value of `var` variable in the expression parser.
+
+This line will add a variable `PLATE_THICKNESS` to the parser with a
+value of 5.0;
+
+```
+%PLATE_THICKNESS = 5
+```
+
+These lines send g-code with variable expansion applied to
+`PROBE_DISTANCE`, `PROBE_FEEDRATE_A`, and `PROBE_FEEDRATE_B`
+
+```
+; Probe rear, slight right
+G38.2 X1 Y%{PROBE_DISTANCE} F%{PROBE_FEEDRATE_A}
+G1 Y-1 F%{PROBE_FEEDRATE_B} ; back off a bit
+```
+
+The `xyz-probe.txt` file in the examples directory shows a cncjs macro
+converted for use with Candle.
 
 Downloads:
 ----------
