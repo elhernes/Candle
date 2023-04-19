@@ -599,9 +599,14 @@ void frmSettings::setSerialHostname(QString hostName)
     ui->hostEdit->setText(hostName);
 }
 
+QString frmSettings::serialHostPort()
+{
+  return ui->hostEdit->text();
+}
+
 int frmSettings::serialTcpPort()
 {
-    auto hostname = this->serialHostname();
+    auto hostname = ui->hostEdit->text();
     if (hostname.isEmpty())
         return -1;
     auto parts = hostname.splitRef(':');

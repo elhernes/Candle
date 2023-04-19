@@ -517,7 +517,7 @@ void frmMain::saveSettings()
 
     set.setValue("port", m_settings->port());
     set.setValue("baud", m_settings->baud());
-    set.setValue("serialHostname", m_settings->serialHostname());
+    set.setValue("serialHostname", m_settings->serialHostPort());
     set.setValue("ignoreErrors", m_settings->ignoreErrors());
     set.setValue("autoLine", m_settings->autoLine());
     set.setValue("toolDiameter", m_settings->toolDiameter());

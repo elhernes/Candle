@@ -118,6 +118,7 @@ public:
     bool autoLine();
     void setAutoLine(bool value);
     QString serialHostname();
+    QString serialHostPort();
     void setSerialHostname(QString hostName);
     int serialTcpPort();
 
