@@ -302,8 +302,10 @@ frmMain::frmMain(QWidget *parent) :
         loadFile(qApp->arguments().last());
     }
 
-    auto co = connect(&m_pendant, SIGNAL(event(int, int, int, int, int)),
-		      this, SLOT(on_pendant_event(int, int, int, int, int)));
+    auto co = connect(&m_pendant,
+		      SIGNAL(event(quint8, quint8, quint8, quint8, int)),
+		      this,
+		      SLOT(on_pendant_event(quint8, quint8, quint8, quint8, int)));
 
     qDebug() << co;
     m_pendant.start();
