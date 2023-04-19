@@ -243,12 +243,12 @@ void frmSettings::setShowUICommands(bool showUICommands)
 
 QString frmSettings::safePositionCommand()
 {
-    return ui->txtSafeCommand->text();
+    return ui->txtSafeCommand->toPlainText();
 }
 
 void frmSettings::setSafePositionCommand(QString command)
 {
-    ui->txtSafeCommand->setText(command);
+    ui->txtSafeCommand->setPlainText(command);
 }
 
 bool frmSettings::moveOnRestore()
@@ -423,12 +423,12 @@ void frmSettings::setUnits(int units)
 
 QString frmSettings::touchCommand()
 {
-    return ui->txtTouchCommand->text();
+    return ui->txtTouchCommand->toPlainText();
 }
 
 void frmSettings::setTouchCommand(QString touchCommand)
 {
-    ui->txtTouchCommand->setText(touchCommand);
+    ui->txtTouchCommand->setPlainText(touchCommand);
 }
 
 bool frmSettings::simplify()
@@ -556,12 +556,12 @@ void frmSettings::setDrawModeVectors(bool value)
 
 QString frmSettings::userCommands(int index)
 {
-    return this->findChild<QLineEdit*>(QString("txtUserCommand%1").arg(index))->text();
+    return this->findChild<QPlainTextEdit*>(QString("txtUserCommand%1").arg(index))->toPlainText();
 }
 
 void frmSettings::setUserCommands(int index, QString commands)
 {
-    this->findChild<QLineEdit*>(QString("txtUserCommand%1").arg(index))->setText(commands);
+    this->findChild<QPlainTextEdit*>(QString("txtUserCommand%1").arg(index))->setPlainText(commands);
 }
 
 bool frmSettings::ignoreErrors()
@@ -617,7 +617,7 @@ int frmSettings::serialTcpPort()
         if (ok)
             return port;
     }
-    return 6778;
+    return 23; // telnet port
 }
 
 void frmSettings::showEvent(QShowEvent *se)

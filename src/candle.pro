@@ -67,7 +67,8 @@ SOURCES += main.cpp\
     widgets/sliderbox.cpp \
     drawers/selectiondrawer.cpp \
     widgets/comboboxkey.cpp \
-    pendant/whb04b.cpp
+    pendant/whb04b.cpp \
+    macros/macroprocessor.cpp
 
 unix:!macx { # linux
 SOURCES += pendant/hidapi/linux/hid.c

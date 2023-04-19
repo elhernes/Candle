@@ -87,6 +87,10 @@ public:
 
     double toolZPosition();
 
+    // public methods for macro processor
+    void storeParserState();
+    void restoreParserState();
+
 private slots:
     void updateHeightMapInterpolationDrawer(bool reset = false);
     void placeVisualizerButtons();
@@ -340,6 +344,7 @@ private:
     void updateControlsState();
     void openPort();
     void sendCommand(QString command, int tableIndex = -1, bool showInConsole = true);
+    void sendMacro(const QString &macroText);
     void grblReset();
     int bufferLength();
     void sendNextFileCommands();
@@ -374,8 +379,6 @@ private:
     void resizeTableHeightMapSections();
     void updateHeightMapGrid(double arg1);
     void resetHeightmap();
-    void storeParserState();
-    void restoreParserState();
     void storeOffsets();
     void restoreOffsets();
     bool isGCodeFile(QString fileName);
@@ -387,7 +390,7 @@ private:
     void updateJogTitle();
 
     WHB04B m_pendant;
-    class MathExpr *m_expr;
+    class MacroProcessor *m_macroproc;
 };
 
 #endif // FRMMAIN_H

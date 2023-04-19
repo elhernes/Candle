@@ -38,12 +38,12 @@
 #include "frmmain.h"
 #include "ui_frmmain.h"
 
-#include "libs/libMathExpr/MathExpr.h"
+#include "macros/macroprocessor.h"
 
 frmMain::frmMain(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::frmMain),
-    m_expr(nullptr)
+    m_macroproc(nullptr)
 {
     m_status << "Unknown"
              << "Idle"
@@ -775,9 +775,11 @@ void frmMain::sendCommand(QString command, int tableIndex, bool showInConsole)
 {
     if (!getIODevice().isOpen() || !m_resetCompleted) return;
 
-    command = command.toUpper();
-
-    // Commands queue
+    //
+    // Commands queue here if we're going to overflow the buffer
+    // each command will eventually end up back here with the buffer
+    // having enough space, triggered from the onSerialPortReadyRead() slot
+    //
     if ((bufferLength() + command.length() + 1) > BUFFERLENGTH) {
 //        qDebug() << "queue:" << command;
 
@@ -790,6 +792,24 @@ void frmMain::sendCommand(QString command, int tableIndex, bool showInConsole)
         m_queue.append(cq);
         return;
     }
+
+    if (m_macroproc) {
+      if (showInConsole) {
+        ui->txtConsole->appendPlainText(QString("macro: ") + command);
+      }
+      QString out = m_macroproc->process(command);
+      if (m_macroproc->terminated()) {
+	delete m_macroproc;
+	m_macroproc = nullptr;
+      }
+      if (out != "") { // processor returns nothing, just ignore it.
+	command = out;
+      } else {
+	return;
+      }
+    }
+
+    command = command.toUpper();
 
     CommandAttributes ca;
 
@@ -905,6 +925,12 @@ void frmMain::onSerialPortReadyRead()
 				  ui->txtMPosZ->text().toDouble(),
 				  ui->cboJogFeed->currentText().toInt(),
 				  ui->slbSpindle->value());
+
+		if (m_macroproc) {
+		  m_macroproc->setVariable("mposx", ui->txtMPosX->text().toDouble());
+		  m_macroproc->setVariable("mposy", ui->txtMPosY->text().toDouble());
+		  m_macroproc->setVariable("mposz", ui->txtMPosZ->text().toDouble());
+  		}
             }
 
             // Status
@@ -1028,6 +1054,12 @@ void frmMain::onSerialPortReadyRead()
             ui->txtWPosX->setText(QString::number(ui->txtMPosX->text().toDouble() - workOffset.x(), 'f', prec));
             ui->txtWPosY->setText(QString::number(ui->txtMPosY->text().toDouble() - workOffset.y(), 'f', prec));
             ui->txtWPosZ->setText(QString::number(ui->txtMPosZ->text().toDouble() - workOffset.z(), 'f', prec));
+
+	    if (m_macroproc) {
+	      m_macroproc->setVariable("posx", ui->txtWPosX->text().toDouble());
+	      m_macroproc->setVariable("posy", ui->txtWPosY->text().toDouble());
+	      m_macroproc->setVariable("posz", ui->txtWPosZ->text().toDouble());
+	    }
 
             // Update tool position
             QVector3D toolPosition;
@@ -2449,13 +2481,7 @@ void frmMain::on_cmdHome_clicked()
 
 void frmMain::on_cmdTouch_clicked()
 {
-//    m_homing = true;
-
-    QStringList list = m_settings->touchCommand().split(";");
-
-    foreach (QString cmd, list) {
-        sendCommand(cmd.trimmed(), -1, m_settings->showUICommands());
-    }
+  sendMacro(m_settings->touchCommand());
 }
 
 void frmMain::on_cmdZeroXY_clicked()
@@ -3912,15 +3938,50 @@ bool frmMain::compareCoordinates(double x, double y, double z)
     return ui->txtMPosX->text().toDouble() == x && ui->txtMPosY->text().toDouble() == y && ui->txtMPosZ->text().toDouble() == z;
 }
 
+void frmMain::sendMacro(const QString &macroText) {
+  if (m_macroproc) {
+    delete m_macroproc;
+  }
+  m_macroproc=new MacroProcessor(this);
+
+  if (m_codeDrawer) {
+    QVector3D axisMin = m_codeDrawer->getMinimumExtremes();
+    QVector3D axisMax = m_codeDrawer->getMaximumExtremes();
+
+    // Bounding box
+    m_macroproc->setVariable("xmin", axisMin.x());
+    m_macroproc->setVariable("xmax", axisMax.x());
+    m_macroproc->setVariable("ymin", axisMin.y());
+    m_macroproc->setVariable("ymax", axisMax.x());
+    m_macroproc->setVariable("zmin", axisMin.z());
+    m_macroproc->setVariable("zmax", axisMax.x());
+  }
+
+  // Machine position
+  m_macroproc->setVariable("mposx", ui->txtMPosX->text().toDouble());
+  m_macroproc->setVariable("mposy", ui->txtMPosY->text().toDouble());
+  m_macroproc->setVariable("mposz", ui->txtMPosZ->text().toDouble());
+
+  // Work position
+  m_macroproc->setVariable("posx", ui->txtWPosX->text().toDouble());
+  m_macroproc->setVariable("posy", ui->txtWPosY->text().toDouble());
+  m_macroproc->setVariable("posz", ui->txtWPosZ->text().toDouble());
+
+  QStringList list = macroText.split("\n");
+
+  foreach (QString cmd, list) {
+    sendCommand(cmd.trimmed(), -1, m_settings->showUICommands());
+  }
+
+  sendCommand("%terminate-macroproc", -1, m_settings->showUICommands());
+}
+
+
 void frmMain::onCmdUserClicked(bool checked)
 {
     int i = sender()->objectName().right(1).toInt();
 
-    QStringList list = m_settings->userCommands(i).split(";");
-
-    foreach (QString cmd, list) {
-        sendCommand(cmd.trimmed(), -1, m_settings->showUICommands());
-    }
+    sendMacro(m_settings->userCommands(i));
 }
 
 void frmMain::onOverridingToggled(bool checked)

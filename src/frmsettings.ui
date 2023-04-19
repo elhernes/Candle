@@ -499,7 +499,7 @@ QGroupBox {
              </widget>
             </item>
             <item>
-             <widget class="QLineEdit" name="txtTouchCommand">
+             <widget class="QPlainTextEdit" name="txtTouchCommand">
               <property name="alignment">
                <set>Qt::AlignCenter</set>
               </property>
@@ -525,7 +525,7 @@ QGroupBox {
              </widget>
             </item>
             <item>
-             <widget class="QLineEdit" name="txtSafeCommand">
+             <widget class="QPlainTextEdit" name="txtSafeCommand">
               <property name="alignment">
                <set>Qt::AlignCenter</set>
               </property>
@@ -614,7 +614,7 @@ QGroupBox {
              </widget>
             </item>
             <item>
-             <widget class="QLineEdit" name="txtUserCommand0">
+             <widget class="QPlainTextEdit" name="txtUserCommand0">
               <property name="alignment">
                <set>Qt::AlignCenter</set>
               </property>
@@ -640,7 +640,7 @@ QGroupBox {
              </widget>
             </item>
             <item>
-             <widget class="QLineEdit" name="txtUserCommand1">
+             <widget class="QPlainTextEdit" name="txtUserCommand1">
               <property name="alignment">
                <set>Qt::AlignCenter</set>
               </property>
@@ -666,7 +666,7 @@ QGroupBox {
              </widget>
             </item>
             <item>
-             <widget class="QLineEdit" name="txtUserCommand2">
+             <widget class="QPlainTextEdit" name="txtUserCommand2">
               <property name="alignment">
                <set>Qt::AlignCenter</set>
               </property>
@@ -692,7 +692,7 @@ QGroupBox {
              </widget>
             </item>
             <item>
-             <widget class="QLineEdit" name="txtUserCommand3">
+             <widget class="QPlainTextEdit" name="txtUserCommand3">
               <property name="alignment">
                <set>Qt::AlignCenter</set>
               </property>
