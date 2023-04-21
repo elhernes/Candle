@@ -217,6 +217,7 @@ void RpnCalcDialog::on_button_go_x_abs_clicked() {
   pushEntry();
   if (!m_stack.isEmpty()) {
     float pos = m_stack.last();
+    m_frm->goAbsolute({pos, 0, 0});
   }
 }
 
@@ -224,6 +225,7 @@ void RpnCalcDialog::on_button_go_x_rel_clicked() {
   pushEntry();
   if (!m_stack.isEmpty()) {
     float pos = m_stack.last();
+    m_frm->goRelative({pos, 0, 0});
   }
 }
 
@@ -237,16 +239,15 @@ void RpnCalcDialog::on_button_set_x_clicked() {
 
 void RpnCalcDialog::on_button_push_x_clicked() {
   pushEntry();
-  if (!m_stack.isEmpty()) {
-    QVector3D pos = m_frm->workPos();
-    pushStack(pos.x());
-  }
+  QVector3D pos = m_frm->workPos();
+  pushStack(pos.x());
 }
 
 void RpnCalcDialog::on_button_go_y_abs_clicked() {
   pushEntry();
   if (!m_stack.isEmpty()) {
     float pos = m_stack.last();
+    m_frm->goAbsolute({0,pos,0});
   }
 }
 
@@ -254,6 +255,7 @@ void RpnCalcDialog::on_button_go_y_rel_clicked() {
   pushEntry();
   if (!m_stack.isEmpty()) {
     float pos = m_stack.last();
+    m_frm->goRelative({0,pos,0});
   }
 }
 
@@ -267,16 +269,15 @@ void RpnCalcDialog::on_button_set_y_clicked() {
 
 void RpnCalcDialog::on_button_push_y_clicked() {
   pushEntry();
-  if (!m_stack.isEmpty()) {
-    QVector3D pos = m_frm->workPos();
-    pushStack(pos.y());
-  }
+  QVector3D pos = m_frm->workPos();
+  pushStack(pos.y());
 }
+
 void RpnCalcDialog::on_button_go_z_abs_clicked() {
   pushEntry();
   if (!m_stack.isEmpty()) {
     float pos = m_stack.last();
-    m_frm->goAbsolute({0., 0., pos});
+    m_frm->goAbsolute({0, 0, pos});
   }
 }
 
@@ -284,6 +285,7 @@ void RpnCalcDialog::on_button_go_z_rel_clicked() {
   pushEntry();
   if (!m_stack.isEmpty()) {
     float pos = m_stack.last();
+    m_frm->goRelative({0, 0, pos});
   }
 }
 
@@ -297,10 +299,8 @@ void RpnCalcDialog::on_button_set_z_clicked() {
 
 void RpnCalcDialog::on_button_push_z_clicked() {
   pushEntry();
-  if (!m_stack.isEmpty()) {
-    QVector3D pos = m_frm->workPos();
-    pushStack(pos.z());
-  }
+  QVector3D pos = m_frm->workPos();
+  pushStack(pos.z());
 }
 
 void RpnCalcDialog::on_button_ok_clicked() {
