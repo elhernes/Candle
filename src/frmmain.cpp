@@ -37,6 +37,7 @@
 
 #include "frmmain.h"
 #include "ui_frmmain.h"
+#include "rpncalc/rpncalc.h"
 
 #include "macros/macroprocessor.h"
 
@@ -283,7 +284,8 @@ frmMain::frmMain(QWidget *parent) :
     connect(&m_serialPort, SIGNAL(error(QSerialPort::SerialPortError)), this, SLOT(onSerialPortError(QSerialPort::SerialPortError)));
     connect(&m_serialSocket, SIGNAL(readyRead()), this, SLOT(onSerialPortReadyRead()), Qt::QueuedConnection);
     connect(&m_serialSocket, SIGNAL(connected()), this, SLOT(onSerialSocketConnected()), Qt::QueuedConnection);
-    connect(&m_serialSocket, SIGNAL(errorOccured(QAbstractSocket::SocketError)), this, SLOT(onSerialSocketError(QAbstractSocket::SocketError)));
+    connect(&m_serialSocket, QOverload<QAbstractSocket::SocketError>::of(&QAbstractSocket::error),
+	    this, &frmMain::onSerialSocketError);
 
     this->installEventFilter(this);
     ui->tblProgram->installEventFilter(this);
@@ -307,8 +309,18 @@ frmMain::frmMain(QWidget *parent) :
 		      this,
 		      SLOT(on_pendant_event(quint8, quint8, quint8, quint8, int)));
 
-    qDebug() << co;
     m_pendant.start();
+
+    /*
+     */
+    /*
+    ui->txtMPosX->installEventFilter(this);
+    ui->txtMPosY->installEventFilter(this);
+    ui->txtMPosZ->installEventFilter(this);
+    ui->txtWPosX->installEventFilter(this);
+    ui->txtWPosY->installEventFilter(this);
+    ui->txtWPosZ->installEventFilter(this);
+    */
 }
 
 frmMain::~frmMain()
@@ -669,7 +681,7 @@ void frmMain::updateControlsState() {
     ui->cmdHome->setEnabled(!m_processingFile);
     ui->cmdTouch->setEnabled(!m_processingFile);
     ui->cmdZeroXY->setEnabled(!m_processingFile);
-    ui->cmdZeroZ->setEnabled(!m_processingFile);
+    ui->cmdKeypad->setEnabled(!m_processingFile);
     ui->cmdRestoreOrigin->setEnabled(!m_processingFile);
     ui->cmdSafePosition->setEnabled(!m_processingFile);
     ui->cmdUnlock->setEnabled(!m_processingFile);
@@ -952,7 +964,7 @@ void frmMain::onSerialPortReadyRead()
                 ui->cmdRestoreOrigin->setEnabled(status == IDLE);
                 ui->cmdSafePosition->setEnabled(status == IDLE);
                 ui->cmdZeroXY->setEnabled(status == IDLE);
-                ui->cmdZeroZ->setEnabled(status == IDLE);
+                ui->cmdKeypad->setEnabled(status == IDLE);
                 ui->chkTestMode->setEnabled(status != RUN && !m_processingFile);
                 ui->chkTestMode->setChecked(status == CHECK);
                 ui->cmdFilePause->setChecked(status == HOLD0 || status == HOLD1 || status == QUEUE);
@@ -1534,6 +1546,41 @@ void frmMain::placeVisualizerButtons()
     ui->cmdFront->move(ui->cmdLeft->geometry().left() - ui->cmdFront->width() - 8, ui->cmdIsometric->geometry().bottom() + 8);
 //    ui->cmdFit->move(ui->cmdTop->geometry().left() - ui->cmdFit->width() - 10, 10);
     ui->cmdFit->move(ui->glwVisualizer->width() - ui->cmdFit->width() - 8, ui->cmdLeft->geometry().bottom() + 8);
+}
+
+QVector3D frmMain::workPos() {
+  return { ui->txtWPosX->text().toFloat(),
+      ui->txtWPosY->text().toFloat(),
+      ui->txtWPosZ->text().toFloat() };
+}
+
+void frmMain::setWorkX(double xpos) {
+  sendCommand(QString("G92X%1").arg(xpos), -1, m_settings->showUICommands());
+}
+
+void frmMain::setWorkY(double ypos) {
+  sendCommand(QString("G92Y%1").arg(ypos), -1, m_settings->showUICommands());
+}
+
+void frmMain::setWorkZ(double zpos) {
+  sendCommand(QString("G92Z%1").arg(zpos), -1, m_settings->showUICommands());
+}
+
+void frmMain::goAbsolute(const QVector3D &pos) {
+  int speed = ui->cboJogFeed->currentText().toInt();
+  sendCommand(QString("$J=G21G90X%1Y%2Z%3F%4")
+	      .arg(pos.x(), 0, 'g', 4)
+          .arg(pos.y(), 0, 'g', 4)
+	      .arg(pos.z(), 0, 'g', 4)
+	      .arg(speed), -2, m_settings->showUICommands());
+}
+void frmMain::goRelative(const QVector3D &pos) {
+  int speed = ui->cboJogFeed->currentText().toInt();
+  sendCommand(QString("$J=G21G91X%1Y%2Z%3F%4")
+	      .arg(pos.x(), 0, 'g', 4)
+          .arg(pos.y(), 0, 'g', 4)
+	      .arg(pos.z(), 0, 'g', 4)
+	      .arg(speed), -2, m_settings->showUICommands());
 }
 
 void frmMain::showEvent(QShowEvent *se)
@@ -2491,11 +2538,15 @@ void frmMain::on_cmdZeroXY_clicked()
     sendCommand("$#", -2, m_settings->showUICommands());
 }
 
-void frmMain::on_cmdZeroZ_clicked()
+void frmMain::on_cmdKeypad_clicked()
 {
+  RpnCalcDialog rpn(this);
+  rpn.exec();
+  /*
     m_settingZeroZ = true;
     sendCommand("G92Z0", -1, m_settings->showUICommands());
     sendCommand("$#", -2, m_settings->showUICommands());
+  */
 }
 
 void frmMain::on_cmdRestoreOrigin_clicked()
@@ -2991,6 +3042,10 @@ bool frmMain::eventFilter(QObject *obj, QEvent *event)
         default:
             break;
         }
+    } else if ((event->type() == QEvent::MouseButtonRelease) &&
+	       ( (obj == ui->txtMPosX) || (obj == ui->txtMPosY) || (obj == ui->txtMPosZ) ||
+		 (obj == ui->txtWPosX) || (obj == ui->txtWPosY) ||  (obj == ui->txtWPosZ) )) {
+      qDebug() << "mouse release on machine position field";
     }
 
     return QMainWindow::eventFilter(obj, event);
@@ -4288,7 +4343,7 @@ void frmMain::on_pendant_event(quint8 button1, quint8 button2, quint8 axis, quin
     }
   }
 
-  if (!handled) {
+  if (!handled && !m_processingFile && m_macroproc==nullptr) { // don't jog while we're processing a file or in a macro
     /*
      * not handled by a keypress,
      * we'll try for an axis jog

@@ -29,8 +29,10 @@ contains(QT_CONFIG, opengles.) {
 
 TARGET = Candle
 TEMPLATE = app
-VERSION = 1.1.8
+VERSION = 1.2.0
 RC_ICONS += images/candle.ico
+
+ICON = candle.icns
 
 DEFINES += sNan=\"65536\"
 DEFINES += APP_VERSION=\\\"$$VERSION\\\"
@@ -54,6 +56,7 @@ SOURCES += main.cpp\
     parser/gcodeviewparse.cpp \
     parser/linesegment.cpp \
     parser/pointsegment.cpp \
+    rpncalc/rpncalc.cpp \
     tables/gcodetablemodel.cpp \
     tables/heightmaptablemodel.cpp \
     widgets/colorpicker.cpp \
@@ -104,6 +107,7 @@ HEADERS  += frmmain.h \
     parser/linesegment.h \
     parser/pointsegment.h \
     pendant/whb04b.h \
+    rpncalc/rpncalc.h \
     tables/gcodetablemodel.h \
     tables/heightmaptablemodel.h \
     utils/interpolation.h \
@@ -123,6 +127,7 @@ HEADERS  += frmmain.h \
 FORMS    += frmmain.ui \
     frmsettings.ui \
     frmabout.ui \
+    rpncalc/rpncalc.ui \
     widgets/sliderbox.ui
 
 DEFINES += _USE_MATH_DEFINES

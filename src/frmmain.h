@@ -91,6 +91,13 @@ public:
     void storeParserState();
     void restoreParserState();
 
+    QVector3D workPos();
+    void goAbsolute(const QVector3D &pos);
+    void goRelative(const QVector3D &pos);
+    void setWorkX(double pos);
+    void setWorkY(double pos);
+    void setWorkZ(double pos);
+
 private slots:
     void updateHeightMapInterpolationDrawer(bool reset = false);
     void placeVisualizerButtons();
@@ -126,7 +133,7 @@ private slots:
     void on_cmdHome_clicked();
     void on_cmdTouch_clicked();
     void on_cmdZeroXY_clicked();
-    void on_cmdZeroZ_clicked();
+    void on_cmdKeypad_clicked();
     void on_cmdRestoreOrigin_clicked();
     void on_cmdReset_clicked();
     void on_cmdUnlock_clicked();

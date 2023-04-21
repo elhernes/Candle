@@ -354,11 +354,11 @@ QSlider::handle:horizontal:hover {
              <property name="gridStyle">
               <enum>Qt::DashLine</enum>
              </property>
-             <attribute name="horizontalHeaderHighlightSections">
-              <bool>false</bool>
-             </attribute>
              <attribute name="horizontalHeaderMinimumSectionSize">
               <number>50</number>
+             </attribute>
+             <attribute name="horizontalHeaderHighlightSections">
+              <bool>false</bool>
              </attribute>
              <attribute name="verticalHeaderVisible">
               <bool>false</bool>
@@ -1356,7 +1356,7 @@ QSlider::handle:horizontal:hover {
               </widget>
              </item>
              <item row="0" column="4">
-              <widget class="StyledToolButton" name="cmdZeroZ">
+              <widget class="StyledToolButton" name="cmdKeypad">
                <property name="minimumSize">
                 <size>
                  <width>44</width>
@@ -1371,7 +1371,7 @@ QSlider::handle:horizontal:hover {
                </property>
                <property name="icon">
                 <iconset resource="images.qrc">
-                 <normaloff>:/images/zero_z.png</normaloff>:/images/zero_z.png</iconset>
+                 <normaloff>:/images/keypad.png</normaloff>:/images/keypad.png</iconset>
                </property>
                <property name="iconSize">
                 <size>
@@ -1540,9 +1540,9 @@ QSlider::handle:horizontal:hover {
           <property name="geometry">
            <rect>
             <x>0</x>
-            <y>-416</y>
-            <width>228</width>
-            <height>691</height>
+            <y>0</y>
+            <width>243</width>
+            <height>736</height>
            </rect>
           </property>
           <property name="sizePolicy">
@@ -2616,7 +2616,7 @@ padding-right: 8;</string>
      <x>0</x>
      <y>0</y>
      <width>952</width>
-     <height>26</height>
+     <height>24</height>
     </rect>
    </property>
    <widget class="QMenu" name="mnuFile">
@@ -2743,6 +2743,9 @@ padding-right: 8;</string>
    <extends>QWidget</extends>
    <header>widgets/sliderbox.h</header>
    <container>1</container>
+   <slots>
+    <slot>click()</slot>
+   </slots>
   </customwidget>
   <customwidget>
    <class>ComboBoxKey</class>
@@ -2790,7 +2793,7 @@ padding-right: 8;</string>
   <tabstop>cmdHome</tabstop>
   <tabstop>cmdTouch</tabstop>
   <tabstop>cmdZeroXY</tabstop>
-  <tabstop>cmdZeroZ</tabstop>
+  <tabstop>cmdKeypad</tabstop>
   <tabstop>cmdRestoreOrigin</tabstop>
   <tabstop>cmdSafePosition</tabstop>
   <tabstop>cmdReset</tabstop>
