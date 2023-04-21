@@ -2,9 +2,21 @@ Candle
 -----------
 GRBL controller application with G-Code visualizer written in Qt.
 
+Motivation
+-----------
+I'm using a Raspberry-PI 3b with a small touchscreen as the controller
+for my GRBL based CNC mill.  I have used cncjs and looked at a few of
+the others (bCNC, UGS, maybe a few more).  cncjs will barely run on
+the PI with a gig of RAM and an 8 gig sd card.  The others also seemed
+to need a lot of compute resources for a really simple job of machine
+control and g-code file metering out to the mill.
+
 Changes from upstream denvi/Candle
 * Added support for WHB04B pendant (https://a.co/d/ac5HEBN)
-* Added macro processor inspired by cncjs macros
+* Added simple macro processor inspired by cncjs macros, nowhere as
+  sophisticated as the script/macro support in the 'Experimental'
+  branch, but still good for xyz-probing and others.
+* Added RPN calculator / keypad, inspired by CNCjs "shopfloor tablet" ui
 * merged in changes from a number of PR's in denvi/Candle
   * fedya/master (preference paths on mac/linux)
   * garuma/tcp-support (connect over TCP)
@@ -19,7 +31,7 @@ Supported functions:
 System requirements for running "Candle":
 -------------------
 * Qt5
-* macOS/Linux
+* macOS/Linux (probably windows with a bit of effort)
 * x86, arm - Apple Silicon, Intel, Raspberry PI, probably others
 * Graphics card with OpenGL 2.0 support
 * 120 MB free storage space

@@ -500,9 +500,6 @@ QGroupBox {
             </item>
             <item>
              <widget class="QPlainTextEdit" name="txtTouchCommand">
-              <property name="alignment">
-               <set>Qt::AlignCenter</set>
-              </property>
               <property name="placeholderText">
                <string>Command 1; command 2; ...</string>
               </property>
@@ -526,9 +523,6 @@ QGroupBox {
             </item>
             <item>
              <widget class="QPlainTextEdit" name="txtSafeCommand">
-              <property name="alignment">
-               <set>Qt::AlignCenter</set>
-              </property>
               <property name="placeholderText">
                <string>Command 1; command 2; ...</string>
               </property>
@@ -615,9 +609,6 @@ QGroupBox {
             </item>
             <item>
              <widget class="QPlainTextEdit" name="txtUserCommand0">
-              <property name="alignment">
-               <set>Qt::AlignCenter</set>
-              </property>
               <property name="placeholderText">
                <string>Command 1; command 2; ...</string>
               </property>
@@ -641,9 +632,6 @@ QGroupBox {
             </item>
             <item>
              <widget class="QPlainTextEdit" name="txtUserCommand1">
-              <property name="alignment">
-               <set>Qt::AlignCenter</set>
-              </property>
               <property name="placeholderText">
                <string>Command 1; command 2; ...</string>
               </property>
@@ -667,9 +655,6 @@ QGroupBox {
             </item>
             <item>
              <widget class="QPlainTextEdit" name="txtUserCommand2">
-              <property name="alignment">
-               <set>Qt::AlignCenter</set>
-              </property>
               <property name="placeholderText">
                <string>Command 1; command 2; ...</string>
               </property>
@@ -693,9 +678,6 @@ QGroupBox {
             </item>
             <item>
              <widget class="QPlainTextEdit" name="txtUserCommand3">
-              <property name="alignment">
-               <set>Qt::AlignCenter</set>
-              </property>
               <property name="placeholderText">
                <string>Command 1; command 2; ...</string>
               </property>
