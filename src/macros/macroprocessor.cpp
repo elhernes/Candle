@@ -22,16 +22,51 @@
 #include <QStringList>
 
 struct MacroProcessor::Privates {
+  void debug_step(const QString &path, const QString &lineIn, const QString &out, const QString &vars);
   MathExpr me;
   bool terminated;
   frmMain *frmmain;
-  bool verbose;
+  unsigned cmdNumber;
+  bool debug;
 };
+
+void
+MacroProcessor::Privates::debug_step(const QString &path, const QString &lineIn, const QString &out, const QString &vars) {
+  if (this->debug) {
+    QString msg;
+    msg += "Command#: " + QString::number(this->cmdNumber);
+    msg += "\nPath: " + path;
+    msg += "\n----------------------------------------\n";
+    msg += "Input Line:\n";
+    msg += lineIn;
+    msg += "\n----------------------------------------\n";
+    msg += "Output Line\n";
+    msg += out;
+    QMessageBox msgBox;
+    msgBox.setText(msg);
+
+    QString details;
+    details += "Variables:\n";
+    details += vars;
+    details += "\n";
+    msgBox.setDetailedText(details);
+
+    msgBox.setStandardButtons(QMessageBox::Ok | QMessageBox::Cancel);
+
+    switch (msgBox.exec()) {
+    case QMessageBox::Ok:
+      break;
+    case QMessageBox::Cancel: // hare kari
+      this->terminated = true;
+    }
+  }
+}
 
 MacroProcessor::MacroProcessor(frmMain *frm) : m_p(new Privates) {
   m_p->terminated = false;
   m_p->frmmain = frm;
-  m_p->verbose = false;
+  m_p->cmdNumber = 0;
+  m_p->debug = false;
 }
 
 MacroProcessor::~MacroProcessor() {
@@ -47,42 +82,58 @@ MacroProcessor::terminated() {
 
 static const std::map<std::string,std::function<QString(MacroProcessor::Privates &p, const QStringList &cmd)>> skDispatchTable = {
   { "%wait", [](MacroProcessor::Privates &, const QStringList &) -> QString {
-      return "";
+      // from cncjs GrblController.js:
+      // G4 P0 or P with a very small value will empty the planner queue and then
+      // respond with an ok when the dwell is complete. At that instant, there will
+      // be no queued motions, as long as no more commands were sent after the G4.
+      // This is the fastest way to do it without having to check the status reports.
+      return "G4 P0.5";
     } },
 
   { "%save-parser-state", [](MacroProcessor::Privates &p, const QStringList &) -> QString {
-      p.frmmain->storeParserState();
-      return "";
+      QString ps = p.frmmain->storeParserState();
+      return "; save-parser-state {" + ps + "}";
     } },
 
   { "%restore-parser-state", [](MacroProcessor::Privates &p, const QStringList &) -> QString {
       p.frmmain->restoreParserState();
-      return "";
+      return "; restore-parser-state";
     } },
 
   { "%terminate-macroproc", [](MacroProcessor::Privates &p, const QStringList &) -> QString {
       p.terminated = true;
-      return "";
+      return "; terminate-macroproc";
     } },
 };
 
-QString
-MacroProcessor::process(const QString &cmd) {
-  QString out;
+void
+MacroProcessor::terminate() {
+  m_p->terminated = true;
+}
+
+bool
+MacroProcessor::process(QString &out, const QString &cmd) {
+  QString vars = QString::fromStdString(m_p->me.dumpVariables());
+  QString path = "raw";
   if (cmd.length() > 1) {
     QStringList sl = cmd.split(" ");
     auto const &de = skDispatchTable.find(cmd.toStdString());
     if (de != skDispatchTable.end()) {
+      path = "dispatch";
       out = de->second(*m_p, sl);
     } else if (cmd.at(0) == '%' && cmd.at(1) != '{') {
+      path = "eval";
       out = eval(cmd);
     } else {
+      path = "expand";
       out = expand(cmd);
     }
   } else {
     out = cmd;
   }
-  return out;
+  m_p->debug_step(path, cmd, out, vars);
+  m_p->cmdNumber++;
+  return true;
 }
 
 QString
@@ -92,18 +143,7 @@ MacroProcessor::eval(const QString &qexpr) {
   if (vxp.indexIn(qexpr) != -1) {
     std::string expr = vxp.cap(1).toStdString();
     std::string result = m_p->me.parse(expr.c_str());
-    qrv = "; eval: " + QString::fromStdString(result);
-    if (m_p->verbose) {
-      printf("%s: %s\n", __func__, expr.c_str());
-      printf("  (%s)\n", result.c_str());
-      const class Error *em=nullptr;
-      m_p->me.getError(em);
-      if (em) {
-	printf("err: %s\n", em->get_msg());
-      }
-      m_p->me.dumpVariables();
-      fflush(stdout);
-    }
+    //    qrv = "; eval: " + QString::fromStdString(result);
   } else {
     qrv = qexpr;
   }

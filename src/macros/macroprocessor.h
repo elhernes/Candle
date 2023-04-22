@@ -21,7 +21,10 @@ class MacroProcessor {
   MacroProcessor(frmMain *frm);
   ~MacroProcessor();
 
-  QString process(const QString &line); // handle anything, dispatch 'eval' or 'expand' appropriately
+  // request termination at the earliest convenience;
+  void terminate();
+
+  bool process(QString &out, const QString &line); // handle anything, dispatch 'eval' or 'expand' appropriately
   QString eval(const QString &expr);  // evaluate an expression, line begins with %
   QString expand(QString expr); // expand variables, syntax is %{var}
 

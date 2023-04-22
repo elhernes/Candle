@@ -810,7 +810,9 @@ void frmMain::sendCommand(QString command, int tableIndex, bool showInConsole)
       if (showInConsole) {
         ui->txtConsole->appendPlainText(QString("macro: ") + command);
       }
-      QString out = m_macroproc->process(command);
+      QString out;
+      m_macroproc->process(out, command);
+      ui->txtConsole->appendPlainText(QString(">> ") + out);
       if (m_macroproc->terminated()) {
 	delete m_macroproc;
 	m_macroproc = nullptr;
@@ -961,10 +963,15 @@ void frmMain::onSerialPortReadyRead()
                                                  .arg(m_statusBackColors[status]).arg(m_statusForeColors[status]));
                 }
 
+		if (status == ALARM && m_macroproc!=nullptr) {
+		  m_macroproc->terminate();
+		}
+
                 // Update controls
                 ui->cmdRestoreOrigin->setEnabled(status == IDLE);
                 ui->cmdSafePosition->setEnabled(status == IDLE);
                 ui->cmdZeroXY->setEnabled(status == IDLE);
+		//                ui->cmdZeroZ->setEnabled(status == IDLE);
                 ui->cmdKeypad->setEnabled(status == IDLE);
                 ui->chkTestMode->setEnabled(status != RUN && !m_processingFile);
                 ui->chkTestMode->setChecked(status == CHECK);
@@ -1499,7 +1506,7 @@ void frmMain::onTimerConnection()
         else {
             openPort();
         }
-    } else if (!m_homing/* && !m_reseting*/ && !ui->cmdFilePause->isChecked() && m_queue.length() == 0) {
+    } else if ((!m_homing) /* && !m_reseting*/ && (!ui->cmdFilePause->isChecked()) && (m_macroproc == nullptr) && (m_queue.length() == 0)) {
         if (m_updateSpindleSpeed) {
             m_updateSpindleSpeed = false;
             sendCommand(QString("S%1").arg(ui->slbSpindle->value()), -2, m_settings->showUICommands());
@@ -2546,27 +2553,31 @@ void frmMain::on_cmdZeroXY_clicked()
     sendCommand("$#", -2, m_settings->showUICommands());
 }
 
+void frmMain::on_cmdZeroZ_clicked()
+{
+  m_settingZeroZ = true;
+  sendCommand("G92Z0", -1, m_settings->showUICommands());
+  sendCommand("$#", -2, m_settings->showUICommands());
+}
+
 void frmMain::on_cmdKeypad_clicked()
 {
   RpnCalcDialog rpn(this);
   rpn.exec();
-  /*
-    m_settingZeroZ = true;
-    sendCommand("G92Z0", -1, m_settings->showUICommands());
-    sendCommand("$#", -2, m_settings->showUICommands());
-  */
 }
 
 void frmMain::on_cmdRestoreOrigin_clicked()
 {
     // Restore offset
     sendCommand(QString("G21"), -1, m_settings->showUICommands());
-    sendCommand(QString("G53G90G0X%1Y%2Z%3").arg(toMetric(ui->txtMPosX->text().toDouble()))
-                                            .arg(toMetric(ui->txtMPosY->text().toDouble()))
-                                            .arg(toMetric(ui->txtMPosZ->text().toDouble())), -1, m_settings->showUICommands());
-    sendCommand(QString("G92X%1Y%2Z%3").arg(toMetric(ui->txtMPosX->text().toDouble()) - m_storedX)
-                                        .arg(toMetric(ui->txtMPosY->text().toDouble()) - m_storedY)
-                                        .arg(toMetric(ui->txtMPosZ->text().toDouble()) - m_storedZ), -1, m_settings->showUICommands());
+    sendCommand(QString("G53G90G0X%1Y%2Z%3")
+		.arg(toMetric(ui->txtMPosX->text().toDouble()))
+		.arg(toMetric(ui->txtMPosY->text().toDouble()))
+		.arg(toMetric(ui->txtMPosZ->text().toDouble())), -1, m_settings->showUICommands());
+    sendCommand(QString("G92X%1Y%2Z%3")
+		.arg(toMetric(ui->txtMPosX->text().toDouble()) - m_storedX)
+		.arg(toMetric(ui->txtMPosY->text().toDouble()) - m_storedY)
+		.arg(toMetric(ui->txtMPosZ->text().toDouble()) - m_storedZ), -1, m_settings->showUICommands());
 
     // Move tool
     if (m_settings->moveOnRestore()) switch (m_settings->restoreMode()) {
@@ -4033,10 +4044,15 @@ void frmMain::sendMacro(const QString &macroText) {
   QStringList list = macroText.split("\n");
 
   foreach (QString cmd, list) {
-    sendCommand(cmd.trimmed(), -1, m_settings->showUICommands());
+    if (m_macroproc) { // a macro script can commit hare kari, we need to detect it
+      sendCommand(cmd.trimmed(), -1, m_settings->showUICommands());
+    }
   }
 
-  sendCommand("%terminate-macroproc", -1, m_settings->showUICommands());
+  if (m_macroproc) {
+    sendCommand("%terminate-macroproc", -1, m_settings->showUICommands());
+  }
+
 }
 
 
