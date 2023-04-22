@@ -17,15 +17,16 @@ win32: {
 
 unix:!macx {
     DEFINES += UNIX #GL_GLEXT_PROTOTYPES
-    QMAKE_LFLAGS += "-Wl,-rpath,\'\$$ORIGIN/libs\'"
+    QMAKE_LFLAGS += "-Wl,-rpath,\'\$$ORIGIN/libs\'" -ludev
 }
 
-contains(QT_CONFIG, opengles.) {
-    warning("GL ES detected. VAO will be disabled.")
-    DEFINES += GLES
-    INSTALLS += target
-    target.path = /home/pi
-}
+message(QT_CONFIG: $$QT_CONFIG)
+#contains(QT_CONFIG, opengles.) {
+#    warning("GL ES detected. VAO will be disabled.")
+#    DEFINES += GLES
+#    INSTALLS += target
+#    target.path = /home/pi
+#}
 
 TARGET = Candle
 TEMPLATE = app

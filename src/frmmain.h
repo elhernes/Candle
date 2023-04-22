@@ -88,7 +88,7 @@ public:
     double toolZPosition();
 
     // public methods for macro processor
-    void storeParserState();
+    QString storeParserState();
     void restoreParserState();
 
     QVector3D workPos();

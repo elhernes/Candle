@@ -217,7 +217,7 @@ void RpnCalcDialog::on_button_go_x_abs_clicked() {
   pushEntry();
   if (!m_stack.isEmpty()) {
     float pos = m_stack.last();
-    m_frm->goAbsolute({pos, 0, 0});
+    m_frm->goAbsolute({pos, std::nanf(""), std::nanf("")});
   }
 }
 
@@ -247,7 +247,7 @@ void RpnCalcDialog::on_button_go_y_abs_clicked() {
   pushEntry();
   if (!m_stack.isEmpty()) {
     float pos = m_stack.last();
-    m_frm->goAbsolute({0,pos,0});
+    m_frm->goAbsolute({std::nanf(""),pos,std::nanf("")});
   }
 }
 
@@ -277,7 +277,7 @@ void RpnCalcDialog::on_button_go_z_abs_clicked() {
   pushEntry();
   if (!m_stack.isEmpty()) {
     float pos = m_stack.last();
-    m_frm->goAbsolute({0, 0, pos});
+    m_frm->goAbsolute({std::nanf(""), std::nanf(""), pos});
   }
 }
 

@@ -101,7 +101,7 @@ WHB04B::stop() {
 
 void
 WHB04B::ll_event(WHB04B::keycode_t button1, WHB04B::keycode_t button2, WHB04B::axis_t axis, WHB04B::stepcon_t stepcon, int count) {
-  emit event(button1, button2, axis, stepcon, count);
+  emit pendant_event(button1, button2, axis, stepcon, count);
   //  printf("WHB04B::%s [b1 0x%02x] [b2 0x%02x] [stepcon %02x] [axis %02x] [count %d]\n", __func__,
   //	 button1, button2, stepcon, axis, count);
 }

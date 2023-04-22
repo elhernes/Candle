@@ -68,7 +68,7 @@ class WHB04B : public QThread {
 
  signals:
   //  void event(WHB04B::keycode_t button1, WHB04B::keycode_t button2, WHB04B::axis_t axis, WHB04B::stepcon_t stepcon, int count);
-  void event(quint8 b1, quint8 b2, quint8 axis, quint8 stepcon, int count);
+  void pendant_event(quint8 b1, quint8 b2, quint8 axis, quint8 stepcon, int count);
 
 
  private:

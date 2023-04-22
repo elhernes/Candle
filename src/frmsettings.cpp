@@ -665,6 +665,7 @@ void frmSettings::on_cmdDefaults_clicked()
 
     setPort("");
     setBaud(115200);
+    setSerialHostname("localhost");
 
     setIgnoreErrors(false);
 
@@ -722,7 +723,7 @@ void frmSettings::on_cmdDefaults_clicked()
     ui->clpToolpathStart->setColor(QColor(255, 0, 0));
     ui->clpToolpathEnd->setColor(QColor(0, 255, 0));
 
-    setFontSize(9);
+    setFontSize(12);
 }
 
 void frmSettings::on_cboFontSize_currentTextChanged(const QString &arg1)

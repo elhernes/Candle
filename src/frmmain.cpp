@@ -92,11 +92,12 @@ frmMain::frmMain(QWidget *parent) :
                        << "black";
 
     // Loading settings
-#ifdef UNIX
+#if defined(__APPLE__) || defined(__linux__)
     m_settingsFileName = QStandardPaths::writableLocation(QStandardPaths::ConfigLocation)+ "/candle/" + "/settings.ini";
 #else
     m_settingsFileName = qApp->applicationDirPath() + "/settings.ini";
 #endif
+    qDebug() << "Settings File: " << m_settingsFileName;
     preloadSettings();
 
     m_settings = new frmSettings(this);
@@ -305,7 +306,7 @@ frmMain::frmMain(QWidget *parent) :
     }
 
     auto co = connect(&m_pendant,
-		      SIGNAL(event(quint8, quint8, quint8, quint8, int)),
+		      SIGNAL(pendant_event(quint8, quint8, quint8, quint8, int)),
 		      this,
 		      SLOT(on_pendant_event(quint8, quint8, quint8, quint8, int)));
 
@@ -1567,13 +1568,19 @@ void frmMain::setWorkZ(double zpos) {
 }
 
 void frmMain::goAbsolute(const QVector3D &pos) {
+  // with goAbsolute, we need a way to not jog irrelevant axes
   int speed = ui->cboJogFeed->currentText().toInt();
-  sendCommand(QString("$J=G21G90X%1Y%2Z%3F%4")
-	      .arg(pos.x(), 0, 'g', 4)
-          .arg(pos.y(), 0, 'g', 4)
-	      .arg(pos.z(), 0, 'g', 4)
+  QString xp = (!std::isnan(pos.x())) ? QString("X%1").arg(pos.x(), 0, 'g', 4) : "";
+  QString yp = (!std::isnan(pos.y())) ? QString("Y%1").arg(pos.y(), 0, 'g', 4) : "";
+  QString zp = (!std::isnan(pos.z())) ? QString("Z%1").arg(pos.z(), 0, 'g', 4) : "";
+
+  sendCommand(QString("$J=G21G90%1%2%3F%4")
+	      .arg(xp)
+	      .arg(yp)
+	      .arg(zp)
 	      .arg(speed), -2, m_settings->showUICommands());
 }
+
 void frmMain::goRelative(const QVector3D &pos) {
   int speed = ui->cboJogFeed->currentText().toInt();
   sendCommand(QString("$J=G21G91X%1Y%2Z%3F%4")
@@ -2140,10 +2147,11 @@ void frmMain::on_cmdFileAbort_clicked()
     }
 }
 
-void frmMain::storeParserState()
+QString frmMain::storeParserState()
 {    
     m_storedParserStatus = ui->glwVisualizer->parserStatus().remove(
                 QRegExp("GC:|\\[|\\]|G[01234]\\s|M[0345]+\\s|\\sF[\\d\\.]+|\\sS[\\d\\.]+"));
+    return m_storedParserStatus;
 }
 
 void frmMain::restoreParserState()
@@ -4341,6 +4349,12 @@ void frmMain::on_pendant_event(quint8 button1, quint8 button2, quint8 axis, quin
       break;
 
     }
+  }
+
+  if (m_processingFile || m_macroproc) {
+    qDebug() << "not processing because " <<
+      "(m_processingFile " << m_processingFile << ") " <<
+      "(m_macroproc " << m_macroproc << ")";
   }
 
   if (!handled && !m_processingFile && m_macroproc==nullptr) { // don't jog while we're processing a file or in a macro
