@@ -45,5 +45,6 @@
         <file>images/handle2s1.png</file>
         <file>images/brake.png</file>
         <file>images/keypad.png</file>
+        <file>images/search_xyz.svg</file>
     </qresource>
 </RCC>

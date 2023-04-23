@@ -34,6 +34,7 @@
 #include <QMimeData>
 #include <QThread>
 #include <QStandardPaths>
+#include <QFile>
 
 #include "frmmain.h"
 #include "ui_frmmain.h"
@@ -673,14 +674,13 @@ void frmMain::updateControlsState() {
     ui->widgetUserCommands->setEnabled(portOpened && !m_processingFile);
     ui->widgetSpindle->setEnabled(portOpened);
     ui->widgetJog->setEnabled(portOpened && !m_processingFile);
-//    ui->grpConsole->setEnabled(portOpened);
     ui->cboCommand->setEnabled(portOpened && (!ui->chkKeyboardControl->isChecked()));
     ui->cmdCommandSend->setEnabled(portOpened);
-//    ui->widgetFeed->setEnabled(!m_transferringFile);
 
     ui->chkTestMode->setEnabled(portOpened && !m_processingFile);
     ui->cmdHome->setEnabled(!m_processingFile);
     ui->cmdTouch->setEnabled(!m_processingFile);
+    ui->cmdProbeXYZ->setEnabled(!m_processingFile);
     ui->cmdZeroXY->setEnabled(!m_processingFile);
     ui->cmdKeypad->setEnabled(!m_processingFile);
     ui->cmdRestoreOrigin->setEnabled(!m_processingFile);
@@ -2546,6 +2546,11 @@ void frmMain::on_cmdTouch_clicked()
   sendMacro(m_settings->touchCommand());
 }
 
+void frmMain::on_cmdProbeXYZ_clicked()
+{
+  sendMacro(m_settings->probeXYZCommand());
+}
+
 void frmMain::on_cmdZeroXY_clicked()
 {
     m_settingZeroXY = true;
@@ -4041,7 +4046,20 @@ void frmMain::sendMacro(const QString &macroText) {
   m_macroproc->setVariable("posy", ui->txtWPosY->text().toDouble());
   m_macroproc->setVariable("posz", ui->txtWPosZ->text().toDouble());
 
-  QStringList list = macroText.split("\n");
+  QStringList list;
+  QUrl url(macroText);
+  if (url.isLocalFile()) {
+    QFile f(url.toLocalFile());
+    if (f.open(QIODevice::ReadOnly|QFile::Text) == false) {
+      // error or quietly fail? we pick the second
+      return;
+    }
+    QTextStream fstream(&f);
+    QString fileText = fstream.readAll();
+    list = fileText.split("\n");
+  } else {
+    list = macroText.split("\n");
+  }
 
   foreach (QString cmd, list) {
     if (m_macroproc) { // a macro script can commit hare kari, we need to detect it

@@ -8,6 +8,8 @@
 #include <QDebug>
 #include <QScrollBar>
 #include <QColorDialog>
+#include <QFileDialog>
+#include <QStandardPaths>
 
 frmSettings::frmSettings(QWidget *parent) :
     QDialog(parent),
@@ -431,6 +433,16 @@ void frmSettings::setTouchCommand(QString touchCommand)
     ui->txtTouchCommand->setPlainText(touchCommand);
 }
 
+QString frmSettings::probeXYZCommand()
+{
+    return ui->txtProbeXYZCommand->toPlainText();
+}
+
+void frmSettings::setProbeXYZCommand(QString probeXYZCommand)
+{
+    ui->txtProbeXYZCommand->setPlainText(probeXYZCommand);
+}
+
 bool frmSettings::simplify()
 {
     return ui->chkSimplify->isChecked();
@@ -658,6 +670,46 @@ void frmSettings::on_cboToolType_currentIndexChanged(int index)
     ui->txtToolAngle->setEnabled(index == 1);
 }
 
+void frmSettings::selectFileForControl(QPlainTextEdit *pte) {
+  QFileDialog qfd;
+  QString docs = QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation);
+
+  QUrl url = qfd.getOpenFileUrl(this, tr("Open macro file"),
+				QUrl::fromLocalFile(docs),
+				tr("GCodeImages (*.gcode *.nc *.gnc *.candle, *.txt)"));
+  if (url.isLocalFile()) {
+    pte->setPlainText(url.toString());
+  }
+}
+
+void frmSettings::on_tbZTouch_clicked() {
+  selectFileForControl(ui->txtTouchCommand);
+}
+
+void frmSettings::on_tbProbeXYZ_clicked() {
+  selectFileForControl(ui->txtProbeXYZCommand);
+}
+
+void frmSettings::on_tbZSafe_clicked() {
+  selectFileForControl(ui->txtSafeCommand);
+}
+
+void frmSettings::on_tbUser0_clicked() {
+  selectFileForControl(ui->txtUserCommand0);
+}
+
+void frmSettings::on_tbUser1_clicked() {
+  selectFileForControl(ui->txtUserCommand1);
+}
+
+void frmSettings::on_tbUser2_clicked() {
+  selectFileForControl(ui->txtUserCommand2);
+}
+
+void frmSettings::on_tbUser3_clicked() {
+  selectFileForControl(ui->txtUserCommand3);
+}
+
 void frmSettings::on_cmdDefaults_clicked()
 {
     if (QMessageBox::warning(this, qApp->applicationDisplayName(), tr("Reset settings to default values?"),
@@ -677,6 +729,7 @@ void frmSettings::on_cmdDefaults_clicked()
     setLaserPowerMin(0);
     setLaserPowerMax(100);
     setTouchCommand("G21G91G38.2Z-30F100; G0Z1; G38.2Z-2F10");
+    //    setProbeXYZCommand("");
     setSafePositionCommand("G21G90; G53G0Z0");
     setMoveOnRestore(false);
     setRestoreMode(0);

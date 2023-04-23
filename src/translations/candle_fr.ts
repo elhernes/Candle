@@ -349,7 +349,7 @@
     </message>
     <message>
         <location filename="../frmmain.ui" line="1315"/>
-        <source>Z-probe</source>
+        <source>Z-Probe</source>
         <translation>Palper Z</translation>
     </message>
     <message>
@@ -1071,7 +1071,7 @@ Temps écoulé: %1</translation>
         <translation>max.:</translation>
     </message>
     <message>
-        <source>Z-probe commands:</source>
+        <source>Z Touch commands:</source>
         <translation type="vanished">Commande de palpage Z:</translation>
     </message>
     <message>

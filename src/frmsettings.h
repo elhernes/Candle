@@ -7,6 +7,7 @@
 #include <QDialog>
 #include <QMessageBox>
 #include <QListWidgetItem>
+#include <QPlainTextEdit>
 #include "widgets/colorpicker.h"
 
 namespace Ui {
@@ -87,6 +88,8 @@ public:
     void setUnits(int units);
     QString touchCommand();
     void setTouchCommand(QString touchCommand);
+    QString probeXYZCommand();
+    void setProbeXYZCommand(QString xyzProbeCommand);
     bool simplify();
     void setSimplify(bool simplify);
     double simplifyPrecision();
@@ -134,6 +137,15 @@ private slots:
     void on_cmdCancel_clicked();
     void on_cboToolType_currentIndexChanged(int index);
     void on_listCategories_currentRowChanged(int currentRow);
+
+    void selectFileForControl(QPlainTextEdit *pte);
+    void on_tbZTouch_clicked();
+    void on_tbProbeXYZ_clicked();
+    void on_tbZSafe_clicked();
+    void on_tbUser0_clicked();
+    void on_tbUser1_clicked();
+    void on_tbUser2_clicked();
+    void on_tbUser3_clicked();
 
     void on_cmdDefaults_clicked();
 

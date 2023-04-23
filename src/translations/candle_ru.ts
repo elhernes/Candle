@@ -381,7 +381,7 @@
     </message>
     <message>
         <location filename="../frmmain.ui" line="1315"/>
-        <source>Z-probe</source>
+        <source>Z-Probe</source>
         <translation>Z-щуп</translation>
     </message>
     <message>
@@ -1435,7 +1435,7 @@ Time elapsed: %1</source>
         <translation type="vanished">Точность:</translation>
     </message>
     <message>
-        <source>Z-probe commands:</source>
+        <source>Z Touch commands:</source>
         <translation type="vanished">Команды Z-щупа:</translation>
     </message>
     <message>

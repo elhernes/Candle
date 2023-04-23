@@ -1277,8 +1277,8 @@ QSlider::handle:horizontal:hover {
              <property name="horizontalSpacing">
               <number>8</number>
              </property>
-             <item row="0" column="1">
-              <widget class="StyledToolButton" name="cmdHome">
+             <item row="1" column="2">
+              <widget class="StyledToolButton" name="cmdSafePosition">
                <property name="minimumSize">
                 <size>
                  <width>44</width>
@@ -1286,92 +1286,14 @@ QSlider::handle:horizontal:hover {
                 </size>
                </property>
                <property name="toolTip">
-                <string>Home</string>
+                <string>Safe position</string>
                </property>
                <property name="text">
                 <string>...</string>
                </property>
                <property name="icon">
                 <iconset resource="images.qrc">
-                 <normaloff>:/images/search_for_home2.png</normaloff>:/images/search_for_home2.png</iconset>
-               </property>
-               <property name="iconSize">
-                <size>
-                 <width>30</width>
-                 <height>30</height>
-                </size>
-               </property>
-              </widget>
-             </item>
-             <item row="0" column="2">
-              <widget class="StyledToolButton" name="cmdTouch">
-               <property name="minimumSize">
-                <size>
-                 <width>44</width>
-                 <height>44</height>
-                </size>
-               </property>
-               <property name="toolTip">
-                <string>Z-probe</string>
-               </property>
-               <property name="text">
-                <string>...</string>
-               </property>
-               <property name="icon">
-                <iconset resource="images.qrc">
-                 <normaloff>:/images/search_for_z.png</normaloff>:/images/search_for_z.png</iconset>
-               </property>
-               <property name="iconSize">
-                <size>
-                 <width>30</width>
-                 <height>30</height>
-                </size>
-               </property>
-              </widget>
-             </item>
-             <item row="0" column="3">
-              <widget class="StyledToolButton" name="cmdZeroXY">
-               <property name="minimumSize">
-                <size>
-                 <width>44</width>
-                 <height>44</height>
-                </size>
-               </property>
-               <property name="toolTip">
-                <string>Zero XY</string>
-               </property>
-               <property name="text">
-                <string>...</string>
-               </property>
-               <property name="icon">
-                <iconset resource="images.qrc">
-                 <normaloff>:/images/axis_zero.png</normaloff>:/images/axis_zero.png</iconset>
-               </property>
-               <property name="iconSize">
-                <size>
-                 <width>30</width>
-                 <height>30</height>
-                </size>
-               </property>
-              </widget>
-             </item>
-             <item row="0" column="4">
-              <widget class="StyledToolButton" name="cmdKeypad">
-               <property name="minimumSize">
-                <size>
-                 <width>44</width>
-                 <height>44</height>
-                </size>
-               </property>
-               <property name="toolTip">
-                <string>Zero Z</string>
-               </property>
-               <property name="text">
-                <string>...</string>
-               </property>
-               <property name="icon">
-                <iconset resource="images.qrc">
-                 <normaloff>:/images/keypad.png</normaloff>:/images/keypad.png</iconset>
+                 <normaloff>:/images/safe_z.png</normaloff>:/images/safe_z.png</iconset>
                </property>
                <property name="iconSize">
                 <size>
@@ -1410,8 +1332,8 @@ QSlider::handle:horizontal:hover {
                </property>
               </widget>
              </item>
-             <item row="1" column="2">
-              <widget class="StyledToolButton" name="cmdSafePosition">
+             <item row="0" column="1">
+              <widget class="StyledToolButton" name="cmdHome">
                <property name="minimumSize">
                 <size>
                  <width>44</width>
@@ -1419,14 +1341,14 @@ QSlider::handle:horizontal:hover {
                 </size>
                </property>
                <property name="toolTip">
-                <string>Safe position</string>
+                <string>Home</string>
                </property>
                <property name="text">
                 <string>...</string>
                </property>
                <property name="icon">
                 <iconset resource="images.qrc">
-                 <normaloff>:/images/run.png</normaloff>:/images/run.png</iconset>
+                 <normaloff>:/images/search_for_home2.png</normaloff>:/images/search_for_home2.png</iconset>
                </property>
                <property name="iconSize">
                 <size>
@@ -1436,7 +1358,85 @@ QSlider::handle:horizontal:hover {
                </property>
               </widget>
              </item>
-             <item row="1" column="3">
+             <item row="0" column="3">
+              <widget class="StyledToolButton" name="cmdZeroXY">
+               <property name="minimumSize">
+                <size>
+                 <width>44</width>
+                 <height>44</height>
+                </size>
+               </property>
+               <property name="toolTip">
+                <string>Zero XY</string>
+               </property>
+               <property name="text">
+                <string>...</string>
+               </property>
+               <property name="icon">
+                <iconset resource="images.qrc">
+                 <normaloff>:/images/axis_zero.png</normaloff>:/images/axis_zero.png</iconset>
+               </property>
+               <property name="iconSize">
+                <size>
+                 <width>30</width>
+                 <height>30</height>
+                </size>
+               </property>
+              </widget>
+             </item>
+             <item row="2" column="1">
+              <widget class="StyledToolButton" name="cmdKeypad">
+               <property name="minimumSize">
+                <size>
+                 <width>44</width>
+                 <height>44</height>
+                </size>
+               </property>
+               <property name="toolTip">
+                <string>Zero Z</string>
+               </property>
+               <property name="text">
+                <string>...</string>
+               </property>
+               <property name="icon">
+                <iconset resource="images.qrc">
+                 <normaloff>:/images/keypad.png</normaloff>:/images/keypad.png</iconset>
+               </property>
+               <property name="iconSize">
+                <size>
+                 <width>30</width>
+                 <height>30</height>
+                </size>
+               </property>
+              </widget>
+             </item>
+             <item row="0" column="4">
+              <widget class="StyledToolButton" name="cmdZeroZ">
+               <property name="minimumSize">
+                <size>
+                 <width>44</width>
+                 <height>44</height>
+                </size>
+               </property>
+               <property name="toolTip">
+                <string>Zero Z</string>
+               </property>
+               <property name="text">
+                <string>...</string>
+               </property>
+               <property name="icon">
+                <iconset resource="images.qrc">
+                 <normaloff>:/images/zero_z.png</normaloff>:/images/zero_z.png</iconset>
+               </property>
+               <property name="iconSize">
+                <size>
+                 <width>30</width>
+                 <height>30</height>
+                </size>
+               </property>
+              </widget>
+             </item>
+             <item row="2" column="3">
               <widget class="StyledToolButton" name="cmdReset">
                <property name="minimumSize">
                 <size>
@@ -1462,7 +1462,7 @@ QSlider::handle:horizontal:hover {
                </property>
               </widget>
              </item>
-             <item row="1" column="4">
+             <item row="2" column="4">
               <widget class="StyledToolButton" name="cmdUnlock">
                <property name="enabled">
                 <bool>true</bool>
@@ -1487,6 +1487,58 @@ QSlider::handle:horizontal:hover {
                 <size>
                  <width>24</width>
                  <height>24</height>
+                </size>
+               </property>
+              </widget>
+             </item>
+             <item row="1" column="4">
+              <widget class="StyledToolButton" name="cmdTouch">
+               <property name="minimumSize">
+                <size>
+                 <width>44</width>
+                 <height>44</height>
+                </size>
+               </property>
+               <property name="toolTip">
+                <string>Z-Probe</string>
+               </property>
+               <property name="text">
+                <string>...</string>
+               </property>
+               <property name="icon">
+                <iconset resource="images.qrc">
+                 <normaloff>:/images/search_for_z.png</normaloff>:/images/search_for_z.png</iconset>
+               </property>
+               <property name="iconSize">
+                <size>
+                 <width>30</width>
+                 <height>30</height>
+                </size>
+               </property>
+              </widget>
+             </item>
+             <item row="1" column="3">
+              <widget class="StyledToolButton" name="cmdProbeXYZ">
+               <property name="minimumSize">
+                <size>
+                 <width>44</width>
+                 <height>44</height>
+                </size>
+               </property>
+               <property name="toolTip">
+                <string>XYZ-Probe</string>
+               </property>
+               <property name="text">
+                <string>...</string>
+               </property>
+               <property name="icon">
+                <iconset resource="images.qrc">
+                 <normaloff>:/images/search_xyz.svg</normaloff>:/images/search_xyz.svg</iconset>
+               </property>
+               <property name="iconSize">
+                <size>
+                 <width>30</width>
+                 <height>30</height>
                 </size>
                </property>
               </widget>
@@ -2791,13 +2843,9 @@ padding-right: 8;</string>
   <tabstop>txtMPosZ</tabstop>
   <tabstop>txtStatus</tabstop>
   <tabstop>cmdHome</tabstop>
-  <tabstop>cmdTouch</tabstop>
   <tabstop>cmdZeroXY</tabstop>
-  <tabstop>cmdKeypad</tabstop>
   <tabstop>cmdRestoreOrigin</tabstop>
   <tabstop>cmdSafePosition</tabstop>
-  <tabstop>cmdReset</tabstop>
-  <tabstop>cmdUnlock</tabstop>
   <tabstop>scrollArea</tabstop>
   <tabstop>chkHeightMapUse</tabstop>
   <tabstop>cmdHeightMapCreate</tabstop>

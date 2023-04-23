@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>555</width>
+    <width>575</width>
     <height>715</height>
    </rect>
   </property>
@@ -72,8 +72,8 @@ QGroupBox {
          <rect>
           <x>0</x>
           <y>0</y>
-          <width>368</width>
-          <height>1571</height>
+          <width>465</width>
+          <height>3251</height>
          </rect>
         </property>
         <layout class="QVBoxLayout" name="verticalLayout_4">
@@ -483,20 +483,31 @@ QGroupBox {
            </property>
            <layout class="QVBoxLayout" name="verticalLayout_9">
             <item>
-             <widget class="QLabel" name="label_17">
-              <property name="styleSheet">
-               <string notr="true">padding-top: 3;</string>
-              </property>
-              <property name="text">
-               <string>Probe commands:</string>
-              </property>
-              <property name="indent">
-               <number>0</number>
-              </property>
-              <property name="buddy">
-               <cstring>txtTouchCommand</cstring>
-              </property>
-             </widget>
+             <layout class="QHBoxLayout" name="horizontalLayout_14">
+              <item>
+               <widget class="QLabel" name="label_17">
+                <property name="styleSheet">
+                 <string notr="true">padding-top: 3;</string>
+                </property>
+                <property name="text">
+                 <string>Z Touch commands:</string>
+                </property>
+                <property name="indent">
+                 <number>0</number>
+                </property>
+                <property name="buddy">
+                 <cstring>txtTouchCommand</cstring>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QToolButton" name="tbZTouch">
+                <property name="text">
+                 <string>...</string>
+                </property>
+               </widget>
+              </item>
+             </layout>
             </item>
             <item>
              <widget class="QPlainTextEdit" name="txtTouchCommand">
@@ -506,20 +517,65 @@ QGroupBox {
              </widget>
             </item>
             <item>
-             <widget class="QLabel" name="label_33">
-              <property name="styleSheet">
-               <string notr="true">padding-top: 3;</string>
-              </property>
-              <property name="text">
-               <string>Safe position commands:</string>
-              </property>
-              <property name="indent">
-               <number>0</number>
-              </property>
-              <property name="buddy">
-               <cstring>txtSafeCommand</cstring>
+             <layout class="QHBoxLayout" name="horizontalLayout_16">
+              <item>
+               <widget class="QLabel" name="label_40">
+                <property name="styleSheet">
+                 <string notr="true">padding-top: 3;</string>
+                </property>
+                <property name="text">
+                 <string>XYZ Probe commands:</string>
+                </property>
+                <property name="indent">
+                 <number>0</number>
+                </property>
+                <property name="buddy">
+                 <cstring>txtProbeXYZCommand</cstring>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QToolButton" name="tbProbeXYZ">
+                <property name="text">
+                 <string>...</string>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </item>
+            <item>
+             <widget class="QPlainTextEdit" name="txtProbeXYZCommand">
+              <property name="placeholderText">
+               <string>Command 1; command 2; ...</string>
               </property>
              </widget>
+            </item>
+            <item>
+             <layout class="QHBoxLayout" name="horizontalLayout_15">
+              <item>
+               <widget class="QLabel" name="label_33">
+                <property name="styleSheet">
+                 <string notr="true">padding-top: 3;</string>
+                </property>
+                <property name="text">
+                 <string>Safe position commands:</string>
+                </property>
+                <property name="indent">
+                 <number>0</number>
+                </property>
+                <property name="buddy">
+                 <cstring>txtSafeCommand</cstring>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QToolButton" name="tbZSafe">
+                <property name="text">
+                 <string>...</string>
+                </property>
+               </widget>
+              </item>
+             </layout>
             </item>
             <item>
              <widget class="QPlainTextEdit" name="txtSafeCommand">
@@ -592,20 +648,31 @@ QGroupBox {
            </property>
            <layout class="QVBoxLayout" name="verticalLayout_12">
             <item>
-             <widget class="QLabel" name="label_34">
-              <property name="styleSheet">
-               <string notr="true">padding-top: 3;</string>
-              </property>
-              <property name="text">
-               <string>Button 1:</string>
-              </property>
-              <property name="indent">
-               <number>0</number>
-              </property>
-              <property name="buddy">
-               <cstring>txtUserCommand0</cstring>
-              </property>
-             </widget>
+             <layout class="QHBoxLayout" name="horizontalLayout_17">
+              <item>
+               <widget class="QLabel" name="label_34">
+                <property name="styleSheet">
+                 <string notr="true">padding-top: 3;</string>
+                </property>
+                <property name="text">
+                 <string>Button 1:</string>
+                </property>
+                <property name="indent">
+                 <number>0</number>
+                </property>
+                <property name="buddy">
+                 <cstring>txtUserCommand0</cstring>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QToolButton" name="tbUser0">
+                <property name="text">
+                 <string>...</string>
+                </property>
+               </widget>
+              </item>
+             </layout>
             </item>
             <item>
              <widget class="QPlainTextEdit" name="txtUserCommand0">
@@ -615,20 +682,31 @@ QGroupBox {
              </widget>
             </item>
             <item>
-             <widget class="QLabel" name="label_36">
-              <property name="styleSheet">
-               <string notr="true">padding-top: 3;</string>
-              </property>
-              <property name="text">
-               <string>Button 2:</string>
-              </property>
-              <property name="indent">
-               <number>0</number>
-              </property>
-              <property name="buddy">
-               <cstring>txtUserCommand1</cstring>
-              </property>
-             </widget>
+             <layout class="QHBoxLayout" name="horizontalLayout_18">
+              <item>
+               <widget class="QLabel" name="label_36">
+                <property name="styleSheet">
+                 <string notr="true">padding-top: 3;</string>
+                </property>
+                <property name="text">
+                 <string>Button 2:</string>
+                </property>
+                <property name="indent">
+                 <number>0</number>
+                </property>
+                <property name="buddy">
+                 <cstring>txtUserCommand1</cstring>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QToolButton" name="tbUser1">
+                <property name="text">
+                 <string>...</string>
+                </property>
+               </widget>
+              </item>
+             </layout>
             </item>
             <item>
              <widget class="QPlainTextEdit" name="txtUserCommand1">
@@ -638,20 +716,31 @@ QGroupBox {
              </widget>
             </item>
             <item>
-             <widget class="QLabel" name="label_37">
-              <property name="styleSheet">
-               <string notr="true">padding-top: 3;</string>
-              </property>
-              <property name="text">
-               <string>Button 3:</string>
-              </property>
-              <property name="indent">
-               <number>0</number>
-              </property>
-              <property name="buddy">
-               <cstring>txtUserCommand2</cstring>
-              </property>
-             </widget>
+             <layout class="QHBoxLayout" name="horizontalLayout_19">
+              <item>
+               <widget class="QLabel" name="label_37">
+                <property name="styleSheet">
+                 <string notr="true">padding-top: 3;</string>
+                </property>
+                <property name="text">
+                 <string>Button 3:</string>
+                </property>
+                <property name="indent">
+                 <number>0</number>
+                </property>
+                <property name="buddy">
+                 <cstring>txtUserCommand2</cstring>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QToolButton" name="tbUser2">
+                <property name="text">
+                 <string>...</string>
+                </property>
+               </widget>
+              </item>
+             </layout>
             </item>
             <item>
              <widget class="QPlainTextEdit" name="txtUserCommand2">
@@ -661,20 +750,31 @@ QGroupBox {
              </widget>
             </item>
             <item>
-             <widget class="QLabel" name="label_39">
-              <property name="styleSheet">
-               <string notr="true">padding-top: 3;</string>
-              </property>
-              <property name="text">
-               <string>Button 4:</string>
-              </property>
-              <property name="indent">
-               <number>0</number>
-              </property>
-              <property name="buddy">
-               <cstring>txtUserCommand3</cstring>
-              </property>
-             </widget>
+             <layout class="QHBoxLayout" name="horizontalLayout_20">
+              <item>
+               <widget class="QLabel" name="label_39">
+                <property name="styleSheet">
+                 <string notr="true">padding-top: 3;</string>
+                </property>
+                <property name="text">
+                 <string>Button 4:</string>
+                </property>
+                <property name="indent">
+                 <number>0</number>
+                </property>
+                <property name="buddy">
+                 <cstring>txtUserCommand3</cstring>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QToolButton" name="tbUser3">
+                <property name="text">
+                 <string>...</string>
+                </property>
+               </widget>
+              </item>
+             </layout>
             </item>
             <item>
              <widget class="QPlainTextEdit" name="txtUserCommand3">

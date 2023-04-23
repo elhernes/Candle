@@ -349,7 +349,7 @@
     </message>
     <message>
         <location filename="../frmmain.ui" line="1315"/>
-        <source>Z-probe</source>
+        <source>Z-Probe</source>
         <translation>Medição de Z</translation>
     </message>
     <message>
@@ -1083,7 +1083,7 @@ Tempo transcorrido: %1</translation>
         <translation>max.:</translation>
     </message>
     <message>
-        <source>Z-probe commands:</source>
+        <source>Z Touch commands:</source>
         <translation type="vanished">Comandos de medição de Z:</translation>
     </message>
     <message>
