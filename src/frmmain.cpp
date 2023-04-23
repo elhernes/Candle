@@ -964,6 +964,7 @@ void frmMain::onSerialPortReadyRead()
                 }
 
 		if (status == ALARM && m_macroproc!=nullptr) {
+		  //popup here would be nice to allow the user to unlock
 		  m_macroproc->terminate();
 		}
 

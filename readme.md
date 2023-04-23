@@ -17,6 +17,8 @@ Changes from upstream denvi/Candle
   sophisticated as the script/macro support in the 'Experimental'
   branch, but still good for xyz-probing and others.
 * Added RPN calculator / keypad, inspired by CNCjs "shopfloor tablet" ui
+* Added macro script for XYZ Probe
+* Probe, Safe, and User commands can be read from a file
 * merged in changes from a number of PR's in denvi/Candle
   * fedya/master (preference paths on mac/linux)
   * garuma/tcp-support (connect over TCP)

@@ -7,10 +7,12 @@
 QT       = core gui opengl serialport network
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
+greaterThan(QT_MAJOR_VERSION, 5): QT += core5compat
+
 win32: {
     QT += winextras
     DEFINES += WINDOWS
-    QMAKE_LFLAGS += "-Wl,--large-address-aware"
+#    QMAKE_LFLAGS += "-Wl,--large-address-aware"
     QMAKE_CXXFLAGS_DEBUG += -g3 -pg
     QMAKE_LFLAGS_DEBUG += -pg -lgmon
 }
@@ -74,12 +76,16 @@ SOURCES += main.cpp\
     pendant/whb04b.cpp \
     macros/macroprocessor.cpp
 
+macx: {
+SOURCES += pendant/hidapi/mac/hid.c
+}
+
 unix:!macx { # linux
 SOURCES += pendant/hidapi/linux/hid.c
 }
 
-macx: {
-SOURCES += pendant/hidapi/mac/hid.c
+win32: {
+SOURCES += pendant/hidapi/windows/hid.c
 }
 
 SOURCES += \
