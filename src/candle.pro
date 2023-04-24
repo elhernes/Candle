@@ -107,6 +107,7 @@ HEADERS  += frmmain.h \
     drawers/origindrawer.h \
     drawers/shaderdrawable.h \
     drawers/tooldrawer.h \
+    macros/macroprocessor.h \
     parser/arcproperties.h \
     parser/gcodeparser.h \
     parser/gcodepreprocessorutils.h \

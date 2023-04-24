@@ -1344,7 +1344,7 @@ QSlider::handle:horizontal:hover {
                 <string>Home</string>
                </property>
                <property name="text">
-                <string>...</string>
+                <string>Home</string>
                </property>
                <property name="icon">
                 <iconset resource="images.qrc">

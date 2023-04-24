@@ -24,10 +24,10 @@
 struct MacroProcessor::Privates {
   void debug_step(const QString &path, const QString &lineIn, const QString &out, const QString &vars);
   MathExpr me;
-  bool terminated;
   frmMain *frmmain;
   unsigned cmdNumber;
-  bool debug;
+  bool debug=true;
+  QStringList list;
 };
 
 void
@@ -57,27 +57,23 @@ MacroProcessor::Privates::debug_step(const QString &path, const QString &lineIn,
     case QMessageBox::Ok:
       break;
     case QMessageBox::Cancel: // hare kari
-      this->terminated = true;
+      break;
     }
   }
 }
 
 MacroProcessor::MacroProcessor(frmMain *frm) : m_p(new Privates) {
-  m_p->terminated = false;
   m_p->frmmain = frm;
   m_p->cmdNumber = 0;
-  m_p->debug = false;
+  m_p->debug = true;
+  connect(frm, SIGNAL(statusChanged(const QString &)),
+	  this, SLOT(onStatusChanged(const QString &)));
 }
 
 MacroProcessor::~MacroProcessor() {
   if (m_p) {
     delete m_p;
   }
-}
-
-bool
-MacroProcessor::terminated() {
-  return m_p->terminated;
 }
 
 static const std::map<std::string,std::function<QString(MacroProcessor::Privates &p, const QStringList &cmd)>> skDispatchTable = {
@@ -101,18 +97,52 @@ static const std::map<std::string,std::function<QString(MacroProcessor::Privates
     } },
 
   { "%terminate-macroproc", [](MacroProcessor::Privates &p, const QStringList &) -> QString {
-      p.terminated = true;
       return "; terminate-macroproc";
     } },
 };
 
+bool
+MacroProcessor::process(const QString &macroText) {
+  QUrl url(macroText);
+  if (url.isLocalFile()) {
+    QFile f(url.toLocalFile());
+    if (f.open(QIODevice::ReadOnly|QFile::Text) == false) {
+      // error or quietly fail? we pick the second
+      return false;
+    }
+    QTextStream fstream(&f);
+    QString fileText = fstream.readAll();
+    m_p->list = fileText.split("\n");
+
+  } else {
+    m_p->list = macroText.split("\n");
+  }
+
+  while (m_p->frmmain->status() == "Idle") {
+    processNext();
+  }
+  return true;
+}
+
 void
-MacroProcessor::terminate() {
-  m_p->terminated = true;
+MacroProcessor::onStatusChanged(const QString &status) {
+  if (status == "Idle") {
+    while (m_p->frmmain->status() == "Idle") {
+      processNext();
+    }
+  } else if (status == "Alarm") {
+  }
 }
 
 bool
-MacroProcessor::process(QString &out, const QString &cmd) {
+MacroProcessor::processNext() {
+  if (m_p->list.isEmpty()) {
+    emit finished();
+    return false;
+  }
+  auto cmd = m_p->list.takeFirst();
+  QString out;
+
   QString vars = QString::fromStdString(m_p->me.dumpVariables());
   QString path = "raw";
   if (cmd.length() > 1) {
@@ -133,6 +163,7 @@ MacroProcessor::process(QString &out, const QString &cmd) {
   }
   m_p->debug_step(path, cmd, out, vars);
   m_p->cmdNumber++;
+  m_p->frmmain->sendCommand(out, -1, true);
   return true;
 }
 

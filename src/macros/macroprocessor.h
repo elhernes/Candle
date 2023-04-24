@@ -14,27 +14,34 @@
 
 #pragma once
 
+#include <QObject>
 #include <QString>
+class frmMain;
 
-class MacroProcessor {
+class MacroProcessor : public QObject {
+  Q_OBJECT
  public:
   MacroProcessor(frmMain *frm);
   ~MacroProcessor();
 
-  // request termination at the earliest convenience;
-  void terminate();
-
-  bool process(QString &out, const QString &line); // handle anything, dispatch 'eval' or 'expand' appropriately
-  QString eval(const QString &expr);  // evaluate an expression, line begins with %
-  QString expand(QString expr); // expand variables, syntax is %{var}
+  //  bool process(QString &out, const QString &line); // handle anything, dispatch 'eval' or 'expand' appropriately
+  bool process(const QString &macroText);
 
   bool setVariable(const QString &symbol, double value);
   double getVariable(const QString &symbol);
 
-  bool terminated();
   struct Privates;
 
+ signals:
+  void finished();
+
+  private slots:
+    void onStatusChanged(const QString &newStatus);
+
  private:
+  bool processNext();
+  QString eval(const QString &expr);  // evaluate an expression, line begins with %
+  QString expand(QString expr); // expand variables, syntax is %{var}
   Privates *m_p;
 };
 

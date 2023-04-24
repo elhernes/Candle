@@ -98,6 +98,12 @@ public:
     void setWorkY(double pos);
     void setWorkZ(double pos);
 
+    const QString status();
+    void sendCommand(QString command, int tableIndex = -1, bool showInConsole = true);
+
+ signals:
+    void statusChanged(const QString &newStatus);
+
 private slots:
     void updateHeightMapInterpolationDrawer(bool reset = false);
     void placeVisualizerButtons();
@@ -185,32 +191,21 @@ private slots:
     void on_cmdSpindle_clicked(bool checked);   
 
     void on_cmdYPlus_pressed();
-
     void on_cmdYPlus_released();
-
     void on_cmdYMinus_pressed();
-
     void on_cmdYMinus_released();
-
     void on_cmdXPlus_pressed();
-
     void on_cmdXPlus_released();
-
     void on_cmdXMinus_pressed();
-
     void on_cmdXMinus_released();
-
     void on_cmdZPlus_pressed();
-
     void on_cmdZPlus_released();
-
     void on_cmdZMinus_pressed();
-
     void on_cmdZMinus_released();
-
     void on_cmdStop_clicked();
 
     void on_pendant_event(quint8 b1, quint8 b2, quint8 asix, quint8 stepcon, int count);
+    void on_macro_finished();
 
  protected:
     void showEvent(QShowEvent *se);
@@ -352,7 +347,6 @@ private:
     bool saveChanges(bool heightMapMode);
     void updateControlsState();
     void openPort();
-    void sendCommand(QString command, int tableIndex = -1, bool showInConsole = true);
     void sendMacro(const QString &macroText);
     void grblReset();
     int bufferLength();

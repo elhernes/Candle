@@ -809,24 +809,6 @@ void frmMain::sendCommand(QString command, int tableIndex, bool showInConsole)
         return;
     }
 
-    if (m_macroproc) {
-      if (showInConsole) {
-        ui->txtConsole->appendPlainText(QString("macro: ") + command);
-      }
-      QString out;
-      m_macroproc->process(out, command);
-      ui->txtConsole->appendPlainText(QString(">> ") + out);
-      if (m_macroproc->terminated()) {
-	delete m_macroproc;
-	m_macroproc = nullptr;
-      }
-      if (out != "") { // processor returns nothing, just ignore it.
-	command = out;
-      } else {
-	return;
-      }
-    }
-
     command = command.toUpper();
 
     CommandAttributes ca;
@@ -964,12 +946,8 @@ void frmMain::onSerialPortReadyRead()
                     ui->txtStatus->setText(m_statusCaptions[status]);
                     ui->txtStatus->setStyleSheet(QString("background-color: %1; color: %2;")
                                                  .arg(m_statusBackColors[status]).arg(m_statusForeColors[status]));
+		    emit statusChanged(m_status[status]);
                 }
-
-		if (status == ALARM && m_macroproc!=nullptr) {
-		  //popup here would be nice to allow the user to unlock
-		  m_macroproc->terminate();
-		}
 
                 // Update controls
                 ui->cmdRestoreOrigin->setEnabled(status == IDLE);
@@ -1463,6 +1441,10 @@ void frmMain::onSerialPortReadyRead()
 //            ui->txtConsole->appendPlainText(data);
         }
     }
+}
+
+const QString frmMain::status() {
+  return m_status[m_lastGrblStatus];
 }
 
 void frmMain::onSerialPortError(QSerialPort::SerialPortError error)
@@ -4021,11 +4003,18 @@ bool frmMain::compareCoordinates(double x, double y, double z)
     return ui->txtMPosX->text().toDouble() == x && ui->txtMPosY->text().toDouble() == y && ui->txtMPosZ->text().toDouble() == z;
 }
 
+void frmMain::on_macro_finished() {
+  delete m_macroproc;
+  m_macroproc = nullptr;
+}
+
 void frmMain::sendMacro(const QString &macroText) {
   if (m_macroproc) {
     delete m_macroproc;
   }
   m_macroproc=new MacroProcessor(this);
+  connect(m_macroproc, SIGNAL(finished()),
+	  this, SLOT(on_macro_finished()));
 
   if (m_codeDrawer) {
     QVector3D axisMin = m_codeDrawer->getMinimumExtremes();
@@ -4050,31 +4039,7 @@ void frmMain::sendMacro(const QString &macroText) {
   m_macroproc->setVariable("posy", ui->txtWPosY->text().toDouble());
   m_macroproc->setVariable("posz", ui->txtWPosZ->text().toDouble());
 
-  QStringList list;
-  QUrl url(macroText);
-  if (url.isLocalFile()) {
-    QFile f(url.toLocalFile());
-    if (f.open(QIODevice::ReadOnly|QFile::Text) == false) {
-      // error or quietly fail? we pick the second
-      return;
-    }
-    QTextStream fstream(&f);
-    QString fileText = fstream.readAll();
-    list = fileText.split("\n");
-  } else {
-    list = macroText.split("\n");
-  }
-
-  foreach (QString cmd, list) {
-    if (m_macroproc) { // a macro script can commit hare kari, we need to detect it
-      sendCommand(cmd.trimmed(), -1, m_settings->showUICommands());
-    }
-  }
-
-  if (m_macroproc) {
-    sendCommand("%terminate-macroproc", -1, m_settings->showUICommands());
-  }
-
+  m_macroproc->process(macroText);
 }
 
 
