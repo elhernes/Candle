@@ -468,6 +468,8 @@ void frmMain::loadSettings()
 
     m_settings->setAutoCompletion(set.value("autoCompletion", true).toBool());
     m_settings->setTouchCommand(set.value("touchCommand").toString());
+    m_settings->setProbeXYZCommand(set.value("probeXYZCommand").toString());
+
     m_settings->setSafePositionCommand(set.value("safePositionCommand").toString());
 
     foreach (StyledToolButton* button, this->findChildren<StyledToolButton*>(QRegExp("cmdUser\\d"))) {
@@ -586,6 +588,7 @@ void frmMain::saveSettings()
     set.setValue("recentHeightmaps", m_recentHeightmaps);
     set.setValue("lastFolder", m_lastFolder);
     set.setValue("touchCommand", m_settings->touchCommand());
+    set.setValue("probeXYZCommand", m_settings->probeXYZCommand());
     set.setValue("safePositionCommand", m_settings->safePositionCommand());
     set.setValue("panelUserCommandsVisible", m_settings->panelUserCommands());
     set.setValue("panelHeightmapVisible", m_settings->panelHeightmap());
