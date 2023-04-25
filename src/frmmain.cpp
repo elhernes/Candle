@@ -893,6 +893,7 @@ int frmMain::bufferLength()
 void frmMain::onSerialPortReadyRead()
 {
     auto& ioDevice = getIODevice();
+
     while (ioDevice.canReadLine()) {
         QString data = ioDevice.readLine().trimmed();
 
@@ -946,7 +947,6 @@ void frmMain::onSerialPortReadyRead()
                     ui->txtStatus->setText(m_statusCaptions[status]);
                     ui->txtStatus->setStyleSheet(QString("background-color: %1; color: %2;")
                                                  .arg(m_statusBackColors[status]).arg(m_statusForeColors[status]));
-		    emit statusChanged(m_status[status]);
                 }
 
                 // Update controls
@@ -1007,7 +1007,10 @@ void frmMain::onSerialPortReadyRead()
                 }
 
                 // Store status
-                if (status != m_lastGrblStatus) m_lastGrblStatus = status;
+                if (status != m_lastGrblStatus) {
+		  m_lastGrblStatus = status;
+		  emit grblStatusChanged(m_status[status]);
+		}
 
                 // Abort
                 static double x = sNan;
@@ -1179,6 +1182,9 @@ void frmMain::onSerialPortReadyRead()
 
                     // Take command from buffer
                     CommandAttributes ca = m_commands.takeFirst();
+		    if (m_commands.isEmpty()) {
+		      emit noCommandsPending();
+		    }
                     QTextBlock tb = ui->txtConsole->document()->findBlockByNumber(ca.consoleIndex);
                     QTextCursor tc(tb);
 
@@ -1445,6 +1451,9 @@ void frmMain::onSerialPortReadyRead()
 
 const QString frmMain::status() {
   return m_status[m_lastGrblStatus];
+}
+size_t frmMain::commandsPending() {
+  return m_commands.size();
 }
 
 void frmMain::onSerialPortError(QSerialPort::SerialPortError error)

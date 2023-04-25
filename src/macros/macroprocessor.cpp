@@ -18,6 +18,7 @@
 #include "../libs/libMathExpr/MathExpr.h"
 
 #include <map>
+#include <mutex>
 #include <QRegExp>
 #include <QStringList>
 
@@ -26,8 +27,9 @@ struct MacroProcessor::Privates {
   MathExpr me;
   frmMain *frmmain;
   unsigned cmdNumber;
-  bool debug=true;
+  bool debug;
   QStringList list;
+  std::mutex mx;
 };
 
 void
@@ -65,14 +67,18 @@ MacroProcessor::Privates::debug_step(const QString &path, const QString &lineIn,
 MacroProcessor::MacroProcessor(frmMain *frm) : m_p(new Privates) {
   m_p->frmmain = frm;
   m_p->cmdNumber = 0;
-  m_p->debug = true;
-  connect(frm, SIGNAL(statusChanged(const QString &)),
-	  this, SLOT(onStatusChanged(const QString &)));
+  m_p->debug = false;
+  connect(frm, SIGNAL(grblStatusChanged(const QString &)),
+	  this, SLOT(onGrblStatusChanged(const QString &)));
+  connect(frm, SIGNAL(noCommandsPending()),
+	  this, SLOT(onNoCommandsPending()));
 }
+
 
 MacroProcessor::~MacroProcessor() {
   if (m_p) {
     delete m_p;
+    m_p=nullptr; // for debug
   }
 }
 
@@ -96,8 +102,12 @@ static const std::map<std::string,std::function<QString(MacroProcessor::Privates
       return "; restore-parser-state";
     } },
 
-  { "%terminate-macroproc", [](MacroProcessor::Privates &p, const QStringList &) -> QString {
-      return "; terminate-macroproc";
+  { "%message", [](MacroProcessor::Privates &p, const QStringList &sl) -> QString {
+      QMessageBox msgBox;
+      msgBox.setText(sl.join(" "));
+      msgBox.setStandardButtons(QMessageBox::Ok);
+      msgBox.exec();
+      return "";
     } },
 };
 
@@ -118,19 +128,36 @@ MacroProcessor::process(const QString &macroText) {
     m_p->list = macroText.split("\n");
   }
 
-  while (m_p->frmmain->status() == "Idle") {
-    processNext();
-  }
+  onNoCommandsPending();
+
   return true;
 }
 
 void
-MacroProcessor::onStatusChanged(const QString &status) {
-  if (status == "Idle") {
-    while (m_p->frmmain->status() == "Idle") {
-      processNext();
+MacroProcessor::onGrblStatusChanged(const QString &status) {
+  if (status == "Alarm") {
+  }
+}
+
+void
+MacroProcessor::onNoCommandsPending() {
+  if(auto lock = std::unique_lock<std::mutex>(m_p->mx, std::try_to_lock)) {
+    while ((m_p->frmmain->commandsPending() == 0) && processNext()) {
+      if (m_p->frmmain->status() == "Alarm") {
+	QMessageBox msgBox;
+	msgBox.setText("Grbl Alarm");
+	msgBox.setStandardButtons(QMessageBox::Abort | QMessageBox::Retry);
+
+	switch (msgBox.exec()) {
+	case QMessageBox::Abort:
+	  emit finished(); // will destroy this
+	  break;
+	case QMessageBox::Retry:
+	  m_p->frmmain->sendCommand("$X", -1, false);
+	  break;
+	}
+      }
     }
-  } else if (status == "Alarm") {
   }
 }
 

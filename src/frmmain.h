@@ -99,10 +99,12 @@ public:
     void setWorkZ(double pos);
 
     const QString status();
+    size_t commandsPending();
     void sendCommand(QString command, int tableIndex = -1, bool showInConsole = true);
 
  signals:
-    void statusChanged(const QString &newStatus);
+    void grblStatusChanged(const QString &newStatus);
+    void noCommandsPending();
 
 private slots:
     void updateHeightMapInterpolationDrawer(bool reset = false);

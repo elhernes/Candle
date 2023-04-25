@@ -36,7 +36,8 @@ class MacroProcessor : public QObject {
   void finished();
 
   private slots:
-    void onStatusChanged(const QString &newStatus);
+    void onGrblStatusChanged(const QString &newStatus);
+    void onNoCommandsPending();
 
  private:
   bool processNext();
