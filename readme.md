@@ -1,15 +1,15 @@
-Candle
+# Candle
 -----------
 GRBL controller application with G-Code visualizer written in Qt.
 
-Motivation
+## Motivation
 -----------
 I'm using a Raspberry-PI 3b with a small touchscreen as the controller
 for my GRBL based CNC mill.  I have used cncjs and looked at a few of
 the others (bCNC, UGS, maybe a few more).  cncjs will barely run on
 the PI with a gig of RAM and an 8 gig sd card.  The others also seemed
 to need a lot of compute resources for a really simple job of machine
-control and g-code file metering out to the mill.
+control and sending g-code to the mill.
 
 Changes from upstream denvi/Candle
 * Added support for WHB04B pendant (https://a.co/d/ac5HEBN)
@@ -19,18 +19,26 @@ Changes from upstream denvi/Candle
 * Added RPN calculator / keypad, inspired by CNCjs "shopfloor tablet" ui
 * Added macro script for XYZ Probe
 * Probe, Safe, and User commands can be read from a file
-* merged in changes from a number of PR's in denvi/Candle
+* merged in changes from a few of PR's in denvi/Candle
   * fedya/master (preference paths on mac/linux)
   * garuma/tcp-support (connect over TCP)
   * dorkable-forkable/yoiang-MacOS (macOS fixes)
 
-Supported functions:
-* Controlling GRBL-based cnc-machine via console commands, buttons on form, numpad.
+### Work In Progress
+Some of this is a work in progress, the to-do list:
+* look at frmmain.ui alternatives, something more suited to a small screen
+   Candle2 looks promising, as does the Experimental branch.
+* I've only implemented the display and jogging for the WHB04B-4.  There is really a lot more it can do.
+* Add more %directives to the macro pre-processor (like %message-box)
+* The button arrangement on RPN keypad doesn't feel right.  I need to use it a bit more to see how to arrange the keys.
+
+## Supported functions:
+* Controlling GRBL-based cnc-machine via console commands, buttons on form, numpad, or pendant.
 * Monitoring cnc-machine state.
 * Loading, editing, saving and sending of G-code files to cnc-machine.
 * Visualizing G-code files.
 
-System requirements for running "Candle":
+## System requirements for running "Candle":
 -------------------
 * Qt5
 * macOS/Linux (probably windows with a bit of effort)
@@ -38,11 +46,11 @@ System requirements for running "Candle":
 * Graphics card with OpenGL 2.0 support
 * 120 MB free storage space
 
-Build requirements:
+## Build requirements:
 ------------------
 Qt 5.4.2 (with MinGW/GCC compiler??)
 
-Macro Support:
+## Macro Support:
 -------------
 
 Macro support inspired by cncjs macro support and roughly follows that
@@ -80,7 +88,7 @@ G1 Y-1 F%{PROBE_FEEDRATE_B} ; back off a bit
 The `xyz-probe.txt` file in the examples directory shows a cncjs macro
 converted for use with Candle.
 
-Downloads:
+## Downloads:
 ----------
 Experimental versions:
 
@@ -94,7 +102,7 @@ For GRBL v1.1 firmware
 
 (for GRBL v0.9 and below use Candle 1.0)
 
-Before creating new issue:
+## Before creating new issue:
 ------
 Candle works with CNC controlled by GRBL firmware, many problems can be solved by using proper version of GRBL, using proper configuration.
 
