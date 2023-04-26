@@ -25,7 +25,9 @@ Changes from upstream denvi/Candle
   * dorkable-forkable/yoiang-MacOS (macOS fixes)
 
 ### Work In Progress
-Some of this is a work in progress, the to-do list:
+Most of this is a work in progress, use only at your own risk.  I don't merge to the master branch until I have tested in some way on my own machine, but it's not a full regression test.
+
+The to-do list:
 * look at frmmain.ui alternatives, something more suited to a small screen
    Candle2 looks promising, as does the Experimental branch.
 * I've only implemented the display and jogging for the WHB04B-4.  There is really a lot more it can do.
