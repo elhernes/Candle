@@ -920,12 +920,14 @@ void frmMain::onSerialPortReadyRead()
                 ui->txtMPosY->setText(mpx.cap(2));
                 ui->txtMPosZ->setText(mpx.cap(3));
 
-		m_pendant.display(0,
-				  ui->txtMPosX->text().toDouble(),
-				  ui->txtMPosY->text().toDouble(),
-				  ui->txtMPosZ->text().toDouble(),
-				  ui->cboJogFeed->currentText().toInt(),
-				  ui->slbSpindle->value());
+		if (false) { // pendant displays machine
+		  m_pendant.display(0,
+				    ui->txtMPosX->text().toDouble(),
+				    ui->txtMPosY->text().toDouble(),
+				    ui->txtMPosZ->text().toDouble(),
+				    ui->cboJogFeed->currentText().toInt(),
+				    ui->slbSpindle->value());
+		}
 
 		if (m_macroproc) {
 		  m_macroproc->setVariable("mposx", ui->txtMPosX->text().toDouble());
@@ -1059,6 +1061,15 @@ void frmMain::onSerialPortReadyRead()
             ui->txtWPosX->setText(QString::number(ui->txtMPosX->text().toDouble() - workOffset.x(), 'f', prec));
             ui->txtWPosY->setText(QString::number(ui->txtMPosY->text().toDouble() - workOffset.y(), 'f', prec));
             ui->txtWPosZ->setText(QString::number(ui->txtMPosZ->text().toDouble() - workOffset.z(), 'f', prec));
+
+	    if (true) { // pendant shows work pos
+	      m_pendant.display(1,
+				ui->txtWPosX->text().toDouble(),
+				ui->txtWPosY->text().toDouble(),
+				ui->txtWPosZ->text().toDouble(),
+				ui->cboJogFeed->currentText().toInt(),
+				ui->slbSpindle->value());
+	    }
 
 	    if (m_macroproc) {
 	      m_macroproc->setVariable("posx", ui->txtWPosX->text().toDouble());
@@ -2338,6 +2349,7 @@ void frmMain::on_actServiceSettings_triggered()
 
         updateControlsState();
         applySettings();
+	saveSettings();
     } else {
         m_settings->undo();
     }
@@ -2603,11 +2615,7 @@ void frmMain::on_cmdUnlock_clicked()
 
 void frmMain::on_cmdSafePosition_clicked()
 {
-    QStringList list = m_settings->safePositionCommand().split(";");
-
-    foreach (QString cmd, list) {
-        sendCommand(cmd.trimmed(), -1, m_settings->showUICommands());
-    }
+  sendMacro(m_settings->safePositionCommand());
 }
 
 void frmMain::on_cmdSpindle_toggled(bool checked)
@@ -4271,7 +4279,7 @@ void frmMain::on_pendant_event(quint8 button1, quint8 button2, quint8 axis, quin
       if (!m_processingFile) {
 	on_cmdSafePosition_clicked();
       }
-	}
+    }
       break;
 
     case keychord(WHB04B::key_w_home,WHB04B::key_none): {
@@ -4341,6 +4349,7 @@ void frmMain::on_pendant_event(quint8 button1, quint8 button2, quint8 axis, quin
       break;
 
     case keychord(WHB04B::key_fn,WHB04B::key_w_home): {
+      sendMacro(m_settings->probeXYZCommand());
     }
       break;
 

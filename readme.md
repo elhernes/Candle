@@ -19,20 +19,28 @@ Changes from upstream denvi/Candle
 * Added RPN calculator / keypad, inspired by CNCjs "shopfloor tablet" ui
 * Added macro script for XYZ Probe
 * Probe, Safe, and User commands can be read from a file
+* Save settings when the settings dialog closes rather than when the
+  app finally exists
 * merged in changes from a few of PR's in denvi/Candle
   * fedya/master (preference paths on mac/linux)
   * garuma/tcp-support (connect over TCP)
   * dorkable-forkable/yoiang-MacOS (macOS fixes)
 
 ### Work In Progress
-Most of this is a work in progress, use only at your own risk.  I don't merge to the master branch until I have tested in some way on my own machine, but it's not a full regression test.
+Some of this is a work in progress, use only at your own risk.  I don't merge to the master branch until I have tested in some way on my own machine, but it's not a full regression test.
 
 The to-do list:
 * look at frmmain.ui alternatives, something more suited to a small screen
    Candle2 looks promising, as does the Experimental branch.
-* I've only implemented the display and jogging for the WHB04B-4.  There is really a lot more it can do.
+* I've only implemented the display, jogging and a couple keys for the WHB04B-4.  There is really a lot more it can do.
 * Add more %directives to the macro pre-processor (like %message-box)
-* The button arrangement on RPN keypad doesn't feel right.  I need to use it a bit more to see how to arrange the keys.
+* The button arrangement on RPN keypad doesn't feel right.  I need to
+  use it a bit more to see how to arrange the keys.
+* look more at Experimental branch.  One catch is that QScript doesn't
+  build for RPI3 by default, so I'll need to re-build Qt with diferent
+  compiler optimizations.  QScript is interesting, but it also seems
+  much more complicated than what I need for simple macros.
+* Save RPN Calc's stack in frmMain class so the data persists.
 
 ## Supported functions:
 * Controlling GRBL-based cnc-machine via console commands, buttons on form, numpad, or pendant.
@@ -51,6 +59,19 @@ The to-do list:
 ## Build requirements:
 ------------------
 Qt 5.4.2 (with MinGW/GCC compiler??)
+
+## WHB04B-4 Pendant
+
+Currently the following keys are mapped:
+
+* Axis selector and Step selector
+* Rotary jog knob
+* Reset button will send a Grbl Unlock
+* FN+Reset sends Grbl Reset
+* M-Home sends machine homing
+* FN+W-Home sends XYZ probe macro
+* Safe-Z sends Safe macro
+* Stop sends a stop command (same as stop in the Jog panel)
 
 ## Macro Support:
 -------------
