@@ -8,13 +8,13 @@ static double degrees_to_radians(double degrees) {
   return degrees * (M_PI / 180.);
 }
 
-RpnCalcDialog::RpnCalcDialog(frmMain *frm, QWidget* parent) : QDialog(parent), m_ui(new Ui::RpnCalcDialog), m_frm(frm)
+RpnCalcDialog::RpnCalcDialog(frmMain *frm, QStack<float> &stack, QWidget* parent) : m_stack(stack), QDialog(parent), m_ui(new Ui::RpnCalcDialog), m_frm(frm)
 {
     m_ui->setupUi(this);
     m_ui->lineEdit->setValidator(new QDoubleValidator());
     m_ui->textEdit->setReadOnly(true);
     m_ui->textEdit->setAlignment(Qt::AlignRight);
-    setWindowTitle("Reverse Polish Notation");
+    setWindowTitle("Candle RPN Keypad");
 }
 
 RpnCalcDialog::~RpnCalcDialog() { delete m_ui; }
@@ -216,7 +216,7 @@ void RpnCalcDialog::on_button_back_clicked() {
 void RpnCalcDialog::on_button_go_x_abs_clicked() {
   pushEntry();
   if (!m_stack.isEmpty()) {
-    float pos = m_stack.last();
+    float pos = popStack();
     m_frm->goAbsolute({pos, std::nanf(""), std::nanf("")});
   }
 }
@@ -224,7 +224,7 @@ void RpnCalcDialog::on_button_go_x_abs_clicked() {
 void RpnCalcDialog::on_button_go_x_rel_clicked() {
   pushEntry();
   if (!m_stack.isEmpty()) {
-    float pos = m_stack.last();
+    float pos = popStack();
     m_frm->goRelative({pos, 0, 0});
   }
 }
@@ -232,8 +232,8 @@ void RpnCalcDialog::on_button_go_x_rel_clicked() {
 void RpnCalcDialog::on_button_set_x_clicked() {
   pushEntry();
   if (!m_stack.isEmpty()) {
-    float pos = m_stack.last();
-    m_frm->setWorkX(pos);
+    float pos = popStack();
+    m_frm->setWorkPos({pos, std::nanf(""), std::nanf("")});
   }
 }
 
@@ -246,7 +246,7 @@ void RpnCalcDialog::on_button_push_x_clicked() {
 void RpnCalcDialog::on_button_go_y_abs_clicked() {
   pushEntry();
   if (!m_stack.isEmpty()) {
-    float pos = m_stack.last();
+    float pos = popStack();
     m_frm->goAbsolute({std::nanf(""),pos,std::nanf("")});
   }
 }
@@ -254,7 +254,7 @@ void RpnCalcDialog::on_button_go_y_abs_clicked() {
 void RpnCalcDialog::on_button_go_y_rel_clicked() {
   pushEntry();
   if (!m_stack.isEmpty()) {
-    float pos = m_stack.last();
+    float pos = popStack();
     m_frm->goRelative({0,pos,0});
   }
 }
@@ -262,8 +262,8 @@ void RpnCalcDialog::on_button_go_y_rel_clicked() {
 void RpnCalcDialog::on_button_set_y_clicked() {
   pushEntry();
   if (!m_stack.isEmpty()) {
-    float pos = m_stack.last();
-    m_frm->setWorkY(pos);
+    float pos = popStack();
+    m_frm->setWorkPos({std::nanf(""), pos, std::nanf("")});
   }
 }
 
@@ -276,7 +276,7 @@ void RpnCalcDialog::on_button_push_y_clicked() {
 void RpnCalcDialog::on_button_go_z_abs_clicked() {
   pushEntry();
   if (!m_stack.isEmpty()) {
-    float pos = m_stack.last();
+    float pos = popStack();
     m_frm->goAbsolute({std::nanf(""), std::nanf(""), pos});
   }
 }
@@ -292,19 +292,81 @@ void RpnCalcDialog::on_button_go_z_rel_clicked() {
 void RpnCalcDialog::on_button_set_z_clicked() {
   pushEntry();
   if (!m_stack.isEmpty()) {
-    float pos = m_stack.last();
-    m_frm->setWorkZ(pos);
+    float pos = popStack();
+    m_frm->setWorkPos({std::nanf(""), std::nanf(""), pos});
   }
 }
 
 void RpnCalcDialog::on_button_push_z_clicked() {
   pushEntry();
-  QVector3D pos = m_frm->workPos();
-  pushStack(pos.z());
+  if (!m_stack.isEmpty()) {
+    QVector3D pos = m_frm->workPos();
+    pushStack(pos.z());
+  }
 }
 
 void RpnCalcDialog::on_button_ok_clicked() {
   done(0);
+}
+
+void RpnCalcDialog::on_button_set_spindle_clicked() {
+  pushEntry();
+  if (!m_stack.isEmpty()) {
+    float speed = popStack();
+    m_frm->setSpindle(speed);
+  }
+}
+
+void RpnCalcDialog::on_button_push_spindle_clicked() {
+  pushEntry();
+  pushStack(m_frm->spindle());
+}
+
+void RpnCalcDialog::on_button_set_feed_clicked() {
+  pushEntry();
+  if (!m_stack.isEmpty()) {
+    float feed = popStack();
+    m_frm->setJogFeed(feed);
+  }
+}
+
+void RpnCalcDialog::on_button_push_feed_clicked() {
+  pushEntry();
+  pushStack(m_frm->jogFeed());
+}
+
+void RpnCalcDialog::on_button_go_xy_abs_clicked() {
+  pushEntry();
+  if (m_stack.size()>1) {
+    float y = popStack();
+    float x = popStack();
+    m_frm->goRelative({x, y, std::nanf("")});
+  }
+}
+
+void RpnCalcDialog::on_button_go_xy_rel_clicked() {
+  pushEntry();
+  if (m_stack.size()>1) {
+    float y = popStack();
+    float x = popStack();
+    m_frm->goRelative({x, y, 0});
+  }
+}
+
+void RpnCalcDialog::on_button_set_xy_clicked() {
+  pushEntry();
+  if (m_stack.size()>1) {
+    float y = popStack();
+    float x = popStack();
+    m_frm->setWorkPos({x, y, std::nanf("")});
+  }
+}
+
+void RpnCalcDialog::on_button_push_xy_clicked() {
+  pushEntry();
+  QVector3D pos = m_frm->workPos();
+  pushStack(pos.x());
+  pushStack(pos.y());
 }
 
 /******************************** UTILS ********************************/

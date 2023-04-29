@@ -2586,7 +2586,7 @@ void frmMain::on_cmdZeroZ_clicked()
 
 void frmMain::on_cmdKeypad_clicked()
 {
-  RpnCalcDialog rpn(this);
+  RpnCalcDialog rpn(this, m_rpnstack);
   rpn.exec();
 }
 

@@ -19,7 +19,7 @@ class RpnCalcDialog : public QDialog
     Q_OBJECT
 
 public:
-    RpnCalcDialog(frmMain *frm, QWidget* parent = nullptr);
+    RpnCalcDialog(frmMain *frm, QStack<float> &stack, QWidget* parent = nullptr);
     ~RpnCalcDialog();
 
 private slots:
@@ -52,6 +52,17 @@ private slots:
     void on_button_back_clicked();
     void on_button_ok_clicked();
 
+    void on_button_set_spindle_clicked();
+    void on_button_push_spindle_clicked();
+
+    void on_button_set_feed_clicked();
+    void on_button_push_feed_clicked();
+
+    void on_button_go_xy_abs_clicked();
+    void on_button_go_xy_rel_clicked();
+    void on_button_set_xy_clicked();
+    void on_button_push_xy_clicked();
+
     void on_button_go_x_abs_clicked();
     void on_button_go_x_rel_clicked();
     void on_button_set_x_clicked();
@@ -74,6 +85,6 @@ private:
     void pushEntry();
 
     Ui::RpnCalcDialog* m_ui;
-    QStack<float> m_stack;
+    QStack<float> &m_stack;
     frmMain *m_frm;
 };

@@ -17,6 +17,7 @@
 #include <QDragEnterEvent>
 #include <QDropEvent>
 #include <QProgressDialog>
+#include <QStack>
 #include <exception>
 
 #include "parser/gcodeviewparse.h"
@@ -94,9 +95,13 @@ public:
     QVector3D workPos();
     void goAbsolute(const QVector3D &pos);
     void goRelative(const QVector3D &pos);
-    void setWorkX(double pos);
-    void setWorkY(double pos);
-    void setWorkZ(double pos);
+
+    void setWorkPos(const QVector3D &pos);
+
+    void setSpindle(double speed);
+    double spindle();
+    void setJogFeed(double feed);
+    double jogFeed();
 
     const QString status();
     size_t commandsPending();
@@ -396,6 +401,7 @@ private:
 
     WHB04B m_pendant;
     class MacroProcessor *m_macroproc;
+    QStack<float> m_rpnstack;
 };
 
 #endif // FRMMAIN_H
