@@ -2,7 +2,11 @@
 // Copyright 2015-2016 Hayrullin Denis Ravilevich
 
 #include "frmsettings.h"
+
+// dumb hack because Qt Creator 10 puts AnyTerritory in the .ui file
+#define AnyTerritory AnyCountry
 #include "ui_frmsettings.h"
+
 #include <QtSerialPort/QSerialPort>
 #include <QtSerialPort/QSerialPortInfo>
 #include <QDebug>

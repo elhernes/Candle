@@ -442,7 +442,7 @@ QSlider::handle:horizontal:hover {
                  </sizepolicy>
                 </property>
                 <property name="locale">
-                 <locale language="C" country="AnyCountry"/>
+                 <locale language="C" country="AnyTerritory"/>
                 </property>
                 <property name="alignment">
                  <set>Qt::AlignCenter</set>
@@ -467,7 +467,7 @@ QSlider::handle:horizontal:hover {
                  </sizepolicy>
                 </property>
                 <property name="locale">
-                 <locale language="C" country="AnyCountry"/>
+                 <locale language="C" country="AnyTerritory"/>
                 </property>
                 <property name="alignment">
                  <set>Qt::AlignCenter</set>
@@ -502,7 +502,7 @@ QSlider::handle:horizontal:hover {
                  </sizepolicy>
                 </property>
                 <property name="locale">
-                 <locale language="C" country="AnyCountry"/>
+                 <locale language="C" country="AnyTerritory"/>
                 </property>
                 <property name="alignment">
                  <set>Qt::AlignCenter</set>
@@ -541,7 +541,7 @@ QSlider::handle:horizontal:hover {
                  </sizepolicy>
                 </property>
                 <property name="locale">
-                 <locale language="C" country="AnyCountry"/>
+                 <locale language="C" country="AnyTerritory"/>
                 </property>
                 <property name="alignment">
                  <set>Qt::AlignCenter</set>
@@ -618,7 +618,7 @@ QSlider::handle:horizontal:hover {
                  </sizepolicy>
                 </property>
                 <property name="locale">
-                 <locale language="C" country="AnyCountry"/>
+                 <locale language="C" country="AnyTerritory"/>
                 </property>
                 <property name="alignment">
                  <set>Qt::AlignCenter</set>
@@ -649,7 +649,7 @@ QSlider::handle:horizontal:hover {
                  </sizepolicy>
                 </property>
                 <property name="locale">
-                 <locale language="C" country="AnyCountry"/>
+                 <locale language="C" country="AnyTerritory"/>
                 </property>
                 <property name="alignment">
                  <set>Qt::AlignCenter</set>
@@ -677,7 +677,7 @@ QSlider::handle:horizontal:hover {
                  </sizepolicy>
                 </property>
                 <property name="locale">
-                 <locale language="C" country="AnyCountry"/>
+                 <locale language="C" country="AnyTerritory"/>
                 </property>
                 <property name="alignment">
                  <set>Qt::AlignCenter</set>
@@ -705,7 +705,7 @@ QSlider::handle:horizontal:hover {
                  </sizepolicy>
                 </property>
                 <property name="locale">
-                 <locale language="C" country="AnyCountry"/>
+                 <locale language="C" country="AnyTerritory"/>
                 </property>
                 <property name="alignment">
                  <set>Qt::AlignCenter</set>
@@ -813,7 +813,7 @@ QSlider::handle:horizontal:hover {
                  </sizepolicy>
                 </property>
                 <property name="locale">
-                 <locale language="C" country="AnyCountry"/>
+                 <locale language="C" country="AnyTerritory"/>
                 </property>
                 <property name="alignment">
                  <set>Qt::AlignCenter</set>
@@ -844,7 +844,7 @@ QSlider::handle:horizontal:hover {
                  </sizepolicy>
                 </property>
                 <property name="locale">
-                 <locale language="C" country="AnyCountry"/>
+                 <locale language="C" country="AnyTerritory"/>
                 </property>
                 <property name="alignment">
                  <set>Qt::AlignCenter</set>

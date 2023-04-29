@@ -37,7 +37,11 @@
 #include <QFile>
 
 #include "frmmain.h"
+
+// dumb hack because Qt Creator 10 puts AnyTerritory in the .ui file
+#define AnyTerritory AnyCountry
 #include "ui_frmmain.h"
+
 #include "rpncalc/rpncalc.h"
 
 #include "macros/macroprocessor.h"
@@ -313,16 +317,6 @@ frmMain::frmMain(QWidget *parent) :
 
     m_pendant.start();
 
-    /*
-     */
-    /*
-    ui->txtMPosX->installEventFilter(this);
-    ui->txtMPosY->installEventFilter(this);
-    ui->txtMPosZ->installEventFilter(this);
-    ui->txtWPosX->installEventFilter(this);
-    ui->txtWPosY->installEventFilter(this);
-    ui->txtWPosZ->installEventFilter(this);
-    */
 }
 
 frmMain::~frmMain()

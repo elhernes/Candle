@@ -4,6 +4,9 @@
 #include <QDesktopServices>
 #include <QFile>
 #include "frmabout.h"
+
+// dumb hack because Qt Creator 10 puts AnyTerritory in the .ui file
+#define AnyTerritory AnyCountry
 #include "ui_frmabout.h"
 
 frmAbout::frmAbout(QWidget *parent) :
