@@ -1052,31 +1052,31 @@ void frmMain::onSerialPortReadyRead()
 
             // Update work coordinates
             int prec = m_settings->units() == 0 ? 3 : 4;
-            ui->txtWPosX->setText(QString::number(ui->txtMPosX->text().toDouble() - workOffset.x(), 'f', prec));
-            ui->txtWPosY->setText(QString::number(ui->txtMPosY->text().toDouble() - workOffset.y(), 'f', prec));
-            ui->txtWPosZ->setText(QString::number(ui->txtMPosZ->text().toDouble() - workOffset.z(), 'f', prec));
+            ui->txtWPosX->display(QString::number(ui->txtMPosX->text().toDouble() - workOffset.x(), 'f', prec));
+            ui->txtWPosY->display(QString::number(ui->txtMPosY->text().toDouble() - workOffset.y(), 'f', prec));
+            ui->txtWPosZ->display(QString::number(ui->txtMPosZ->text().toDouble() - workOffset.z(), 'f', prec));
 
 	    if (true) { // pendant shows work pos
 	      m_pendant.display(1,
-				ui->txtWPosX->text().toDouble(),
-				ui->txtWPosY->text().toDouble(),
-				ui->txtWPosZ->text().toDouble(),
+				ui->txtWPosX->value(),
+				ui->txtWPosY->value(),
+				ui->txtWPosZ->value(),
 				ui->cboJogFeed->currentText().toInt(),
 				ui->slbSpindle->value());
 	    }
 
 	    if (m_macroproc) {
-	      m_macroproc->setVariable("posx", ui->txtWPosX->text().toDouble());
-	      m_macroproc->setVariable("posy", ui->txtWPosY->text().toDouble());
-	      m_macroproc->setVariable("posz", ui->txtWPosZ->text().toDouble());
+	      m_macroproc->setVariable("posx", ui->txtWPosX->value());
+	      m_macroproc->setVariable("posy", ui->txtWPosY->value());
+	      m_macroproc->setVariable("posz", ui->txtWPosZ->value());
 	    }
 
             // Update tool position
             QVector3D toolPosition;
             if (!(status == CHECK && m_fileProcessedCommandIndex < m_currentModel->rowCount() - 1)) {
-                toolPosition = QVector3D(toMetric(ui->txtWPosX->text().toDouble()),
-                                         toMetric(ui->txtWPosY->text().toDouble()),
-                                         toMetric(ui->txtWPosZ->text().toDouble()));
+                toolPosition = QVector3D(toMetric(ui->txtWPosX->value()),
+                                         toMetric(ui->txtWPosY->value()),
+                                         toMetric(ui->txtWPosZ->value()));
                 m_toolDrawer.setToolPosition(m_codeDrawer->getIgnoreZ() ? QVector3D(toolPosition.x(), toolPosition.y(), 0) : toolPosition);
             }
 
@@ -1557,21 +1557,39 @@ void frmMain::placeVisualizerButtons()
 }
 
 QVector3D frmMain::workPos() {
-  return { ui->txtWPosX->text().toFloat(),
-      ui->txtWPosY->text().toFloat(),
-      ui->txtWPosZ->text().toFloat() };
+  return {
+    float(ui->txtWPosX->value()),
+    float(ui->txtWPosY->value()),
+    float(ui->txtWPosZ->value())
+  };
 }
 
-void frmMain::setWorkX(double xpos) {
-  sendCommand(QString("G92X%1").arg(xpos), -1, m_settings->showUICommands());
+void frmMain::setWorkPos(const QVector3D &pos) {
+  // similar to goAbsolute, we need a way to not set irrelevant axes
+  QString xp = (!std::isnan(pos.x())) ? QString("X%1").arg(pos.x(), 0, 'g', 4) : "";
+  QString yp = (!std::isnan(pos.y())) ? QString("Y%1").arg(pos.y(), 0, 'g', 4) : "";
+  QString zp = (!std::isnan(pos.z())) ? QString("Z%1").arg(pos.z(), 0, 'g', 4) : "";
+
+  sendCommand(QString("G92%1%2%3")
+	      .arg(xp)
+	      .arg(yp)
+	      .arg(zp), -2, m_settings->showUICommands());
 }
 
-void frmMain::setWorkY(double ypos) {
-  sendCommand(QString("G92Y%1").arg(ypos), -1, m_settings->showUICommands());
+void frmMain::setSpindle(double speed) {
+  ui->slbSpindle->setValue(speed);
 }
 
-void frmMain::setWorkZ(double zpos) {
-  sendCommand(QString("G92Z%1").arg(zpos), -1, m_settings->showUICommands());
+double frmMain::spindle() {
+  return ui->slbSpindle->value();
+}
+
+void frmMain::setJogFeed(double feed) {
+  ui->cboJogFeed->setCurrentText(QString::number(feed));
+}
+
+double frmMain::jogFeed() {
+  return ui->cboJogFeed->currentText().toDouble();
 }
 
 void frmMain::goAbsolute(const QVector3D &pos) {
@@ -2177,9 +2195,9 @@ void frmMain::restoreOffsets()
     sendCommand(QString("G21G53G90X%1Y%2Z%3").arg(toMetric(ui->txtMPosX->text().toDouble()))
                                        .arg(toMetric(ui->txtMPosY->text().toDouble()))
                                        .arg(toMetric(ui->txtMPosZ->text().toDouble())), -1, m_settings->showUICommands());
-    sendCommand(QString("G21G92X%1Y%2Z%3").arg(toMetric(ui->txtWPosX->text().toDouble()))
-                                       .arg(toMetric(ui->txtWPosY->text().toDouble()))
-                                       .arg(toMetric(ui->txtWPosZ->text().toDouble())), -1, m_settings->showUICommands());
+    sendCommand(QString("G21G92X%1Y%2Z%3").arg(toMetric(ui->txtWPosX->value()))
+                                       .arg(toMetric(ui->txtWPosY->value()))
+                                       .arg(toMetric(ui->txtWPosZ->value())), -1, m_settings->showUICommands());
 }
 
 void frmMain::sendNextFileCommands() {
@@ -4046,9 +4064,9 @@ void frmMain::sendMacro(const QString &macroText) {
   m_macroproc->setVariable("mposz", ui->txtMPosZ->text().toDouble());
 
   // Work position
-  m_macroproc->setVariable("posx", ui->txtWPosX->text().toDouble());
-  m_macroproc->setVariable("posy", ui->txtWPosY->text().toDouble());
-  m_macroproc->setVariable("posz", ui->txtWPosZ->text().toDouble());
+  m_macroproc->setVariable("posx", ui->txtWPosX->value());
+  m_macroproc->setVariable("posy", ui->txtWPosY->value());
+  m_macroproc->setVariable("posz", ui->txtWPosZ->value());
 
   m_macroproc->process(macroText);
 }
