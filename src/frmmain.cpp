@@ -298,7 +298,6 @@ frmMain::frmMain(QWidget *parent) :
     ui->tblProgram->installEventFilter(this);
     ui->cboJogStep->installEventFilter(this);
     ui->cboJogFeed->installEventFilter(this);
-    ui->splitPanels->handle(1)->installEventFilter(this);
     ui->splitPanels->installEventFilter(this);
 
     connect(&m_timerConnection, SIGNAL(timeout()), this, SLOT(onTimerConnection()));
@@ -508,7 +507,6 @@ void frmMain::loadSettings()
     ui->scrollArea->updateMinimumWidth();
 
     // Restore panels state
-    ui->grpUserCommands->setChecked(set.value("userCommandsPanel", true).toBool());
     ui->grpHeightMap->setChecked(set.value("heightmapPanel", true).toBool());
     ui->grpSpindle->setChecked(set.value("spindlePanel", true).toBool());
     ui->grpOverriding->setChecked(set.value("feedPanel", true).toBool());
@@ -567,8 +565,7 @@ void frmMain::saveSettings()
     set.setValue("header", ui->tblProgram->horizontalHeader()->saveState());
     set.setValue("splitter", ui->splitter->saveState());
     set.setValue("formGeometry", this->saveGeometry());
-    set.setValue("formSettingsSize", m_settings->size());    
-    set.setValue("userCommandsPanel", ui->grpUserCommands->isChecked());
+    set.setValue("formSettingsSize", m_settings->size());
     set.setValue("heightmapPanel", ui->grpHeightMap->isChecked());
     set.setValue("spindlePanel", ui->grpSpindle->isChecked());
     set.setValue("feedPanel", ui->grpOverriding->isChecked());
@@ -669,7 +666,6 @@ void frmMain::updateControlsState() {
 
     ui->grpState->setEnabled(portOpened);
     ui->grpControl->setEnabled(portOpened);
-    ui->widgetUserCommands->setEnabled(portOpened && !m_processingFile);
     ui->widgetSpindle->setEnabled(portOpened);
     ui->widgetJog->setEnabled(portOpened && !m_processingFile);
     ui->cboCommand->setEnabled(portOpened && (!ui->chkKeyboardControl->isChecked()));
@@ -2404,7 +2400,6 @@ void frmMain::applySettings() {
     ui->scrollArea->setVisible(m_settings->panelHeightmap() || m_settings->panelOverriding()
                                || m_settings->panelJog() || m_settings->panelSpindle());
 
-    ui->grpUserCommands->setVisible(m_settings->panelUserCommands());
     ui->grpHeightMap->setVisible(m_settings->panelHeightmap());
     ui->grpSpindle->setVisible(m_settings->panelSpindle());
     ui->grpOverriding->setVisible(m_settings->panelOverriding());
@@ -2969,7 +2964,6 @@ void frmMain::on_grpSpindle_toggled(bool checked)
 
 void frmMain::on_grpUserCommands_toggled(bool checked)
 {
-    ui->widgetUserCommands->setVisible(checked);
 }
 
 bool frmMain::eventFilter(QObject *obj, QEvent *event)
