@@ -15,6 +15,7 @@ RpnCalcDialog::RpnCalcDialog(frmMain *frm, QStack<float> &stack, QWidget* parent
     m_ui->textEdit->setReadOnly(true);
     m_ui->textEdit->setAlignment(Qt::AlignRight);
     setWindowTitle("Candle RPN Keypad");
+    redrawDisplay();
 }
 
 RpnCalcDialog::~RpnCalcDialog() { delete m_ui; }
