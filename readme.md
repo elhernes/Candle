@@ -21,6 +21,9 @@ Changes from upstream denvi/Candle
 * Probe, Safe, and User commands can be read from a file
 * Save settings when the settings dialog closes rather than when the
   app finally exists
+* switched Work Coordinates to QLCDNumber (like Candle2)
+* moved the User 1,2,3,4 buttons into the Control area
+* Added XYZ-probe and RPN keypad buttons to the Control area
 * merged in changes from a few of PR's in denvi/Candle
   * fedya/master (preference paths on mac/linux)
   * garuma/tcp-support (connect over TCP)
@@ -111,8 +114,22 @@ G1 Y-1 F%{PROBE_FEEDRATE_B} ; back off a bit
 The `xyz-probe.txt` file in the examples directory shows a cncjs macro
 converted for use with Candle.
 
+## RPN Keypad
+The RPN keypad is inspired by the cncjs "shopfloor tablet" UI.  This version has the RPN Calculator, but also allows you to perform the following operations on each of the X, Y, or Z axis, as well as the XY axis (pops two numbers from the stack):
+- Set Work position for axis
+- Jog to absolute position
+- Jog to relative position
+- Push position to stack
+
+It also allows control of the spindle speed and the jog feed rate.
+
+<img width="675" alt="image" src="https://user-images.githubusercontent.com/6046966/235562937-0afadfe4-1bee-471b-939d-97f8c046af1c.png">
+
 ## Downloads:
 ----------
+Source only.
+
+<!--
 Experimental versions:
 
 * [Version 1.2b release](https://github.com/Denvi/Candle/releases/tag/v1.2b)
@@ -124,6 +141,7 @@ For GRBL v1.1 firmware
 * Linux: [candle_1.1.7.tar.gz](https://github.com/Denvi/Candle/releases/download/v1.1/Candle_1.1.7.tar.gz)
 
 (for GRBL v0.9 and below use Candle 1.0)
+-->
 
 ## Before creating new issue:
 ------
