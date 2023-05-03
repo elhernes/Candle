@@ -341,7 +341,7 @@ void RpnCalcDialog::on_button_go_xy_abs_clicked() {
   if (m_stack.size()>1) {
     float y = popStack();
     float x = popStack();
-    m_frm->goRelative({x, y, std::nanf("")});
+    m_frm->goAbsolute({x, y, std::nanf("")});
   }
 }
 

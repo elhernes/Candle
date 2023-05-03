@@ -68,14 +68,18 @@ MacroProcessor::MacroProcessor(frmMain *frm) : m_p(new Privates) {
   m_p->frmmain = frm;
   m_p->cmdNumber = 0;
   m_p->debug = false;
-  connect(frm, SIGNAL(grblStatusChanged(const QString &)),
-	  this, SLOT(onGrblStatusChanged(const QString &)));
-  connect(frm, SIGNAL(noCommandsPending()),
+  connect(m_p->frmmain, SIGNAL(grblStatusChanged(const QString&)),
+	  this, SLOT(onGrblStatusChanged(const QString&)));
+  connect(m_p->frmmain, SIGNAL(noCommandsPending()),
 	  this, SLOT(onNoCommandsPending()));
 }
 
 
 MacroProcessor::~MacroProcessor() {
+  disconnect(m_p->frmmain, SIGNAL(grblStatusChanged(const QString&)),
+	     this, SLOT(onGrblStatusChanged(const QString&)));
+  disconnect(m_p->frmmain, SIGNAL(noCommandsPending()),
+	     this, SLOT(onNoCommandsPending()));
   if (m_p) {
     delete m_p;
     m_p=nullptr; // for debug
@@ -141,8 +145,9 @@ MacroProcessor::onGrblStatusChanged(const QString &status) {
 
 void
 MacroProcessor::onNoCommandsPending() {
+  bool aborted=false;
   if(auto lock = std::unique_lock<std::mutex>(m_p->mx, std::try_to_lock)) {
-    while ((m_p->frmmain->commandsPending() == 0) && processNext()) {
+    while (!aborted && (m_p->frmmain->commandsPending() == 0) && processNext()) {
       if (m_p->frmmain->status() == "Alarm") {
 	QMessageBox msgBox;
 	msgBox.setText("Grbl Alarm");
@@ -150,7 +155,7 @@ MacroProcessor::onNoCommandsPending() {
 
 	switch (msgBox.exec()) {
 	case QMessageBox::Abort:
-	  emit finished(); // will destroy this
+	  aborted = true;
 	  break;
 	case QMessageBox::Retry:
 	  m_p->frmmain->sendCommand("$X", -1, false);
@@ -158,6 +163,9 @@ MacroProcessor::onNoCommandsPending() {
 	}
       }
     }
+  }
+  if (aborted) {
+    emit finished(); // will destroy this
   }
 }
 
@@ -173,11 +181,13 @@ MacroProcessor::processNext() {
   QString vars = QString::fromStdString(m_p->me.dumpVariables());
   QString path = "raw";
   if (cmd.length() > 1) {
-    QStringList sl = cmd.split(" ");
-    auto const &de = skDispatchTable.find(cmd.toStdString());
+    QStringList argv = cmd.split(" ");
+    QString arg0 = argv.first();
+    argv.pop_front();
+    auto const &de = skDispatchTable.find(arg0.toStdString());
     if (de != skDispatchTable.end()) {
       path = "dispatch";
-      out = de->second(*m_p, sl);
+      out = de->second(*m_p, argv);
     } else if (cmd.at(0) == '%' && cmd.at(1) != '{') {
       path = "eval";
       out = eval(cmd);

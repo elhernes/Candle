@@ -77,7 +77,10 @@ G10 L20 P1 Z%{PLATE_THICKNESS}
 
 ; Move back up and over to the XY
 G0 Z5
+
 M6 ; Remove the probe
+%message Remove Probe, Prepare for Tool Change
+
 ; Rapid back to zero for validation
 G90 ; absolute positioning
 G0 X0 Y0

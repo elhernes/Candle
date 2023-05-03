@@ -53,7 +53,7 @@ The to-do list:
 
 ## System requirements for running "Candle":
 -------------------
-* Qt5
+* Qt5 (including libqt5opengl5 and libqt5serialport5, on raspbian this is a separate apt-install)
 * macOS/Linux (probably windows with a bit of effort)
 * x86, arm - Apple Silicon, Intel, Raspberry PI, probably others
 * Graphics card with OpenGL 2.0 support

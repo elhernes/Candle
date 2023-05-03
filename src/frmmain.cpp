@@ -311,9 +311,9 @@ frmMain::frmMain(QWidget *parent) :
     }
 
     auto co = connect(&m_pendant,
-		      SIGNAL(pendant_event(quint8, quint8, quint8, quint8, int)),
+		      SIGNAL(pendant_event(quint8,quint8,quint8,quint8,int)),
 		      this,
-		      SLOT(on_pendant_event(quint8, quint8, quint8, quint8, int)));
+		      SLOT(on_pendant_event(quint8,quint8,quint8,quint8,int)));
 
     m_pendant.start();
 

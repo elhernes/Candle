@@ -1219,6 +1219,12 @@ padding-right: 8;</string>
                     <verstretch>0</verstretch>
                    </sizepolicy>
                   </property>
+                  <property name="minimumSize">
+                   <size>
+                    <width>116</width>
+                    <height>0</height>
+                   </size>
+                  </property>
                   <property name="toolTip">
                    <string>X</string>
                   </property>
@@ -1229,7 +1235,7 @@ padding-right: 8;</string>
                    <bool>true</bool>
                   </property>
                   <property name="digitCount">
-                   <number>8</number>
+                   <number>6</number>
                   </property>
                   <property name="segmentStyle">
                    <enum>QLCDNumber::Flat</enum>
@@ -1250,6 +1256,12 @@ padding-right: 8;</string>
                     <verstretch>0</verstretch>
                    </sizepolicy>
                   </property>
+                  <property name="minimumSize">
+                   <size>
+                    <width>116</width>
+                    <height>0</height>
+                   </size>
+                  </property>
                   <property name="toolTip">
                    <string>Y</string>
                   </property>
@@ -1260,7 +1272,7 @@ padding-right: 8;</string>
                    <bool>true</bool>
                   </property>
                   <property name="digitCount">
-                   <number>8</number>
+                   <number>6</number>
                   </property>
                   <property name="segmentStyle">
                    <enum>QLCDNumber::Flat</enum>
@@ -1281,6 +1293,12 @@ padding-right: 8;</string>
                     <verstretch>0</verstretch>
                    </sizepolicy>
                   </property>
+                  <property name="minimumSize">
+                   <size>
+                    <width>116</width>
+                    <height>0</height>
+                   </size>
+                  </property>
                   <property name="toolTip">
                    <string>Z</string>
                   </property>
@@ -1291,7 +1309,7 @@ padding-right: 8;</string>
                    <bool>true</bool>
                   </property>
                   <property name="digitCount">
-                   <number>8</number>
+                   <number>6</number>
                   </property>
                   <property name="segmentStyle">
                    <enum>QLCDNumber::Flat</enum>
@@ -1877,7 +1895,7 @@ padding-right: 8;</string>
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>357</width>
+            <width>393</width>
             <height>642</height>
            </rect>
           </property>
