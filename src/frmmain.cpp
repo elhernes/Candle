@@ -665,7 +665,7 @@ void frmMain::updateControlsState() {
     bool portOpened = getIODevice().isOpen();
 
     ui->grpState->setEnabled(portOpened);
-    //    ui->grpControl->setEnabled(portOpened);
+    ui->grpControl->setEnabled(portOpened);
     ui->widgetSpindle->setEnabled(portOpened);
     ui->widgetJog->setEnabled(portOpened && !m_processingFile);
     ui->cboCommand->setEnabled(portOpened && (!ui->chkKeyboardControl->isChecked()));
@@ -1598,21 +1598,22 @@ double frmMain::jogFeed() {
   return ui->cboJogFeed->currentText().toDouble();
 }
 
-void frmMain::goAbsoluteWork(const QVector3D &pos) {
+void frmMain::goAbsoluteWork(const QVector3D &pos, bool jogp) {
   // with goAbsolute, we need a way to not jog irrelevant axes
   int speed = ui->cboJogFeed->currentText().toInt();
   QString xp = (!std::isnan(pos.x())) ? QString("X%1").arg(pos.x(), 0, 'g', 4) : "";
   QString yp = (!std::isnan(pos.y())) ? QString("Y%1").arg(pos.y(), 0, 'g', 4) : "";
   QString zp = (!std::isnan(pos.z())) ? QString("Z%1").arg(pos.z(), 0, 'g', 4) : "";
 
-  sendCommand(QString("$J=G21G90%1%2%3F%4")
+  sendCommand(QString("%1G21G90%2%3%4F%5")
+	      .arg(jogp ? "$J=" : "")
 	      .arg(xp)
 	      .arg(yp)
 	      .arg(zp)
 	      .arg(speed), -2, m_settings->showUICommands());
 }
 
-void frmMain::goAbsoluteMachine(const QVector3D &mp) {
+void frmMain::goAbsoluteMachine(const QVector3D &mp, bool jogp) {
   // translate pos to work space
   QVector3D w = workPos();
   QVector3D m = machinePos();
@@ -1624,18 +1625,20 @@ void frmMain::goAbsoluteMachine(const QVector3D &mp) {
   QString yp = (!std::isnan(pos.y())) ? QString("Y%1").arg(pos.y(), 0, 'g', 4) : "";
   QString zp = (!std::isnan(pos.z())) ? QString("Z%1").arg(pos.z(), 0, 'g', 4) : "";
 
-  sendCommand(QString("$J=G21G90%1%2%3F%4")
+  sendCommand(QString("%1G21G90%2%3%4F%5")
+	      .arg(jogp ? "$J=" : "")
 	      .arg(xp)
 	      .arg(yp)
 	      .arg(zp)
 	      .arg(speed), -2, m_settings->showUICommands());
 }
 
-void frmMain::goRelative(const QVector3D &pos) {
+void frmMain::goRelative(const QVector3D &pos, bool jogp) {
   int speed = ui->cboJogFeed->currentText().toInt();
-  sendCommand(QString("$J=G21G91X%1Y%2Z%3F%4")
+  sendCommand(QString("%1G21G91X%2Y%3Z%4F%5")
+	      .arg(jogp ? "$J=" : "")
 	      .arg(pos.x(), 0, 'g', 4)
-          .arg(pos.y(), 0, 'g', 4)
+	      .arg(pos.y(), 0, 'g', 4)
 	      .arg(pos.z(), 0, 'g', 4)
 	      .arg(speed), -2, m_settings->showUICommands());
 }

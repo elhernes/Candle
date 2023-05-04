@@ -222,7 +222,7 @@
      <item row="6" column="8">
       <widget class="QPushButton" name="button_push_feed">
        <property name="text">
-        <string>Jog→</string>
+        <string>Feed→</string>
        </property>
       </widget>
      </item>
@@ -353,7 +353,20 @@
      <item row="6" column="6">
       <widget class="QPushButton" name="button_set_feed">
        <property name="text">
-        <string>→Jog</string>
+        <string>→Feed</string>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="5">
+      <widget class="QPushButton" name="toggle_jog_cut">
+       <property name="text">
+        <string>Jog</string>
+       </property>
+       <property name="checkable">
+        <bool>true</bool>
+       </property>
+       <property name="checked">
+        <bool>true</bool>
        </property>
       </widget>
      </item>

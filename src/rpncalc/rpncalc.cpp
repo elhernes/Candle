@@ -218,18 +218,19 @@ void RpnCalcDialog::on_button_go_x_clicked() {
   pushEntry();
   if (!m_stack.isEmpty()) {
     float pos = popStack();
+    bool jog = m_ui->toggle_jog_cut->isChecked();
     bool rel = m_ui->toggle_relative_absolute->isChecked();
     bool work = m_ui->toggle_work_machine->isChecked();
     switch((rel&1)<<1|(work&1)) {
     case 3: // relative  + work
     case 2: // relative + machine
-      m_frm->goRelative({pos, 0, 0});
+      m_frm->goRelative({pos, 0, 0}, jog);
       break;
     case 1: // absolute + work
-      m_frm->goAbsoluteWork({pos, std::nanf(""), std::nanf("")});
+      m_frm->goAbsoluteWork({pos, std::nanf(""), std::nanf("")}, jog);
       break;
     case 0: // absolute + machine
-      m_frm->goAbsoluteMachine({pos, std::nanf(""), std::nanf("")});
+      m_frm->goAbsoluteMachine({pos, std::nanf(""), std::nanf("")}, jog);
       break;
     }
   }
@@ -259,18 +260,19 @@ void RpnCalcDialog::on_button_go_y_clicked() {
   pushEntry();
   if (!m_stack.isEmpty()) {
     float pos = popStack();
+    bool jog = m_ui->toggle_jog_cut->isChecked();
     bool rel = m_ui->toggle_relative_absolute->isChecked();
     bool work = m_ui->toggle_work_machine->isChecked();
     switch((rel&1)<<1|(work&1)) {
     case 3: // relative  + work
     case 2: // relative + machine
-      m_frm->goRelative({0, pos, 0});
+      m_frm->goRelative({0, pos, 0}, jog);
       break;
     case 1: // absolute + work
-      m_frm->goAbsoluteWork({std::nanf(""), pos, std::nanf("")});
+      m_frm->goAbsoluteWork({std::nanf(""), pos, std::nanf("")}, jog);
       break;
     case 0: // absolute + machine
-      m_frm->goAbsoluteMachine({std::nanf(""), pos, std::nanf("")});
+      m_frm->goAbsoluteMachine({std::nanf(""), pos, std::nanf("")}, jog);
       break;
     }
   }
@@ -301,18 +303,19 @@ void RpnCalcDialog::on_button_go_z_clicked() {
   pushEntry();
   if (!m_stack.isEmpty()) {
     float pos = popStack();
+    bool jog = m_ui->toggle_jog_cut->isChecked();
     bool rel = m_ui->toggle_relative_absolute->isChecked();
     bool work = m_ui->toggle_work_machine->isChecked();
     switch((rel&1)<<1|(work&1)) {
     case 3: // relative  + work
     case 2: // relative + machine
-      m_frm->goRelative({0, 0, pos});
+      m_frm->goRelative({0, 0, pos}, jog);
       break;
     case 1: // absolute + work
-      m_frm->goAbsoluteWork({std::nanf(""), std::nanf(""), pos});
+      m_frm->goAbsoluteWork({std::nanf(""), std::nanf(""), pos}, jog);
       break;
     case 0: // absolute + machine
-      m_frm->goAbsoluteMachine({std::nanf(""), std::nanf(""), pos});
+      m_frm->goAbsoluteMachine({std::nanf(""), std::nanf(""), pos}, jog);
       break;
     }
   }
@@ -377,18 +380,19 @@ void RpnCalcDialog::on_button_go_xy_clicked() {
     float y = popStack();
     float x = popStack();
 
+    bool jog = m_ui->toggle_jog_cut->isChecked();
     bool rel = m_ui->toggle_relative_absolute->isChecked();
     bool work = m_ui->toggle_work_machine->isChecked();
     switch((rel&1)<<1|(work&1)) {
     case 3: // relative  + work
     case 2: // relative + machine
-      m_frm->goRelative({x, y, 0});
+      m_frm->goRelative({x, y, 0}, jog);
       break;
     case 1: // absolute + work
-      m_frm->goAbsoluteWork({x, y, std::nanf("")});
+      m_frm->goAbsoluteWork({x, y, std::nanf("")}, jog);
       break;
     case 0: // absolute + machine
-      m_frm->goAbsoluteMachine({x, y, std::nanf("")});
+      m_frm->goAbsoluteMachine({x, y, std::nanf("")}, jog);
       break;
     }
   }
@@ -443,6 +447,16 @@ void RpnCalcDialog::on_toggle_relative_absolute_clicked() {
     label = "Absolute";
   }
   m_ui->toggle_relative_absolute->setText(label);
+}
+
+void RpnCalcDialog::on_toggle_jog_cut_clicked() {
+  QString label;
+  if (m_ui->toggle_jog_cut->isChecked()) {
+    label = "Jog";
+  } else {
+    label = "Cut";
+  }
+  m_ui->toggle_jog_cut->setText(label);
 }
 
 /******************************** UTILS ********************************/

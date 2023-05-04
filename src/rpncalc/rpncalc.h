@@ -76,6 +76,7 @@ private slots:
 
     void on_toggle_work_machine_clicked();
     void on_toggle_relative_absolute_clicked();
+    void on_toggle_jog_cut_clicked();
 
  private:
     float popStack();
