@@ -214,19 +214,24 @@ void RpnCalcDialog::on_button_back_clicked() {
   }
 }
 
-void RpnCalcDialog::on_button_go_x_abs_clicked() {
+void RpnCalcDialog::on_button_go_x_clicked() {
   pushEntry();
   if (!m_stack.isEmpty()) {
     float pos = popStack();
-    m_frm->goAbsolute({pos, std::nanf(""), std::nanf("")});
-  }
-}
-
-void RpnCalcDialog::on_button_go_x_rel_clicked() {
-  pushEntry();
-  if (!m_stack.isEmpty()) {
-    float pos = popStack();
-    m_frm->goRelative({pos, 0, 0});
+    bool rel = m_ui->toggle_relative_absolute->isChecked();
+    bool work = m_ui->toggle_work_machine->isChecked();
+    switch((rel&1)<<1|(work&1)) {
+    case 3: // relative  + work
+    case 2: // relative + machine
+      m_frm->goRelative({pos, 0, 0});
+      break;
+    case 1: // absolute + work
+      m_frm->goAbsoluteWork({pos, std::nanf(""), std::nanf("")});
+      break;
+    case 0: // absolute + machine
+      m_frm->goAbsoluteMachine({pos, std::nanf(""), std::nanf("")});
+      break;
+    }
   }
 }
 
@@ -240,25 +245,37 @@ void RpnCalcDialog::on_button_set_x_clicked() {
 
 void RpnCalcDialog::on_button_push_x_clicked() {
   pushEntry();
-  QVector3D pos = m_frm->workPos();
+  QVector3D pos;
+  bool work = m_ui->toggle_work_machine->isChecked();
+  if (work) {
+    pos = m_frm->workPos();
+  } else {
+    pos = m_frm->machinePos();
+  }
   pushStack(pos.x());
 }
 
-void RpnCalcDialog::on_button_go_y_abs_clicked() {
+void RpnCalcDialog::on_button_go_y_clicked() {
   pushEntry();
   if (!m_stack.isEmpty()) {
     float pos = popStack();
-    m_frm->goAbsolute({std::nanf(""),pos,std::nanf("")});
+    bool rel = m_ui->toggle_relative_absolute->isChecked();
+    bool work = m_ui->toggle_work_machine->isChecked();
+    switch((rel&1)<<1|(work&1)) {
+    case 3: // relative  + work
+    case 2: // relative + machine
+      m_frm->goRelative({0, pos, 0});
+      break;
+    case 1: // absolute + work
+      m_frm->goAbsoluteWork({std::nanf(""), pos, std::nanf("")});
+      break;
+    case 0: // absolute + machine
+      m_frm->goAbsoluteMachine({std::nanf(""), pos, std::nanf("")});
+      break;
+    }
   }
 }
 
-void RpnCalcDialog::on_button_go_y_rel_clicked() {
-  pushEntry();
-  if (!m_stack.isEmpty()) {
-    float pos = popStack();
-    m_frm->goRelative({0,pos,0});
-  }
-}
 
 void RpnCalcDialog::on_button_set_y_clicked() {
   pushEntry();
@@ -270,25 +287,37 @@ void RpnCalcDialog::on_button_set_y_clicked() {
 
 void RpnCalcDialog::on_button_push_y_clicked() {
   pushEntry();
-  QVector3D pos = m_frm->workPos();
+  QVector3D pos;
+  bool work = m_ui->toggle_work_machine->isChecked();
+  if (work) {
+    pos = m_frm->workPos();
+  } else {
+    pos = m_frm->machinePos();
+  }
   pushStack(pos.y());
 }
 
-void RpnCalcDialog::on_button_go_z_abs_clicked() {
+void RpnCalcDialog::on_button_go_z_clicked() {
   pushEntry();
   if (!m_stack.isEmpty()) {
     float pos = popStack();
-    m_frm->goAbsolute({std::nanf(""), std::nanf(""), pos});
+    bool rel = m_ui->toggle_relative_absolute->isChecked();
+    bool work = m_ui->toggle_work_machine->isChecked();
+    switch((rel&1)<<1|(work&1)) {
+    case 3: // relative  + work
+    case 2: // relative + machine
+      m_frm->goRelative({0, 0, pos});
+      break;
+    case 1: // absolute + work
+      m_frm->goAbsoluteWork({std::nanf(""), std::nanf(""), pos});
+      break;
+    case 0: // absolute + machine
+      m_frm->goAbsoluteMachine({std::nanf(""), std::nanf(""), pos});
+      break;
+    }
   }
 }
 
-void RpnCalcDialog::on_button_go_z_rel_clicked() {
-  pushEntry();
-  if (!m_stack.isEmpty()) {
-    float pos = m_stack.last();
-    m_frm->goRelative({0, 0, pos});
-  }
-}
 
 void RpnCalcDialog::on_button_set_z_clicked() {
   pushEntry();
@@ -301,7 +330,13 @@ void RpnCalcDialog::on_button_set_z_clicked() {
 void RpnCalcDialog::on_button_push_z_clicked() {
   pushEntry();
   if (!m_stack.isEmpty()) {
-    QVector3D pos = m_frm->workPos();
+    QVector3D pos;
+    bool work = m_ui->toggle_work_machine->isChecked();
+    if (work) {
+      pos = m_frm->workPos();
+    } else {
+      pos = m_frm->machinePos();
+    }
     pushStack(pos.z());
   }
 }
@@ -336,23 +371,29 @@ void RpnCalcDialog::on_button_push_feed_clicked() {
   pushStack(m_frm->jogFeed());
 }
 
-void RpnCalcDialog::on_button_go_xy_abs_clicked() {
+void RpnCalcDialog::on_button_go_xy_clicked() {
   pushEntry();
   if (m_stack.size()>1) {
     float y = popStack();
     float x = popStack();
-    m_frm->goAbsolute({x, y, std::nanf("")});
+
+    bool rel = m_ui->toggle_relative_absolute->isChecked();
+    bool work = m_ui->toggle_work_machine->isChecked();
+    switch((rel&1)<<1|(work&1)) {
+    case 3: // relative  + work
+    case 2: // relative + machine
+      m_frm->goRelative({x, y, 0});
+      break;
+    case 1: // absolute + work
+      m_frm->goAbsoluteWork({x, y, std::nanf("")});
+      break;
+    case 0: // absolute + machine
+      m_frm->goAbsoluteMachine({x, y, std::nanf("")});
+      break;
+    }
   }
 }
 
-void RpnCalcDialog::on_button_go_xy_rel_clicked() {
-  pushEntry();
-  if (m_stack.size()>1) {
-    float y = popStack();
-    float x = popStack();
-    m_frm->goRelative({x, y, 0});
-  }
-}
 
 void RpnCalcDialog::on_button_set_xy_clicked() {
   pushEntry();
@@ -365,9 +406,43 @@ void RpnCalcDialog::on_button_set_xy_clicked() {
 
 void RpnCalcDialog::on_button_push_xy_clicked() {
   pushEntry();
-  QVector3D pos = m_frm->workPos();
+  bool work = m_ui->toggle_work_machine->isChecked();
+  QVector3D pos;
+  if (work) {
+    pos = m_frm->workPos();
+  } else {
+    //    pos = m_frm->machinePos();
+  }
   pushStack(pos.x());
   pushStack(pos.y());
+}
+
+void RpnCalcDialog::on_toggle_work_machine_clicked() {
+  QString label;
+  bool enabled = true;
+  if (m_ui->toggle_work_machine->isChecked()) {
+    label = "Work";
+    enabled = true;
+  } else {
+    label = "Machine";
+    enabled = false;
+  }
+  m_ui->button_set_x->setEnabled(enabled);
+  m_ui->button_set_y->setEnabled(enabled);
+  m_ui->button_set_z->setEnabled(enabled);
+  m_ui->button_set_xy->setEnabled(enabled);
+
+  m_ui->toggle_work_machine->setText(label);
+}
+
+void RpnCalcDialog::on_toggle_relative_absolute_clicked() {
+  QString label;
+  if (m_ui->toggle_relative_absolute->isChecked()) {
+    label = "Relative";
+  } else {
+    label = "Absolute";
+  }
+  m_ui->toggle_relative_absolute->setText(label);
 }
 
 /******************************** UTILS ********************************/

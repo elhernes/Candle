@@ -665,7 +665,7 @@ void frmMain::updateControlsState() {
     bool portOpened = getIODevice().isOpen();
 
     ui->grpState->setEnabled(portOpened);
-    ui->grpControl->setEnabled(portOpened);
+    //    ui->grpControl->setEnabled(portOpened);
     ui->widgetSpindle->setEnabled(portOpened);
     ui->widgetJog->setEnabled(portOpened && !m_processingFile);
     ui->cboCommand->setEnabled(portOpened && (!ui->chkKeyboardControl->isChecked()));
@@ -946,8 +946,8 @@ void frmMain::onSerialPortReadyRead()
                 ui->cmdRestoreOrigin->setEnabled(status == IDLE);
                 ui->cmdSafePosition->setEnabled(status == IDLE);
                 ui->cmdZeroXY->setEnabled(status == IDLE);
-		//                ui->cmdZeroZ->setEnabled(status == IDLE);
-                ui->cmdKeypad->setEnabled(status == IDLE);
+		ui->cmdZeroZ->setEnabled(status == IDLE);
+		ui->cmdKeypad->setEnabled(status == IDLE);
                 ui->chkTestMode->setEnabled(status != RUN && !m_processingFile);
                 ui->chkTestMode->setChecked(status == CHECK);
                 ui->cmdFilePause->setChecked(status == HOLD0 || status == HOLD1 || status == QUEUE);
@@ -1573,6 +1573,15 @@ void frmMain::setWorkPos(const QVector3D &pos) {
 	      .arg(zp), -2, m_settings->showUICommands());
 }
 
+QVector3D frmMain::machinePos() {
+  return {
+    ui->txtMPosX->text().toFloat(),
+    ui->txtMPosY->text().toFloat(),
+    ui->txtMPosZ->text().toFloat()
+  };
+}
+
+
 void frmMain::setSpindle(double speed) {
   ui->slbSpindle->setValue(speed);
 }
@@ -1589,7 +1598,26 @@ double frmMain::jogFeed() {
   return ui->cboJogFeed->currentText().toDouble();
 }
 
-void frmMain::goAbsolute(const QVector3D &pos) {
+void frmMain::goAbsoluteWork(const QVector3D &pos) {
+  // with goAbsolute, we need a way to not jog irrelevant axes
+  int speed = ui->cboJogFeed->currentText().toInt();
+  QString xp = (!std::isnan(pos.x())) ? QString("X%1").arg(pos.x(), 0, 'g', 4) : "";
+  QString yp = (!std::isnan(pos.y())) ? QString("Y%1").arg(pos.y(), 0, 'g', 4) : "";
+  QString zp = (!std::isnan(pos.z())) ? QString("Z%1").arg(pos.z(), 0, 'g', 4) : "";
+
+  sendCommand(QString("$J=G21G90%1%2%3F%4")
+	      .arg(xp)
+	      .arg(yp)
+	      .arg(zp)
+	      .arg(speed), -2, m_settings->showUICommands());
+}
+
+void frmMain::goAbsoluteMachine(const QVector3D &mp) {
+  // translate pos to work space
+  QVector3D w = workPos();
+  QVector3D m = machinePos();
+  QVector3D pos = mp - m + w;
+
   // with goAbsolute, we need a way to not jog irrelevant axes
   int speed = ui->cboJogFeed->currentText().toInt();
   QString xp = (!std::isnan(pos.x())) ? QString("X%1").arg(pos.x(), 0, 'g', 4) : "";

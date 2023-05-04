@@ -93,10 +93,13 @@ public:
     void restoreParserState();
 
     QVector3D workPos();
-    void goAbsolute(const QVector3D &pos);
-    void goRelative(const QVector3D &pos);
-
     void setWorkPos(const QVector3D &pos);
+    QVector3D machinePos();
+
+    void goAbsoluteWork(const QVector3D &pos);
+    void goAbsoluteMachine(const QVector3D &pos);
+    
+    void goRelative(const QVector3D &pos); // machine and work relative are the same...
 
     void setSpindle(double speed);
     double spindle();

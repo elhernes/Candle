@@ -58,27 +58,26 @@ private slots:
     void on_button_set_feed_clicked();
     void on_button_push_feed_clicked();
 
-    void on_button_go_xy_abs_clicked();
-    void on_button_go_xy_rel_clicked();
+    void on_button_go_xy_clicked();
     void on_button_set_xy_clicked();
     void on_button_push_xy_clicked();
 
-    void on_button_go_x_abs_clicked();
-    void on_button_go_x_rel_clicked();
+    void on_button_go_x_clicked();
     void on_button_set_x_clicked();
     void on_button_push_x_clicked();
 
-    void on_button_go_y_abs_clicked();
-    void on_button_go_y_rel_clicked();
+    void on_button_go_y_clicked();
     void on_button_set_y_clicked();
     void on_button_push_y_clicked();
 
-    void on_button_go_z_abs_clicked();
-    void on_button_go_z_rel_clicked();
+    void on_button_go_z_clicked();
     void on_button_set_z_clicked();
     void on_button_push_z_clicked();
 
-private:
+    void on_toggle_work_machine_clicked();
+    void on_toggle_relative_absolute_clicked();
+
+ private:
     float popStack();
     void pushStack(float n);
     void redrawDisplay();
