@@ -154,29 +154,35 @@ void RpnCalcDialog::on_button_plus_minus_clicked()
   if (m_ui->lineEdit->text() != "") {
     float val = m_ui->lineEdit->text().toFloat() * -1.;
     m_ui->lineEdit->setText(QString::number(val));
-  } else {
+  } else if (!m_stack.isEmpty()) {
     float val = popStack();
     val *= -1.;
     pushStack(val);
+  } else {
+    return; // do nothing
   }
 }
 
 void RpnCalcDialog::on_button_roll_down_clicked()
 {
   pushEntry();
-  float val = m_stack.front();
-  m_stack.pop_front();
-  m_stack.push_back(val);
-  redrawDisplay();
+  if (!m_stack.isEmpty()) {
+    float val = m_stack.front();
+    m_stack.pop_front();
+    m_stack.push_back(val);
+    redrawDisplay();
+  }
 }
 
 void RpnCalcDialog::on_button_roll_up_clicked()
 {
   pushEntry();
-  float val = m_stack.last();
-  m_stack.pop_back();
-  m_stack.push_front(val);
-  redrawDisplay();
+  if (!m_stack.isEmpty()) {
+    float val = m_stack.last();
+    m_stack.pop_back();
+    m_stack.push_front(val);
+    redrawDisplay();
+  }
 }
 
 void RpnCalcDialog::on_button_enter_clicked()

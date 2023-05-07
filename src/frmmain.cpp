@@ -2993,9 +2993,6 @@ void frmMain::on_grpSpindle_toggled(bool checked)
     ui->widgetSpindle->setVisible(checked);
 }
 
-void frmMain::on_grpUserCommands_toggled(bool checked)
-{
-}
 
 bool frmMain::eventFilter(QObject *obj, QEvent *event)
 {

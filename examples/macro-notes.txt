@@ -1,0 +1,5 @@
+commands
+
+%run-macro ....
+%tool-change
+%message-box
