@@ -1,5 +1,18 @@
 commands
 
-%run-macro ....
-%tool-change
+%include-macro {macro}
+{macro} is one of
+ * xyz-probe
+ * z-probe
+ * toolchange
+ * user0
+ * user1
+ * user2
+ * user3
+ * file url (file:///)
+
+%toolchange
 %message-box
+
+
+Tool change - https://github.com/cncjs/cncjs/wiki/Tool-Change

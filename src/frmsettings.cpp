@@ -447,6 +447,16 @@ void frmSettings::setProbeXYZCommand(QString probeXYZCommand)
     ui->txtProbeXYZCommand->setPlainText(probeXYZCommand);
 }
 
+QString frmSettings::toolchangeCommand()
+{
+    return ui->txtToolchangeCommand->toPlainText();
+}
+
+void frmSettings::setToolchangeCommand(QString toolchangeCommand)
+{
+    ui->txtToolchangeCommand->setPlainText(toolchangeCommand);
+}
+
 bool frmSettings::simplify()
 {
     return ui->chkSimplify->isChecked();
@@ -692,6 +702,10 @@ void frmSettings::on_tbZTouch_clicked() {
 
 void frmSettings::on_tbProbeXYZ_clicked() {
   selectFileForControl(ui->txtProbeXYZCommand);
+}
+
+void frmSettings::on_tbToolchange_clicked() {
+  selectFileForControl(ui->txtToolchangeCommand);
 }
 
 void frmSettings::on_tbZSafe_clicked() {

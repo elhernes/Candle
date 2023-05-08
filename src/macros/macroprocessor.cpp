@@ -22,6 +22,21 @@
 #include <QRegExp>
 #include <QStringList>
 
+static bool
+readTextFromUrl(QString &text, const QUrl &url) {
+  bool rv=false;
+  if (url.isLocalFile()) {
+    QFile f(url.toLocalFile());
+    if (f.open(QIODevice::ReadOnly|QFile::Text) == false) {
+      return false;
+    }
+    QTextStream fstream(&f);
+    text = fstream.readAll();
+    rv = true;
+  }
+  return rv;
+}
+
 struct MacroProcessor::Privates {
   void debug_step(const QString &path, const QString &lineIn, const QString &out, const QString &vars);
   MathExpr me;
@@ -68,8 +83,6 @@ MacroProcessor::MacroProcessor(frmMain *frm) : m_p(new Privates) {
   m_p->frmmain = frm;
   m_p->cmdNumber = 0;
   m_p->debug = false;
-  connect(m_p->frmmain, SIGNAL(grblStatusChanged(const QString&)),
-	  this, SLOT(onGrblStatusChanged(const QString&)));
   connect(m_p->frmmain, SIGNAL(noCommandsPending()),
 	  this, SLOT(onNoCommandsPending()));
 }
@@ -96,14 +109,14 @@ static const std::map<std::string,std::function<QString(MacroProcessor::Privates
       return "G4 P0.5";
     } },
 
-  { "%save-parser-state", [](MacroProcessor::Privates &p, const QStringList &) -> QString {
-      QString ps = p.frmmain->storeParserState();
-      return "; save-parser-state {" + ps + "}";
+  { "%save-modal-state", [](MacroProcessor::Privates &p, const QStringList &) -> QString {
+      QString ps = p.frmmain->storeModalState();
+      return "; save-modal-state {" + ps + "}";
     } },
 
-  { "%restore-parser-state", [](MacroProcessor::Privates &p, const QStringList &) -> QString {
-      p.frmmain->restoreParserState();
-      return "; restore-parser-state";
+  { "%restore-modal-state", [](MacroProcessor::Privates &p, const QStringList &) -> QString {
+      p.frmmain->restoreModalState();
+      return "; modal-parser-state";
     } },
 
   { "%message", [](MacroProcessor::Privates &p, const QStringList &sl) -> QString {
@@ -113,34 +126,35 @@ static const std::map<std::string,std::function<QString(MacroProcessor::Privates
       msgBox.exec();
       return "";
     } },
+
+  { "%include-macro", [](MacroProcessor::Privates &p, const QStringList &sl) -> QString {
+      QString text;
+      if (!readTextFromUrl(text, QUrl(sl[0]))) {
+	QString macrotext;
+	p.frmmain->macroText(macrotext, sl[0]);
+	if (!readTextFromUrl(text, QUrl(macrotext))) {
+	  text = macrotext;
+	}
+      }
+      if (text != "") {
+	QStringList list = text.split("\n");
+	list += p.list;
+	p.list = list;
+      }
+    } },
 };
 
 bool
 MacroProcessor::process(const QString &macroText) {
-  QUrl url(macroText);
-  if (url.isLocalFile()) {
-    QFile f(url.toLocalFile());
-    if (f.open(QIODevice::ReadOnly|QFile::Text) == false) {
-      // error or quietly fail? we pick the second
-      return false;
-    }
-    QTextStream fstream(&f);
-    QString fileText = fstream.readAll();
-    m_p->list = fileText.split("\n");
-
-  } else {
-    m_p->list = macroText.split("\n");
+  QString text;
+  if (!readTextFromUrl(text, QUrl(macroText))) {
+    text = macroText;
   }
 
+  m_p->list = text.split("\n");
   onNoCommandsPending();
 
   return true;
-}
-
-void
-MacroProcessor::onGrblStatusChanged(const QString &status) {
-  if (status == "Alarm") {
-  }
 }
 
 void

@@ -89,8 +89,8 @@ public:
     double toolZPosition();
 
     // public methods for macro processor
-    QString storeParserState();
-    void restoreParserState();
+    QString storeModalState();
+    void restoreModalState();
 
     QVector3D workPos();
     void setWorkPos(const QVector3D &pos);
@@ -105,6 +105,18 @@ public:
     double spindle();
     void setJogFeed(double feed);
     double jogFeed();
+
+    /*
+     * name is:
+     *   z-touch
+     *   xyz-probe
+     *   safe-z
+     *   user0
+     *   user1
+     *   user2
+     *   user3
+     */
+    bool macroText(QString &text, const QString &name);
 
     const QString status();
     size_t commandsPending();
@@ -294,7 +306,7 @@ private:
     double m_storedX = 0;
     double m_storedY = 0;
     double m_storedZ = 0;
-    QString m_storedParserStatus;
+    QString m_storedModalStatus;
 
     // Console window
     int m_storedConsoleMinimumHeight;

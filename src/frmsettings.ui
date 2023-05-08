@@ -551,6 +551,40 @@ QGroupBox {
              </widget>
             </item>
             <item>
+             <layout class="QHBoxLayout" name="horizontalLayout_20">
+              <item>
+               <widget class="QLabel" name="label_40">
+                <property name="styleSheet">
+                 <string notr="true">padding-top: 3;</string>
+                </property>
+                <property name="text">
+                 <string>Toolchange Commands:</string>
+                </property>
+                <property name="indent">
+                 <number>0</number>
+                </property>
+                <property name="buddy">
+                 <cstring>txtToolchangeCommand</cstring>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QToolButton" name="tbToolchange">
+                <property name="text">
+                 <string>...</string>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </item>
+            <item>
+             <widget class="QPlainTextEdit" name="txtToolchangeCommand">
+              <property name="placeholderText">
+               <string>Command 1; command 2; ...</string>
+              </property>
+             </widget>
+            </item>
+            <item>
              <layout class="QHBoxLayout" name="horizontalLayout_15">
               <item>
                <widget class="QLabel" name="label_33">

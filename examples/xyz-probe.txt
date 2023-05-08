@@ -12,7 +12,7 @@
 %PLATE_THICKNESS = 5
 
 ; for restoration at the end
-%save-parser-state
+%save-modal-state
 
 G91 ; Relative positioning
 G21 ; Use millimeters
@@ -86,4 +86,4 @@ G90 ; absolute positioning
 G0 X0 Y0
 G0 Z0
 
-%restore-parser-state
+%restore-modal-state

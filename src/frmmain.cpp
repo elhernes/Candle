@@ -665,7 +665,7 @@ void frmMain::updateControlsState() {
     bool portOpened = getIODevice().isOpen();
 
     ui->grpState->setEnabled(portOpened);
-    ui->grpControl->setEnabled(portOpened);
+    //    ui->grpControl->setEnabled(portOpened);
     ui->widgetSpindle->setEnabled(portOpened);
     ui->widgetJog->setEnabled(portOpened && !m_processingFile);
     ui->cboCommand->setEnabled(portOpened && (!ui->chkKeyboardControl->isChecked()));
@@ -982,7 +982,7 @@ void frmMain::onSerialPortReadyRead()
                     m_processingFile = false;
                     m_fileProcessedCommandIndex = 0;
                     m_lastDrawnLineIndex = 0;
-                    m_storedParserStatus.clear();
+                    m_storedModalStatus.clear();
 
                     updateControlsState();
 
@@ -1016,7 +1016,7 @@ void frmMain::onSerialPortReadyRead()
                         if (!m_processingFile && m_resetCompleted) {
                             m_aborting = false;
                             restoreOffsets();
-                            restoreParserState();
+                            restoreModalState();
                             return;
                         }
                         break;
@@ -1207,7 +1207,7 @@ void frmMain::onSerialPortReadyRead()
                         ui->glwVisualizer->setParserStatus(response.left(response.indexOf("; ")));
 
                         // Store parser status
-                        if (m_processingFile) storeParserState();
+                        if (m_processingFile) storeModalState();
 
                         // Spindle speed
                         QRegExp rx(".*S([\\d\\.]+)");
@@ -1643,6 +1643,49 @@ void frmMain::goRelative(const QVector3D &pos, bool jogp) {
 	      .arg(speed), -2, m_settings->showUICommands());
 }
 
+bool
+frmMain::macroText(QString &text, const QString &name) {
+  bool rv=false;
+  if (name == "z-touch") {
+    text = m_settings->touchCommand();
+    rv=true;
+
+  } else if (name == "xyz-probe") {
+    text = m_settings->probeXYZCommand();
+    rv=true;
+
+  } else if (name == "toolchange") {
+    text = ""; //m_settings->toolchangeCommand();
+    rv=true;
+
+  } else if (name == "safe-z") {
+    text = m_settings->safePositionCommand();
+    rv=true;
+
+  } else if (name == "user0") {
+    text = m_settings->userCommands(0);
+    rv=true;
+
+  } else if (name == "user1") {
+    text = m_settings->userCommands(1);
+    rv=true;
+
+  } else if (name == "user2") {
+    text = m_settings->userCommands(2);
+    rv=true;
+
+  } else if (name == "user3") {
+    text = m_settings->userCommands(3);
+    rv=true;
+
+  } else {
+    rv = false;
+  }
+
+  return rv;
+}
+
+
 void frmMain::showEvent(QShowEvent *se)
 {
     Q_UNUSED(se)
@@ -2062,7 +2105,7 @@ void frmMain::on_cmdFileSend_clicked()
     ui->chkKeyboardControl->setChecked(false);
 
     if (!ui->chkTestMode->isChecked()) storeOffsets(); // Allready stored on check
-    storeParserState();
+    storeModalState();
 
 #ifdef WINDOWS
     if (QSysInfo::windowsVersion() >= QSysInfo::WV_WINDOWS7) {
@@ -2170,7 +2213,7 @@ void frmMain::onActSendFromLineTriggered()
     ui->chkKeyboardControl->setChecked(false);
 
     if (!ui->chkTestMode->isChecked()) storeOffsets(); // Allready stored on check
-    storeParserState();
+    storeModalState();
 
 #ifdef WINDOWS
     if (QSysInfo::windowsVersion() >= QSysInfo::WV_WINDOWS7) {
@@ -2200,16 +2243,16 @@ void frmMain::on_cmdFileAbort_clicked()
     }
 }
 
-QString frmMain::storeParserState()
+QString frmMain::storeModalState()
 {    
-    m_storedParserStatus = ui->glwVisualizer->parserStatus().remove(
+    m_storedModalStatus = ui->glwVisualizer->parserStatus().remove(
                 QRegExp("GC:|\\[|\\]|G[01234]\\s|M[0345]+\\s|\\sF[\\d\\.]+|\\sS[\\d\\.]+"));
-    return m_storedParserStatus;
+    return m_storedModalStatus;
 }
 
-void frmMain::restoreParserState()
+void frmMain::restoreModalState()
 {
-    if (!m_storedParserStatus.isEmpty()) sendCommand(m_storedParserStatus, -1, m_settings->showUICommands());
+    if (!m_storedModalStatus.isEmpty()) sendCommand(m_storedModalStatus, -1, m_settings->showUICommands());
 }
 
 void frmMain::storeOffsets()
@@ -2683,7 +2726,7 @@ void frmMain::on_chkTestMode_clicked(bool checked)
 {
     if (checked) {
         storeOffsets();
-        storeParserState();
+        storeModalState();
         sendCommand("$C", -1, m_settings->showUICommands());
     } else {
         m_aborting = true;

@@ -90,6 +90,8 @@ public:
     void setTouchCommand(QString touchCommand);
     QString probeXYZCommand();
     void setProbeXYZCommand(QString xyzProbeCommand);
+    QString toolchangeCommand();
+    void setToolchangeCommand(QString toolchangeCommand);
     bool simplify();
     void setSimplify(bool simplify);
     double simplifyPrecision();
@@ -141,6 +143,7 @@ private slots:
     void selectFileForControl(QPlainTextEdit *pte);
     void on_tbZTouch_clicked();
     void on_tbProbeXYZ_clicked();
+    void on_tbToolchange_clicked();
     void on_tbZSafe_clicked();
     void on_tbUser0_clicked();
     void on_tbUser1_clicked();
