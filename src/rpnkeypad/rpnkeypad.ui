@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>RpnCalcDialog</class>
- <widget class="QDialog" name="RpnCalcDialog">
+ <class>RpnKeypadDialog</class>
+ <widget class="QDialog" name="RpnKeypadDialog">
   <property name="geometry">
    <rect>
     <x>0</x>

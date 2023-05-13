@@ -59,7 +59,7 @@ SOURCES += main.cpp\
     parser/gcodeviewparse.cpp \
     parser/linesegment.cpp \
     parser/pointsegment.cpp \
-    rpncalc/rpncalc.cpp \
+    rpnkeypad/rpnkeypad.cpp \
     tables/gcodetablemodel.cpp \
     tables/heightmaptablemodel.cpp \
     widgets/colorpicker.cpp \
@@ -115,7 +115,7 @@ HEADERS  += frmmain.h \
     parser/linesegment.h \
     parser/pointsegment.h \
     pendant/whb04b.h \
-    rpncalc/rpncalc.h \
+    rpnkeypad/rpnkeypad.h \
     tables/gcodetablemodel.h \
     tables/heightmaptablemodel.h \
     utils/interpolation.h \
@@ -135,7 +135,7 @@ HEADERS  += frmmain.h \
 FORMS    += frmmain.ui \
     frmsettings.ui \
     frmabout.ui \
-    rpncalc/rpncalc.ui \
+    rpnkeypad/rpnkeypad.ui \
     widgets/sliderbox.ui
 
 DEFINES += _USE_MATH_DEFINES

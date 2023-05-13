@@ -1,14 +1,14 @@
 #include <cmath>
 
-#include "rpncalc.h"
-#include "ui_rpncalc.h"
+#include "rpnkeypad.h"
+#include "ui_rpnkeypad.h"
 #include "../frmmain.h"
 
 static double degrees_to_radians(double degrees) {
   return degrees * (M_PI / 180.);
 }
 
-RpnCalcDialog::RpnCalcDialog(frmMain *frm, QStack<float> &stack, QWidget* parent) : m_stack(stack), QDialog(parent), m_ui(new Ui::RpnCalcDialog), m_frm(frm)
+RpnKeypadDialog::RpnKeypadDialog(frmMain *frm, QStack<float> &stack, QWidget* parent) : m_stack(stack), QDialog(parent), m_ui(new Ui::RpnKeypadDialog), m_frm(frm)
 {
     m_ui->setupUi(this);
     m_ui->lineEdit->setValidator(new QDoubleValidator());
@@ -18,35 +18,35 @@ RpnCalcDialog::RpnCalcDialog(frmMain *frm, QStack<float> &stack, QWidget* parent
     redrawDisplay();
 }
 
-RpnCalcDialog::~RpnCalcDialog() { delete m_ui; }
+RpnKeypadDialog::~RpnKeypadDialog() { delete m_ui; }
 
 /******************************** DIGITS ********************************/
 
-void RpnCalcDialog::on_button_0_clicked() { m_ui->lineEdit->insert("0"); }
+void RpnKeypadDialog::on_button_0_clicked() { m_ui->lineEdit->insert("0"); }
 
-void RpnCalcDialog::on_button_1_clicked() { m_ui->lineEdit->insert("1"); }
+void RpnKeypadDialog::on_button_1_clicked() { m_ui->lineEdit->insert("1"); }
 
-void RpnCalcDialog::on_button_2_clicked() { m_ui->lineEdit->insert("2"); }
+void RpnKeypadDialog::on_button_2_clicked() { m_ui->lineEdit->insert("2"); }
 
-void RpnCalcDialog::on_button_3_clicked() { m_ui->lineEdit->insert("3"); }
+void RpnKeypadDialog::on_button_3_clicked() { m_ui->lineEdit->insert("3"); }
 
-void RpnCalcDialog::on_button_4_clicked() { m_ui->lineEdit->insert("4"); }
+void RpnKeypadDialog::on_button_4_clicked() { m_ui->lineEdit->insert("4"); }
 
-void RpnCalcDialog::on_button_5_clicked() { m_ui->lineEdit->insert("5"); }
+void RpnKeypadDialog::on_button_5_clicked() { m_ui->lineEdit->insert("5"); }
 
-void RpnCalcDialog::on_button_6_clicked() { m_ui->lineEdit->insert("6"); }
+void RpnKeypadDialog::on_button_6_clicked() { m_ui->lineEdit->insert("6"); }
 
-void RpnCalcDialog::on_button_7_clicked() { m_ui->lineEdit->insert("7"); }
+void RpnKeypadDialog::on_button_7_clicked() { m_ui->lineEdit->insert("7"); }
 
-void RpnCalcDialog::on_button_8_clicked() { m_ui->lineEdit->insert("8"); }
+void RpnKeypadDialog::on_button_8_clicked() { m_ui->lineEdit->insert("8"); }
 
-void RpnCalcDialog::on_button_9_clicked() { m_ui->lineEdit->insert("9"); }
+void RpnKeypadDialog::on_button_9_clicked() { m_ui->lineEdit->insert("9"); }
 
-void RpnCalcDialog::on_button_dot_clicked() { m_ui->lineEdit->insert("."); }
+void RpnKeypadDialog::on_button_dot_clicked() { m_ui->lineEdit->insert("."); }
 
 /******************************** OPERATIONS ********************************/
 
-void RpnCalcDialog::on_button_sum_clicked()
+void RpnKeypadDialog::on_button_sum_clicked()
 {
     pushEntry();
 
@@ -59,7 +59,7 @@ void RpnCalcDialog::on_button_sum_clicked()
     pushStack(b + a);                                         //inserts operation result into stack and updates TextEdit
 }
 
-void RpnCalcDialog::on_button_subtract_clicked()
+void RpnKeypadDialog::on_button_subtract_clicked()
 {
     pushEntry();
 
@@ -72,7 +72,7 @@ void RpnCalcDialog::on_button_subtract_clicked()
     pushStack(b - a);
 }
 
-void RpnCalcDialog::on_button_multiplication_clicked()
+void RpnKeypadDialog::on_button_multiplication_clicked()
 {
     pushEntry();
 
@@ -85,7 +85,7 @@ void RpnCalcDialog::on_button_multiplication_clicked()
     pushStack(b * a);
 }
 
-void RpnCalcDialog::on_button_division_clicked()
+void RpnKeypadDialog::on_button_division_clicked()
 {
     pushEntry();
 
@@ -101,7 +101,7 @@ void RpnCalcDialog::on_button_division_clicked()
     pushStack(b / a);
 }
 
-void RpnCalcDialog::on_button_sin_clicked()
+void RpnKeypadDialog::on_button_sin_clicked()
 {
     pushEntry();
 
@@ -113,7 +113,7 @@ void RpnCalcDialog::on_button_sin_clicked()
     pushStack(sin(degrees_to_radians(a)));
 }
 
-void RpnCalcDialog::on_button_cos_clicked()
+void RpnKeypadDialog::on_button_cos_clicked()
 {
     pushEntry();
 
@@ -125,7 +125,7 @@ void RpnCalcDialog::on_button_cos_clicked()
     pushStack(cos(degrees_to_radians(a)));
 }
 
-void RpnCalcDialog::on_button_tan_clicked()
+void RpnKeypadDialog::on_button_tan_clicked()
 {
     pushEntry();
 
@@ -137,7 +137,7 @@ void RpnCalcDialog::on_button_tan_clicked()
     pushStack(tan(degrees_to_radians(a)));
 }
 
-void RpnCalcDialog::on_button_sqrt_clicked()
+void RpnKeypadDialog::on_button_sqrt_clicked()
 {
     pushEntry();
 
@@ -149,7 +149,7 @@ void RpnCalcDialog::on_button_sqrt_clicked()
     pushStack(sqrt(a));
 }
 
-void RpnCalcDialog::on_button_plus_minus_clicked()
+void RpnKeypadDialog::on_button_plus_minus_clicked()
 {
   if (m_ui->lineEdit->text() != "") {
     float val = m_ui->lineEdit->text().toFloat() * -1.;
@@ -163,7 +163,7 @@ void RpnCalcDialog::on_button_plus_minus_clicked()
   }
 }
 
-void RpnCalcDialog::on_button_roll_down_clicked()
+void RpnKeypadDialog::on_button_roll_down_clicked()
 {
   pushEntry();
   if (!m_stack.isEmpty()) {
@@ -174,7 +174,7 @@ void RpnCalcDialog::on_button_roll_down_clicked()
   }
 }
 
-void RpnCalcDialog::on_button_roll_up_clicked()
+void RpnKeypadDialog::on_button_roll_up_clicked()
 {
   pushEntry();
   if (!m_stack.isEmpty()) {
@@ -185,7 +185,7 @@ void RpnCalcDialog::on_button_roll_up_clicked()
   }
 }
 
-void RpnCalcDialog::on_button_enter_clicked()
+void RpnKeypadDialog::on_button_enter_clicked()
 {
   if (m_ui->lineEdit->text() == "") {
     pushStack(m_stack.top());
@@ -196,7 +196,7 @@ void RpnCalcDialog::on_button_enter_clicked()
   }
 }
 
-void RpnCalcDialog::on_button_swap_clicked()
+void RpnKeypadDialog::on_button_swap_clicked()
 {
     pushEntry();
     if (m_stack.length() < 2)
@@ -210,7 +210,7 @@ void RpnCalcDialog::on_button_swap_clicked()
 }
 
 
-void RpnCalcDialog::on_button_back_clicked() {
+void RpnKeypadDialog::on_button_back_clicked() {
   if (m_ui->lineEdit->text() != "") {
     m_ui->lineEdit->backspace();
   } else {
@@ -220,7 +220,7 @@ void RpnCalcDialog::on_button_back_clicked() {
   }
 }
 
-void RpnCalcDialog::on_button_go_x_clicked() {
+void RpnKeypadDialog::on_button_go_x_clicked() {
   pushEntry();
   if (!m_stack.isEmpty()) {
     float pos = popStack();
@@ -242,7 +242,7 @@ void RpnCalcDialog::on_button_go_x_clicked() {
   }
 }
 
-void RpnCalcDialog::on_button_set_x_clicked() {
+void RpnKeypadDialog::on_button_set_x_clicked() {
   pushEntry();
   if (!m_stack.isEmpty()) {
     float pos = popStack();
@@ -250,7 +250,7 @@ void RpnCalcDialog::on_button_set_x_clicked() {
   }
 }
 
-void RpnCalcDialog::on_button_push_x_clicked() {
+void RpnKeypadDialog::on_button_push_x_clicked() {
   pushEntry();
   QVector3D pos;
   bool work = m_ui->toggle_work_machine->isChecked();
@@ -262,7 +262,7 @@ void RpnCalcDialog::on_button_push_x_clicked() {
   pushStack(pos.x());
 }
 
-void RpnCalcDialog::on_button_go_y_clicked() {
+void RpnKeypadDialog::on_button_go_y_clicked() {
   pushEntry();
   if (!m_stack.isEmpty()) {
     float pos = popStack();
@@ -285,7 +285,7 @@ void RpnCalcDialog::on_button_go_y_clicked() {
 }
 
 
-void RpnCalcDialog::on_button_set_y_clicked() {
+void RpnKeypadDialog::on_button_set_y_clicked() {
   pushEntry();
   if (!m_stack.isEmpty()) {
     float pos = popStack();
@@ -293,7 +293,7 @@ void RpnCalcDialog::on_button_set_y_clicked() {
   }
 }
 
-void RpnCalcDialog::on_button_push_y_clicked() {
+void RpnKeypadDialog::on_button_push_y_clicked() {
   pushEntry();
   QVector3D pos;
   bool work = m_ui->toggle_work_machine->isChecked();
@@ -305,7 +305,7 @@ void RpnCalcDialog::on_button_push_y_clicked() {
   pushStack(pos.y());
 }
 
-void RpnCalcDialog::on_button_go_z_clicked() {
+void RpnKeypadDialog::on_button_go_z_clicked() {
   pushEntry();
   if (!m_stack.isEmpty()) {
     float pos = popStack();
@@ -328,7 +328,7 @@ void RpnCalcDialog::on_button_go_z_clicked() {
 }
 
 
-void RpnCalcDialog::on_button_set_z_clicked() {
+void RpnKeypadDialog::on_button_set_z_clicked() {
   pushEntry();
   if (!m_stack.isEmpty()) {
     float pos = popStack();
@@ -336,7 +336,7 @@ void RpnCalcDialog::on_button_set_z_clicked() {
   }
 }
 
-void RpnCalcDialog::on_button_push_z_clicked() {
+void RpnKeypadDialog::on_button_push_z_clicked() {
   pushEntry();
   if (!m_stack.isEmpty()) {
     QVector3D pos;
@@ -350,11 +350,11 @@ void RpnCalcDialog::on_button_push_z_clicked() {
   }
 }
 
-void RpnCalcDialog::on_button_ok_clicked() {
+void RpnKeypadDialog::on_button_ok_clicked() {
   done(0);
 }
 
-void RpnCalcDialog::on_button_set_spindle_clicked() {
+void RpnKeypadDialog::on_button_set_spindle_clicked() {
   pushEntry();
   if (!m_stack.isEmpty()) {
     float speed = popStack();
@@ -362,12 +362,12 @@ void RpnCalcDialog::on_button_set_spindle_clicked() {
   }
 }
 
-void RpnCalcDialog::on_button_push_spindle_clicked() {
+void RpnKeypadDialog::on_button_push_spindle_clicked() {
   pushEntry();
   pushStack(m_frm->spindle());
 }
 
-void RpnCalcDialog::on_button_set_feed_clicked() {
+void RpnKeypadDialog::on_button_set_feed_clicked() {
   pushEntry();
   if (!m_stack.isEmpty()) {
     float feed = popStack();
@@ -375,12 +375,12 @@ void RpnCalcDialog::on_button_set_feed_clicked() {
   }
 }
 
-void RpnCalcDialog::on_button_push_feed_clicked() {
+void RpnKeypadDialog::on_button_push_feed_clicked() {
   pushEntry();
   pushStack(m_frm->jogFeed());
 }
 
-void RpnCalcDialog::on_button_go_xy_clicked() {
+void RpnKeypadDialog::on_button_go_xy_clicked() {
   pushEntry();
   if (m_stack.size()>1) {
     float y = popStack();
@@ -405,7 +405,7 @@ void RpnCalcDialog::on_button_go_xy_clicked() {
 }
 
 
-void RpnCalcDialog::on_button_set_xy_clicked() {
+void RpnKeypadDialog::on_button_set_xy_clicked() {
   pushEntry();
   if (m_stack.size()>1) {
     float y = popStack();
@@ -414,7 +414,7 @@ void RpnCalcDialog::on_button_set_xy_clicked() {
   }
 }
 
-void RpnCalcDialog::on_button_push_xy_clicked() {
+void RpnKeypadDialog::on_button_push_xy_clicked() {
   pushEntry();
   bool work = m_ui->toggle_work_machine->isChecked();
   QVector3D pos;
@@ -427,7 +427,7 @@ void RpnCalcDialog::on_button_push_xy_clicked() {
   pushStack(pos.y());
 }
 
-void RpnCalcDialog::on_toggle_work_machine_clicked() {
+void RpnKeypadDialog::on_toggle_work_machine_clicked() {
   QString label;
   bool enabled = true;
   if (m_ui->toggle_work_machine->isChecked()) {
@@ -445,7 +445,7 @@ void RpnCalcDialog::on_toggle_work_machine_clicked() {
   m_ui->toggle_work_machine->setText(label);
 }
 
-void RpnCalcDialog::on_toggle_relative_absolute_clicked() {
+void RpnKeypadDialog::on_toggle_relative_absolute_clicked() {
   QString label;
   if (m_ui->toggle_relative_absolute->isChecked()) {
     label = "Relative";
@@ -455,7 +455,7 @@ void RpnCalcDialog::on_toggle_relative_absolute_clicked() {
   m_ui->toggle_relative_absolute->setText(label);
 }
 
-void RpnCalcDialog::on_toggle_jog_cut_clicked() {
+void RpnKeypadDialog::on_toggle_jog_cut_clicked() {
   QString label;
   if (m_ui->toggle_jog_cut->isChecked()) {
     label = "Jog";
@@ -467,7 +467,7 @@ void RpnCalcDialog::on_toggle_jog_cut_clicked() {
 
 /******************************** UTILS ********************************/
 
-float RpnCalcDialog::popStack()
+float RpnKeypadDialog::popStack()
 {
     float last = m_stack.pop();                                               //removes last element
 
@@ -475,14 +475,14 @@ float RpnCalcDialog::popStack()
     return last;                                                            //returns removed element
 }
 
-void RpnCalcDialog::pushStack(float n)
+void RpnKeypadDialog::pushStack(float n)
 {
     float nn = round(n*100000.)/100000.;
     m_ui->textEdit->insertPlainText(QString::number(nn) + "\n");
     m_stack.push(n);
 }
 
-void RpnCalcDialog::redrawDisplay() {
+void RpnKeypadDialog::redrawDisplay() {
   m_ui->textEdit->clear();
   m_ui->textEdit->setAlignment(Qt::AlignRight);
 
@@ -493,7 +493,7 @@ void RpnCalcDialog::redrawDisplay() {
 
 }
 
-void RpnCalcDialog::pushEntry() {
+void RpnKeypadDialog::pushEntry() {
   if (m_ui->lineEdit->text()!="") {
     float next = m_ui->lineEdit->text().toFloat();
     m_ui->lineEdit->clear();

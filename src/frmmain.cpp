@@ -42,7 +42,7 @@
 #define AnyTerritory AnyCountry
 #include "ui_frmmain.h"
 
-#include "rpncalc/rpncalc.h"
+#include "rpnkeypad/rpnkeypad.h"
 
 #include "macros/macroprocessor.h"
 
@@ -2656,7 +2656,7 @@ void frmMain::on_cmdZeroZ_clicked()
 
 void frmMain::on_cmdKeypad_clicked()
 {
-  RpnCalcDialog rpn(this, m_rpnstack);
+  RpnKeypadDialog rpn(this, m_rpnstack);
   rpn.exec();
 }
 

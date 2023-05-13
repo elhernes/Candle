@@ -11,16 +11,16 @@
 class frmMain;
 
 QT_BEGIN_NAMESPACE
-namespace Ui { class RpnCalcDialog; }
+namespace Ui { class RpnKeypadDialog; }
 QT_END_NAMESPACE
 
-class RpnCalcDialog : public QDialog
+class RpnKeypadDialog : public QDialog
 {
     Q_OBJECT
 
 public:
-    RpnCalcDialog(frmMain *frm, QStack<float> &stack, QWidget* parent = nullptr);
-    ~RpnCalcDialog();
+    RpnKeypadDialog(frmMain *frm, QStack<float> &stack, QWidget* parent = nullptr);
+    ~RpnKeypadDialog();
 
 private slots:
     void on_button_0_clicked();
@@ -83,8 +83,8 @@ private slots:
     void pushStack(float n);
     void redrawDisplay();
     void pushEntry();
-
-    Ui::RpnCalcDialog* m_ui;
+    
+    Ui::RpnKeypadDialog* m_ui;
     QStack<float> &m_stack;
     frmMain *m_frm;
 };
