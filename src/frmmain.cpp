@@ -4107,9 +4107,14 @@ void frmMain::sendMacro(const QString &macroText) {
   if (m_macroproc) {
     delete m_macroproc;
   }
+
   m_macroproc=new MacroProcessor(this);
+
   connect(m_macroproc, SIGNAL(finished()),
 	  this, SLOT(on_macro_finished()));
+
+  connect(this, &frmMain::noCommandsPending,
+      [this]() { if (m_macroproc) m_macroproc->onNoCommandsPending(); } );
 
   if (m_codeDrawer) {
     QVector3D axisMin = m_codeDrawer->getMinimumExtremes();

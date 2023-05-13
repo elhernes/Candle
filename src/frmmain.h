@@ -43,6 +43,8 @@
 #include "frmabout.h"
 #include "pendant/whb04b.h"
 
+#include "machinecontrol.h"
+
 #ifdef WINDOWS
     #include <QtWinExtras/QtWinExtras>
     #include "shobjidl.h"
@@ -78,7 +80,7 @@ public:
     }
 };
 
-class frmMain : public QMainWindow
+class frmMain : public QMainWindow, public MachineControl
 {
     Q_OBJECT
 
@@ -89,22 +91,22 @@ public:
     double toolZPosition();
 
     // public methods for macro processor
-    QString storeModalState();
-    void restoreModalState();
+    virtual QString storeModalState() override;
+    virtual void restoreModalState() override;
 
-    QVector3D workPos();
-    void setWorkPos(const QVector3D &pos);
-    QVector3D machinePos();
+    virtual QVector3D workPos() override;
+    virtual void setWorkPos(const QVector3D &pos) override;
+    virtual QVector3D machinePos() override;
 
-    void goAbsoluteWork(const QVector3D &pos, bool jogp=true);
-    void goAbsoluteMachine(const QVector3D &pos, bool jogp=true);
+    virtual void goAbsoluteWork(const QVector3D &pos, bool jogp=true) override;
+    virtual void goAbsoluteMachine(const QVector3D &pos, bool jogp=true) override;
     
-    void goRelative(const QVector3D &pos, bool jogp=true); // machine and work relative are the same...
+    virtual void goRelative(const QVector3D &pos, bool jogp=true) override; // machine and work relative are the same...
 
-    void setSpindle(double speed);
-    double spindle();
-    void setJogFeed(double feed);
-    double jogFeed();
+    virtual void setSpindle(double speed) override;
+    virtual double spindle() override;
+    virtual void setJogFeed(double feed) override;
+    virtual double jogFeed() override;
 
     /*
      * name is:
@@ -116,11 +118,11 @@ public:
      *   user2
      *   user3
      */
-    bool macroText(QString &text, const QString &name);
+    virtual bool macroText(QString &text, const QString &name) override;
 
-    const QString status();
-    size_t commandsPending();
-    void sendCommand(QString command, int tableIndex = -1, bool showInConsole = true);
+    virtual const QString status() override;
+    virtual size_t commandsPending() override;
+    virtual void sendCommand(QString command, int tableIndex = -1, bool showInConsole = true) override;
 
  signals:
     void grblStatusChanged(const QString &newStatus);

@@ -14,29 +14,29 @@
 
 #pragma once
 
+#include "../machinecontrol.h"
+
 #include <QObject>
 #include <QString>
-class frmMain;
 
 class MacroProcessor : public QObject {
   Q_OBJECT
  public:
-  MacroProcessor(frmMain *frm);
+  MacroProcessor(MachineControl *mc);
   ~MacroProcessor();
 
-  //  bool process(QString &out, const QString &line); // handle anything, dispatch 'eval' or 'expand' appropriately
   bool process(const QString &macroText);
 
   bool setVariable(const QString &symbol, double value);
   double getVariable(const QString &symbol);
+
+  void onNoCommandsPending();
 
   struct Privates;
 
  signals:
   void finished();
 
-  private slots:
-    void onNoCommandsPending();
 
  private:
   bool processNext();

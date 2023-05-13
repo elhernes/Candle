@@ -12,7 +12,6 @@
  *
  */
 
-#include "frmmain.h"
 #include "macroprocessor.h"
 
 #include "../libs/libMathExpr/MathExpr.h"
@@ -21,6 +20,10 @@
 #include <mutex>
 #include <QRegExp>
 #include <QStringList>
+#include <QUrl>
+#include <QFile>
+#include <QTextStream>
+#include <QMessageBox>
 
 static bool
 readTextFromUrl(QString &text, const QUrl &url) {
@@ -40,7 +43,7 @@ readTextFromUrl(QString &text, const QUrl &url) {
 struct MacroProcessor::Privates {
   void debug_step(const QString &path, const QString &lineIn, const QString &out, const QString &vars);
   MathExpr me;
-  frmMain *frmmain;
+  MachineControl *mc;
   unsigned cmdNumber;
   bool debug;
   QStringList list;
@@ -79,20 +82,22 @@ MacroProcessor::Privates::debug_step(const QString &path, const QString &lineIn,
   }
 }
 
-MacroProcessor::MacroProcessor(frmMain *frm) : m_p(new Privates) {
-  m_p->frmmain = frm;
+MacroProcessor::MacroProcessor(MachineControl *mc) : m_p(new Privates) {
+  m_p->mc = mc;
   m_p->cmdNumber = 0;
   m_p->debug = false;
-  connect(m_p->frmmain, SIGNAL(noCommandsPending()),
+#if 0
+  connect(m_p->mc, SIGNAL(noCommandsPending()),
 	  this, SLOT(onNoCommandsPending()));
+#endif
 }
 
 
 MacroProcessor::~MacroProcessor() {
-  disconnect(m_p->frmmain, SIGNAL(grblStatusChanged(const QString&)),
-	     this, SLOT(onGrblStatusChanged(const QString&)));
-  disconnect(m_p->frmmain, SIGNAL(noCommandsPending()),
+#if 0
+  disconnect(m_p->mc, SIGNAL(noCommandsPending()),
 	     this, SLOT(onNoCommandsPending()));
+#endif
   if (m_p) {
     delete m_p;
     m_p=nullptr; // for debug
@@ -110,12 +115,12 @@ static const std::map<std::string,std::function<QString(MacroProcessor::Privates
     } },
 
   { "%save-modal-state", [](MacroProcessor::Privates &p, const QStringList &) -> QString {
-      QString ps = p.frmmain->storeModalState();
+      QString ps = p.mc->storeModalState();
       return "; save-modal-state {" + ps + "}";
     } },
 
   { "%restore-modal-state", [](MacroProcessor::Privates &p, const QStringList &) -> QString {
-      p.frmmain->restoreModalState();
+      p.mc->restoreModalState();
       return "; modal-parser-state";
     } },
 
@@ -131,7 +136,7 @@ static const std::map<std::string,std::function<QString(MacroProcessor::Privates
       QString text;
       if (!readTextFromUrl(text, QUrl(sl[0]))) {
 	QString macrotext;
-	p.frmmain->macroText(macrotext, sl[0]);
+	p.mc->macroText(macrotext, sl[0]);
 	if (!readTextFromUrl(text, QUrl(macrotext))) {
 	  text = macrotext;
 	}
@@ -159,27 +164,29 @@ MacroProcessor::process(const QString &macroText) {
 
 void
 MacroProcessor::onNoCommandsPending() {
-  bool aborted=false;
-  if(auto lock = std::unique_lock<std::mutex>(m_p->mx, std::try_to_lock)) {
-    while (!aborted && (m_p->frmmain->commandsPending() == 0) && processNext()) {
-      if (m_p->frmmain->status() == "Alarm") {
-	QMessageBox msgBox;
-	msgBox.setText("Grbl Alarm");
-	msgBox.setStandardButtons(QMessageBox::Abort | QMessageBox::Retry);
+  if (m_p != nullptr) {
+    bool aborted=false;
+    if(auto lock = std::unique_lock<std::mutex>(m_p->mx, std::try_to_lock)) {
+      while (!aborted && (m_p->mc->commandsPending() == 0) && processNext()) {
+	if (m_p->mc->status() == "Alarm") {
+	  QMessageBox msgBox;
+	  msgBox.setText("Grbl Alarm");
+	  msgBox.setStandardButtons(QMessageBox::Abort | QMessageBox::Retry);
 
-	switch (msgBox.exec()) {
-	case QMessageBox::Abort:
-	  aborted = true;
-	  break;
-	case QMessageBox::Retry:
-	  m_p->frmmain->sendCommand("$X", -1, false);
-	  break;
+	  switch (msgBox.exec()) {
+	  case QMessageBox::Abort:
+	    aborted = true;
+	    break;
+	  case QMessageBox::Retry:
+	    m_p->mc->sendCommand("$X", -1, false);
+	    break;
+	  }
 	}
       }
     }
-  }
-  if (aborted) {
-    emit finished(); // will destroy this
+    if (aborted) {
+      emit finished(); // will destroy this
+    }
   }
 }
 
@@ -214,7 +221,7 @@ MacroProcessor::processNext() {
   }
   m_p->debug_step(path, cmd, out, vars);
   m_p->cmdNumber++;
-  m_p->frmmain->sendCommand(out, -1, true);
+  m_p->mc->sendCommand(out, -1, true);
   return true;
 }
 

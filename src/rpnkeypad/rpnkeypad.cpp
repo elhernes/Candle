@@ -2,13 +2,12 @@
 
 #include "rpnkeypad.h"
 #include "ui_rpnkeypad.h"
-#include "../frmmain.h"
 
 static double degrees_to_radians(double degrees) {
   return degrees * (M_PI / 180.);
 }
 
-RpnKeypadDialog::RpnKeypadDialog(frmMain *frm, QStack<float> &stack, QWidget* parent) : m_stack(stack), QDialog(parent), m_ui(new Ui::RpnKeypadDialog), m_frm(frm)
+RpnKeypadDialog::RpnKeypadDialog(MachineControl *mc, QStack<float> &stack, QWidget* parent) : QDialog(parent), m_ui(new Ui::RpnKeypadDialog), m_stack(stack), m_mc(mc)
 {
     m_ui->setupUi(this);
     m_ui->lineEdit->setValidator(new QDoubleValidator());
@@ -230,13 +229,13 @@ void RpnKeypadDialog::on_button_go_x_clicked() {
     switch((rel&1)<<1|(work&1)) {
     case 3: // relative  + work
     case 2: // relative + machine
-      m_frm->goRelative({pos, 0, 0}, jog);
+      m_mc->goRelative({pos, 0, 0}, jog);
       break;
     case 1: // absolute + work
-      m_frm->goAbsoluteWork({pos, std::nanf(""), std::nanf("")}, jog);
+      m_mc->goAbsoluteWork({pos, std::nanf(""), std::nanf("")}, jog);
       break;
     case 0: // absolute + machine
-      m_frm->goAbsoluteMachine({pos, std::nanf(""), std::nanf("")}, jog);
+      m_mc->goAbsoluteMachine({pos, std::nanf(""), std::nanf("")}, jog);
       break;
     }
   }
@@ -246,7 +245,7 @@ void RpnKeypadDialog::on_button_set_x_clicked() {
   pushEntry();
   if (!m_stack.isEmpty()) {
     float pos = popStack();
-    m_frm->setWorkPos({pos, std::nanf(""), std::nanf("")});
+    m_mc->setWorkPos({pos, std::nanf(""), std::nanf("")});
   }
 }
 
@@ -255,9 +254,9 @@ void RpnKeypadDialog::on_button_push_x_clicked() {
   QVector3D pos;
   bool work = m_ui->toggle_work_machine->isChecked();
   if (work) {
-    pos = m_frm->workPos();
+    pos = m_mc->workPos();
   } else {
-    pos = m_frm->machinePos();
+    pos = m_mc->machinePos();
   }
   pushStack(pos.x());
 }
@@ -272,13 +271,13 @@ void RpnKeypadDialog::on_button_go_y_clicked() {
     switch((rel&1)<<1|(work&1)) {
     case 3: // relative  + work
     case 2: // relative + machine
-      m_frm->goRelative({0, pos, 0}, jog);
+      m_mc->goRelative({0, pos, 0}, jog);
       break;
     case 1: // absolute + work
-      m_frm->goAbsoluteWork({std::nanf(""), pos, std::nanf("")}, jog);
+      m_mc->goAbsoluteWork({std::nanf(""), pos, std::nanf("")}, jog);
       break;
     case 0: // absolute + machine
-      m_frm->goAbsoluteMachine({std::nanf(""), pos, std::nanf("")}, jog);
+      m_mc->goAbsoluteMachine({std::nanf(""), pos, std::nanf("")}, jog);
       break;
     }
   }
@@ -289,7 +288,7 @@ void RpnKeypadDialog::on_button_set_y_clicked() {
   pushEntry();
   if (!m_stack.isEmpty()) {
     float pos = popStack();
-    m_frm->setWorkPos({std::nanf(""), pos, std::nanf("")});
+    m_mc->setWorkPos({std::nanf(""), pos, std::nanf("")});
   }
 }
 
@@ -298,9 +297,9 @@ void RpnKeypadDialog::on_button_push_y_clicked() {
   QVector3D pos;
   bool work = m_ui->toggle_work_machine->isChecked();
   if (work) {
-    pos = m_frm->workPos();
+    pos = m_mc->workPos();
   } else {
-    pos = m_frm->machinePos();
+    pos = m_mc->machinePos();
   }
   pushStack(pos.y());
 }
@@ -315,13 +314,13 @@ void RpnKeypadDialog::on_button_go_z_clicked() {
     switch((rel&1)<<1|(work&1)) {
     case 3: // relative  + work
     case 2: // relative + machine
-      m_frm->goRelative({0, 0, pos}, jog);
+      m_mc->goRelative({0, 0, pos}, jog);
       break;
     case 1: // absolute + work
-      m_frm->goAbsoluteWork({std::nanf(""), std::nanf(""), pos}, jog);
+      m_mc->goAbsoluteWork({std::nanf(""), std::nanf(""), pos}, jog);
       break;
     case 0: // absolute + machine
-      m_frm->goAbsoluteMachine({std::nanf(""), std::nanf(""), pos}, jog);
+      m_mc->goAbsoluteMachine({std::nanf(""), std::nanf(""), pos}, jog);
       break;
     }
   }
@@ -332,7 +331,7 @@ void RpnKeypadDialog::on_button_set_z_clicked() {
   pushEntry();
   if (!m_stack.isEmpty()) {
     float pos = popStack();
-    m_frm->setWorkPos({std::nanf(""), std::nanf(""), pos});
+    m_mc->setWorkPos({std::nanf(""), std::nanf(""), pos});
   }
 }
 
@@ -342,9 +341,9 @@ void RpnKeypadDialog::on_button_push_z_clicked() {
     QVector3D pos;
     bool work = m_ui->toggle_work_machine->isChecked();
     if (work) {
-      pos = m_frm->workPos();
+      pos = m_mc->workPos();
     } else {
-      pos = m_frm->machinePos();
+      pos = m_mc->machinePos();
     }
     pushStack(pos.z());
   }
@@ -358,26 +357,26 @@ void RpnKeypadDialog::on_button_set_spindle_clicked() {
   pushEntry();
   if (!m_stack.isEmpty()) {
     float speed = popStack();
-    m_frm->setSpindle(speed);
+    m_mc->setSpindle(speed);
   }
 }
 
 void RpnKeypadDialog::on_button_push_spindle_clicked() {
   pushEntry();
-  pushStack(m_frm->spindle());
+  pushStack(m_mc->spindle());
 }
 
 void RpnKeypadDialog::on_button_set_feed_clicked() {
   pushEntry();
   if (!m_stack.isEmpty()) {
     float feed = popStack();
-    m_frm->setJogFeed(feed);
+    m_mc->setJogFeed(feed);
   }
 }
 
 void RpnKeypadDialog::on_button_push_feed_clicked() {
   pushEntry();
-  pushStack(m_frm->jogFeed());
+  pushStack(m_mc->jogFeed());
 }
 
 void RpnKeypadDialog::on_button_go_xy_clicked() {
@@ -392,13 +391,13 @@ void RpnKeypadDialog::on_button_go_xy_clicked() {
     switch((rel&1)<<1|(work&1)) {
     case 3: // relative  + work
     case 2: // relative + machine
-      m_frm->goRelative({x, y, 0}, jog);
+      m_mc->goRelative({x, y, 0}, jog);
       break;
     case 1: // absolute + work
-      m_frm->goAbsoluteWork({x, y, std::nanf("")}, jog);
+      m_mc->goAbsoluteWork({x, y, std::nanf("")}, jog);
       break;
     case 0: // absolute + machine
-      m_frm->goAbsoluteMachine({x, y, std::nanf("")}, jog);
+      m_mc->goAbsoluteMachine({x, y, std::nanf("")}, jog);
       break;
     }
   }
@@ -410,7 +409,7 @@ void RpnKeypadDialog::on_button_set_xy_clicked() {
   if (m_stack.size()>1) {
     float y = popStack();
     float x = popStack();
-    m_frm->setWorkPos({x, y, std::nanf("")});
+    m_mc->setWorkPos({x, y, std::nanf("")});
   }
 }
 
@@ -419,9 +418,9 @@ void RpnKeypadDialog::on_button_push_xy_clicked() {
   bool work = m_ui->toggle_work_machine->isChecked();
   QVector3D pos;
   if (work) {
-    pos = m_frm->workPos();
+    pos = m_mc->workPos();
   } else {
-    //    pos = m_frm->machinePos();
+    //    pos = m_mc->machinePos();
   }
   pushStack(pos.x());
   pushStack(pos.y());
@@ -460,7 +459,7 @@ void RpnKeypadDialog::on_toggle_jog_cut_clicked() {
   if (m_ui->toggle_jog_cut->isChecked()) {
     label = "Jog";
   } else {
-    label = "Cut";
+    label = "Rapid";
   }
   m_ui->toggle_jog_cut->setText(label);
 }

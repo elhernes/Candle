@@ -8,7 +8,7 @@
 #include <QIntValidator>
 #include <QKeyEvent>
 
-class frmMain;
+#include "../machinecontrol.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class RpnKeypadDialog; }
@@ -19,7 +19,7 @@ class RpnKeypadDialog : public QDialog
     Q_OBJECT
 
 public:
-    RpnKeypadDialog(frmMain *frm, QStack<float> &stack, QWidget* parent = nullptr);
+    RpnKeypadDialog(MachineControl *mc, QStack<float> &stack, QWidget* parent = nullptr);
     ~RpnKeypadDialog();
 
 private slots:
@@ -86,5 +86,5 @@ private slots:
     
     Ui::RpnKeypadDialog* m_ui;
     QStack<float> &m_stack;
-    frmMain *m_frm;
+    MachineControl *m_mc;
 };
