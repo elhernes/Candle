@@ -1,0 +1,564 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>RpnKeypad</class>
+ <widget class="QWidget" name="RpnKeypad">
+  <property name="modal" stdset="0">
+   <bool>false</bool>
+  </property>
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>643</width>
+    <height>301</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>RPN Calc</string>
+  </property>
+  <layout class="QVBoxLayout" name="verticalLayout">
+   <property name="spacing">
+    <number>0</number>
+   </property>
+   <property name="leftMargin">
+    <number>3</number>
+   </property>
+   <property name="topMargin">
+    <number>3</number>
+   </property>
+   <property name="rightMargin">
+    <number>3</number>
+   </property>
+   <property name="bottomMargin">
+    <number>3</number>
+   </property>
+   <item>
+    <layout class="QGridLayout" name="gridLayout" rowstretch="0,0,0,0,0,0,0,0,0,0,0" columnstretch="0,0,0,0,0,0,0,0,0,0">
+     <property name="sizeConstraint">
+      <enum>QLayout::SetDefaultConstraint</enum>
+     </property>
+     <property name="spacing">
+      <number>0</number>
+     </property>
+     <item row="6" column="5">
+      <widget class="QPushButton" name="pb_7_1">
+       <property name="text">
+        <string>b_7_1</string>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="5">
+      <widget class="QPushButton" name="pb_1_1">
+       <property name="text">
+        <string>b_1_1</string>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="9">
+      <widget class="QPushButton" name="pb_2_4">
+       <property name="text">
+        <string>b_2_4</string>
+       </property>
+      </widget>
+     </item>
+     <item row="8" column="0">
+      <widget class="QPushButton" name="button_4">
+       <property name="styleSheet">
+        <string notr="true">    font: bold;</string>
+       </property>
+       <property name="text">
+        <string>4</string>
+       </property>
+      </widget>
+     </item>
+     <item row="7" column="6">
+      <widget class="QPushButton" name="pb_8_2">
+       <property name="text">
+        <string>b_8_2</string>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="9">
+      <widget class="QPushButton" name="pb_1_4">
+       <property name="text">
+        <string>b_1_4</string>
+       </property>
+      </widget>
+     </item>
+     <item row="5" column="5">
+      <widget class="QPushButton" name="pb_6_1">
+       <property name="text">
+        <string>b_6_1</string>
+       </property>
+      </widget>
+     </item>
+     <item row="4" column="6">
+      <widget class="QPushButton" name="pb_5_2">
+       <property name="text">
+        <string>b_5_2</string>
+       </property>
+      </widget>
+     </item>
+     <item row="8" column="3">
+      <widget class="QPushButton" name="button_multiply">
+       <property name="styleSheet">
+        <string notr="true">    font: bold;</string>
+       </property>
+       <property name="text">
+        <string>x</string>
+       </property>
+      </widget>
+     </item>
+     <item row="7" column="5">
+      <widget class="QPushButton" name="pb_8_1">
+       <property name="text">
+        <string>b_8_1</string>
+       </property>
+      </widget>
+     </item>
+     <item row="10" column="4" colspan="2">
+      <widget class="QPushButton" name="button_enter">
+       <property name="styleSheet">
+        <string notr="true">    font: bold;</string>
+       </property>
+       <property name="text">
+        <string>Enter⏎</string>
+       </property>
+      </widget>
+     </item>
+     <item row="4" column="9">
+      <widget class="QPushButton" name="pb_5_4">
+       <property name="text">
+        <string>b_5_4</string>
+       </property>
+      </widget>
+     </item>
+     <item row="3" column="6">
+      <widget class="QPushButton" name="pb_4_2">
+       <property name="text">
+        <string>b_4_2</string>
+       </property>
+      </widget>
+     </item>
+     <item row="5" column="7">
+      <widget class="QPushButton" name="pb_6_3">
+       <property name="text">
+        <string>b_6_3</string>
+       </property>
+      </widget>
+     </item>
+     <item row="8" column="7">
+      <widget class="QPushButton" name="pb_9_3">
+       <property name="text">
+        <string>b_9_3</string>
+       </property>
+      </widget>
+     </item>
+     <item row="6" column="6">
+      <widget class="QPushButton" name="pb_7_2">
+       <property name="text">
+        <string>b_7_2</string>
+       </property>
+      </widget>
+     </item>
+     <item row="7" column="0">
+      <widget class="QPushButton" name="button_7">
+       <property name="styleSheet">
+        <string notr="true">    font: bold;</string>
+       </property>
+       <property name="text">
+        <string>7</string>
+       </property>
+      </widget>
+     </item>
+     <item row="9" column="7">
+      <widget class="QPushButton" name="pb_10_3">
+       <property name="text">
+        <string>b_10_3</string>
+       </property>
+      </widget>
+     </item>
+     <item row="10" column="9">
+      <widget class="QPushButton" name="pb_10_5">
+       <property name="text">
+        <string>b_11_4</string>
+       </property>
+      </widget>
+     </item>
+     <item row="6" column="9">
+      <widget class="QPushButton" name="pb_7_4">
+       <property name="text">
+        <string>b_7_4</string>
+       </property>
+      </widget>
+     </item>
+     <item row="10" column="7">
+      <widget class="QPushButton" name="pb_11_3">
+       <property name="text">
+        <string>b_11_3</string>
+       </property>
+      </widget>
+     </item>
+     <item row="10" column="0">
+      <widget class="QPushButton" name="button_dot">
+       <property name="styleSheet">
+        <string notr="true">    font: bold;</string>
+       </property>
+       <property name="text">
+        <string>.</string>
+       </property>
+      </widget>
+     </item>
+     <item row="10" column="3">
+      <widget class="QPushButton" name="button_add">
+       <property name="styleSheet">
+        <string notr="true">    font: bold;</string>
+       </property>
+       <property name="text">
+        <string>+</string>
+       </property>
+      </widget>
+     </item>
+     <item row="10" column="2">
+      <widget class="QPushButton" name="button_chs">
+       <property name="styleSheet">
+        <string notr="true">    font: bold;</string>
+       </property>
+       <property name="text">
+        <string>±</string>
+       </property>
+      </widget>
+     </item>
+     <item row="9" column="9">
+      <widget class="QPushButton" name="pb_10_4">
+       <property name="text">
+        <string>b_10_4</string>
+       </property>
+      </widget>
+     </item>
+     <item row="9" column="4">
+      <widget class="QPushButton" name="pb_10_0">
+       <property name="text">
+        <string>b_10_0</string>
+       </property>
+      </widget>
+     </item>
+     <item row="6" column="7">
+      <widget class="QPushButton" name="pb_7_3">
+       <property name="text">
+        <string>b_7_3</string>
+       </property>
+      </widget>
+     </item>
+     <item row="5" column="9">
+      <widget class="QPushButton" name="pb_6_4">
+       <property name="text">
+        <string>b_6_4</string>
+       </property>
+      </widget>
+     </item>
+     <item row="7" column="4">
+      <widget class="QPushButton" name="pb_8_0">
+       <property name="text">
+        <string>b_8_0</string>
+       </property>
+      </widget>
+     </item>
+     <item row="10" column="1">
+      <widget class="QPushButton" name="button_0">
+       <property name="styleSheet">
+        <string notr="true">    font: bold;</string>
+       </property>
+       <property name="text">
+        <string>0</string>
+       </property>
+      </widget>
+     </item>
+     <item row="9" column="3">
+      <widget class="QPushButton" name="button_subtract">
+       <property name="styleSheet">
+        <string notr="true">    font: bold;</string>
+       </property>
+       <property name="text">
+        <string>-</string>
+       </property>
+      </widget>
+     </item>
+     <item row="8" column="1">
+      <widget class="QPushButton" name="button_5">
+       <property name="styleSheet">
+        <string notr="true">    font: bold;</string>
+       </property>
+       <property name="text">
+        <string>5</string>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="7">
+      <widget class="QPushButton" name="pb_2_3">
+       <property name="text">
+        <string>b_2_3</string>
+       </property>
+      </widget>
+     </item>
+     <item row="9" column="6">
+      <widget class="QPushButton" name="pb_10_2">
+       <property name="text">
+        <string>b_10_2</string>
+       </property>
+      </widget>
+     </item>
+     <item row="8" column="4">
+      <widget class="QPushButton" name="pb_9_0">
+       <property name="text">
+        <string>b_9_0</string>
+       </property>
+      </widget>
+     </item>
+     <item row="4" column="5">
+      <widget class="QPushButton" name="pb_5_1">
+       <property name="text">
+        <string>b_5_1</string>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="7">
+      <widget class="QPushButton" name="pb_1_3">
+       <property name="text">
+        <string>b_1_3</string>
+       </property>
+      </widget>
+     </item>
+     <item row="8" column="6">
+      <widget class="QPushButton" name="pb_9_2">
+       <property name="text">
+        <string>b_9_2</string>
+       </property>
+      </widget>
+     </item>
+     <item row="6" column="4">
+      <widget class="QPushButton" name="button_back">
+       <property name="styleSheet">
+        <string notr="true">    font: bold;</string>
+       </property>
+       <property name="text">
+        <string>⌫</string>
+       </property>
+      </widget>
+     </item>
+     <item row="8" column="2">
+      <widget class="QPushButton" name="button_6">
+       <property name="styleSheet">
+        <string notr="true">    font: bold;</string>
+       </property>
+       <property name="text">
+        <string>6</string>
+       </property>
+      </widget>
+     </item>
+     <item row="4" column="7">
+      <widget class="QPushButton" name="pb_5_3">
+       <property name="text">
+        <string>b_5_3</string>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="5">
+      <widget class="QPushButton" name="pb_2_1">
+       <property name="text">
+        <string>b_2_1</string>
+       </property>
+      </widget>
+     </item>
+     <item row="10" column="6">
+      <widget class="QPushButton" name="pb_11_2">
+       <property name="text">
+        <string>b_11_2</string>
+       </property>
+      </widget>
+     </item>
+     <item row="3" column="9">
+      <widget class="QPushButton" name="pb_4_4">
+       <property name="text">
+        <string>b_4_4</string>
+       </property>
+      </widget>
+     </item>
+     <item row="8" column="9">
+      <widget class="QPushButton" name="pb_9_4">
+       <property name="text">
+        <string>b_9_4</string>
+       </property>
+      </widget>
+     </item>
+     <item row="6" column="0" colspan="4">
+      <widget class="QLineEdit" name="lineEdit"/>
+     </item>
+     <item row="9" column="0">
+      <widget class="QPushButton" name="button_1">
+       <property name="styleSheet">
+        <string notr="true">    font: bold;</string>
+       </property>
+       <property name="text">
+        <string>1</string>
+       </property>
+      </widget>
+     </item>
+     <item row="9" column="2">
+      <widget class="QPushButton" name="button_3">
+       <property name="styleSheet">
+        <string notr="true">    font: bold;</string>
+       </property>
+       <property name="text">
+        <string>3</string>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="6">
+      <widget class="QPushButton" name="pb_3_2">
+       <property name="text">
+        <string>b_3_2</string>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="7">
+      <widget class="QPushButton" name="pb_3_3">
+       <property name="text">
+        <string>b_3_3</string>
+       </property>
+      </widget>
+     </item>
+     <item row="7" column="2">
+      <widget class="QPushButton" name="button_9">
+       <property name="styleSheet">
+        <string notr="true">    font: bold;</string>
+       </property>
+       <property name="text">
+        <string>9</string>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="0" rowspan="6" colspan="5">
+      <widget class="QTextEdit" name="textEdit"/>
+     </item>
+     <item row="9" column="5">
+      <widget class="QPushButton" name="pb_10_1">
+       <property name="text">
+        <string>b_10_1</string>
+       </property>
+      </widget>
+     </item>
+     <item row="7" column="1">
+      <widget class="QPushButton" name="button_8">
+       <property name="styleSheet">
+        <string notr="true">    font: bold;</string>
+       </property>
+       <property name="text">
+        <string>8</string>
+       </property>
+      </widget>
+     </item>
+     <item row="8" column="5">
+      <widget class="QPushButton" name="pb_9_1">
+       <property name="text">
+        <string>b_9_1</string>
+       </property>
+      </widget>
+     </item>
+     <item row="9" column="1">
+      <widget class="QPushButton" name="button_2">
+       <property name="styleSheet">
+        <string notr="true">    font: bold;</string>
+       </property>
+       <property name="text">
+        <string>2</string>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="5">
+      <widget class="QPushButton" name="pb_3_1">
+       <property name="text">
+        <string>b_3_1</string>
+       </property>
+      </widget>
+     </item>
+     <item row="3" column="5">
+      <widget class="QPushButton" name="pb_4_1">
+       <property name="text">
+        <string>b_4_1</string>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="9">
+      <widget class="QPushButton" name="pb_3_4">
+       <property name="text">
+        <string>b_3_4</string>
+       </property>
+      </widget>
+     </item>
+     <item row="7" column="3">
+      <widget class="QPushButton" name="button_divide">
+       <property name="styleSheet">
+        <string notr="true">    font: bold;</string>
+       </property>
+       <property name="text">
+        <string>÷</string>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="6">
+      <widget class="QPushButton" name="pb_1_2">
+       <property name="text">
+        <string>b_1_2</string>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="6">
+      <widget class="QPushButton" name="pb_2_2">
+       <property name="text">
+        <string>b_2_2</string>
+       </property>
+      </widget>
+     </item>
+     <item row="3" column="7">
+      <widget class="QPushButton" name="pb_4_3">
+       <property name="text">
+        <string>b_4_3</string>
+       </property>
+      </widget>
+     </item>
+     <item row="7" column="7">
+      <widget class="QPushButton" name="pb_8_3">
+       <property name="text">
+        <string>b_8_3</string>
+       </property>
+      </widget>
+     </item>
+     <item row="7" column="9">
+      <widget class="QPushButton" name="pb_8_4">
+       <property name="text">
+        <string>b_8_4</string>
+       </property>
+      </widget>
+     </item>
+     <item row="5" column="6">
+      <widget class="QPushButton" name="pb_6_2">
+       <property name="text">
+        <string>b_6_2</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+   <item>
+    <widget class="QLabel" name="statusLabel">
+     <property name="text">
+      <string>TextLabel</string>
+     </property>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

@@ -9,6 +9,8 @@ greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 greaterThan(QT_MAJOR_VERSION, 5): QT += core5compat
 
+CONFIG += c++17
+
 win32: {
     QT += winextras
     DEFINES += WINDOWS
@@ -59,7 +61,14 @@ SOURCES += main.cpp\
     parser/gcodeviewparse.cpp \
     parser/linesegment.cpp \
     parser/pointsegment.cpp \
-    rpnkeypad/rpnkeypad.cpp \
+    rpn-lang/src/logic-dict.cpp \
+    rpn-lang/src/math-dict.cpp \
+    rpn-lang/src/rpn-cnc.cpp \
+    rpn-lang/src/rpn-interp.cpp \
+    rpn-lang/src/rpn-stack.cpp \
+    rpn-lang/src/stack-dict.cpp \
+    rpn-lang/src/types-dict.cpp \
+    rpn-lang/ui/rpnkeypad.cpp \
     tables/gcodetablemodel.cpp \
     tables/heightmaptablemodel.cpp \
     widgets/colorpicker.cpp \
@@ -115,7 +124,7 @@ HEADERS  += frmmain.h \
     parser/linesegment.h \
     parser/pointsegment.h \
     pendant/whb04b.h \
-    rpnkeypad/rpnkeypad.h \
+    rpn-lang/ui/rpnkeypad.h \
     tables/gcodetablemodel.h \
     tables/heightmaptablemodel.h \
     utils/interpolation.h \
@@ -135,13 +144,14 @@ HEADERS  += frmmain.h \
 FORMS    += frmmain.ui \
     frmsettings.ui \
     frmabout.ui \
-    rpnkeypad/rpnkeypad.ui \
+    rpn-lang/ui/rpnkeypad.ui \
     widgets/sliderbox.ui
 
 DEFINES += _USE_MATH_DEFINES
 
 RESOURCES += \
     shaders.qrc \
-    images.qrc
+    images.qrc \
+    rpn-lang/ui/rpn-ui.qrc
 
 CONFIG += c++11

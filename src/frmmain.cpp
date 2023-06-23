@@ -42,14 +42,16 @@
 #define AnyTerritory AnyCountry
 #include "ui_frmmain.h"
 
-#include "rpnkeypad/rpnkeypad.h"
+#include "rpn-lang/ui/rpnkeypad.h"
 
 #include "macros/macroprocessor.h"
 
 frmMain::frmMain(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::frmMain),
-    m_macroproc(nullptr)
+    m_macroproc(nullptr),
+    m_keypad(nullptr),
+    m_mi(m_rpn, *this)
 {
     m_status << "Unknown"
              << "Idle"
@@ -1808,6 +1810,11 @@ void frmMain::closeEvent(QCloseEvent *ce)
         m_commands.clear();
         m_queue.clear();
     }
+
+    if (m_keypad) {
+      m_keypad->close();
+    }
+
 }
 
 void frmMain::dragEnterEvent(QDragEnterEvent *dee)
@@ -2656,8 +2663,20 @@ void frmMain::on_cmdZeroZ_clicked()
 
 void frmMain::on_cmdKeypad_clicked()
 {
-  RpnKeypadDialog rpn(this, m_rpnstack);
-  rpn.exec();
+  if (m_keypad != nullptr) {
+    // https://forum.qt.io/topic/10893/how-to-check-if-a-qwidget-is-closed/7
+    if (m_keypad->isVisible()) {
+      m_keypad->raise();
+    } else {
+      delete m_keypad;
+      m_keypad = nullptr;
+    }
+  }
+
+  if (m_keypad == nullptr) {
+    m_keypad = new rpn::KeypadController(m_rpn);
+    m_keypad->show();
+  }
 }
 
 void frmMain::on_cmdRestoreOrigin_clicked()

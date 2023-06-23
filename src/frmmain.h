@@ -44,6 +44,10 @@
 #include "pendant/whb04b.h"
 
 #include "machinecontrol.h"
+#include "rpn-lang/rpn.h"
+#include "rpn-lang/rpn-cnc.h"
+
+namespace rpn { class KeypadController; };
 
 #ifdef WINDOWS
     #include <QtWinExtras/QtWinExtras>
@@ -417,7 +421,9 @@ private:
 
     WHB04B m_pendant;
     class MacroProcessor *m_macroproc;
-    QStack<float> m_rpnstack;
+    rpn::Interp m_rpn;
+    rpn::KeypadController *m_keypad;
+    rpn::MachineInterface m_mi;
 };
 
 #endif // FRMMAIN_H

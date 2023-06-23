@@ -1,0 +1,46 @@
+: circle-area SQ k_PI * ;
+
+28
+circle-area
+
+DUP
+2463.00864041
+==
+
+8
+2
+^
+
+5
+6
+OVER
+
+( test multiplication )
+
+2 4 * ( integer mult )
+2.5 4 * ( double * int )
+5 0.2 * ( int * double )
+3.5 6.2 * ( double * double )
+
+INV
+
+DUP
+
+INV
+
+DROP
+
+." test addition"
+2 4 + ( integer mult )
+2.5 4 + ( double * int )
+5 0.2 + ( int * double )
+3.5 6.2 + ( double * double )
+
+." test subtraction"
+2 4 - ( integer mult )
+2.5 4 - ( double * int )
+5 0.2 - ( int * double )
+3.5 6.2 - ( double * double )
+
+- -
+.S

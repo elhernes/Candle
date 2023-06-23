@@ -2,8 +2,6 @@
 TEMPLATE = subdirs
  
 SUBDIRS = \
-    src \
-    src/tests/rpnkeypad \
-    src/tests/macroprocessor
+    src
 
 src.file = src/candle.pro

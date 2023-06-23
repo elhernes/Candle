@@ -14,18 +14,17 @@
 
 #include <QApplication>
 #include <QStack>
-#include "../../rpnkeypad/rpnkeypad.h"
-#include "../testmc.h"
+#include "rpn.h"
+#include "rpnkeypad.h"
 
 int
 main(int ac, char **av) {
   QApplication app(ac, av);
 
-  TestMC tmc;
-  QStack<QJsonValue> stack;
-  RpnKeypadDialog rpn(&tmc, stack);
-  rpn.setModal(true);
-  rpn.show();
+  rpn::Interp rpn;
+  rpn::KeypadController keypad(rpn);
+  keypad.assignButton(10,4, "DROP", "DROP");
+  keypad.show();
   return app.exec();
 }
 
