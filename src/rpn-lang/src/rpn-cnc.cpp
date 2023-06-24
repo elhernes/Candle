@@ -30,212 +30,136 @@ rpn::MachineInterface::~MachineInterface() {
   delete m_p;
 }
 
-#if 0
-
-NATIVE_WORD_DECL(cnc, word) {
-  rpn::MC *mc = dynamic_cast<rpn::MC*>(ctx);
-}
-
-NATIVE_WORD_IMPL(MPOS_to) {
+NATIVE_WORD_DECL(cnc, MPOS_push) {
+  rpn::WordDefinition::Result rv = rpn::WordDefinition::Result::ok;
   rpn::MachineInterface::Privates *p = dynamic_cast<rpn::MachineInterface::Privates*>(ctx);
-  rpn.stack_push(Vec3(3.4, 4.5, 5.6));
-  return 0;
-}
-
-NATIVE_WORD_IMPL(WPOS_to) {
-  rpn::MachineInterface::Privates *p = dynamic_cast<rpn::MachineInterface::Privates*>(ctx);
-  rpn.stack_push(Vec3(1.2, 2.3, 3.4));
-  return 0;
-}
-
-NATIVE_WORD_IMPL(to_WPOS) {
-  rpn::MachineInterface::Privates *p = dynamic_cast<rpn::MachineInterface::Privates*>(ctx);
-  Vec3 np = rpn.stack_pop_as_vec3();
-  printf("->WPOS: popped '%s' from stack\n", to_string(np).c_str());
-  return 0;
-}
-
-NATIVE_WORD_IMPL(SPEED_to) {
-  rpn::MachineInterface::Privates *p = dynamic_cast<rpn::MachineInterface::Privates*>(ctx);
-  std::string::size_type rv = 0;
-  rpn.stack_push(10000);
+  auto pos = p->_mc.machinePos();
+  rpn.stack.push(StVec3(pos.x(), pos.y(), pos.z()));
   return rv;
 }
 
-NATIVE_WORD_IMPL(to_SPEED) {
+NATIVE_WORD_DECL(cnc, WPOS_push) {
+  rpn::WordDefinition::Result rv = rpn::WordDefinition::Result::ok;
   rpn::MachineInterface::Privates *p = dynamic_cast<rpn::MachineInterface::Privates*>(ctx);
-  std::string::size_type rv = 0;
+  auto pos = p->_mc.workPos();
+  rpn.stack.push(StVec3(pos.x(), pos.y(), pos.z()));
   return rv;
 }
 
-NATIVE_WORD_IMPL(FEED_to) {
+NATIVE_WORD_DECL(cnc, set_WPOS) {
+  rpn::WordDefinition::Result rv = rpn::WordDefinition::Result::ok;
   rpn::MachineInterface::Privates *p = dynamic_cast<rpn::MachineInterface::Privates*>(ctx);
-  std::string::size_type rv = 0;
+  auto obj = rpn.stack.pop();
+  const auto &pos = POP_CAST(StVec3,obj);
+  p->_mc.setWorkPos(QVector3D(pos._x, pos._y, pos._z));
   return rv;
 }
 
-NATIVE_WORD_IMPL(to_FEED) {
+NATIVE_WORD_DECL(cnc, SPEED_push) {
+  rpn::WordDefinition::Result rv = rpn::WordDefinition::Result::ok;
   rpn::MachineInterface::Privates *p = dynamic_cast<rpn::MachineInterface::Privates*>(ctx);
-  std::string::size_type rv = 0;
+  rpn.stack.push_double(p->_mc.spindle());
   return rv;
 }
 
-NATIVE_WORD_IMPL(JOG_R) {
+NATIVE_WORD_DECL(cnc, set_SPEED) {
+  rpn::WordDefinition::Result rv = rpn::WordDefinition::Result::ok;
   rpn::MachineInterface::Privates *p = dynamic_cast<rpn::MachineInterface::Privates*>(ctx);
-  std::string::size_type rv = 0;
+  double speed = rpn.stack.pop_as_double();
+  p->_mc.setSpindle(speed);
   return rv;
 }
 
-NATIVE_WORD_IMPL(JOG_WA) {
+NATIVE_WORD_DECL(cnc, FEED_push) {
+  rpn::WordDefinition::Result rv = rpn::WordDefinition::Result::ok;
   rpn::MachineInterface::Privates *p = dynamic_cast<rpn::MachineInterface::Privates*>(ctx);
-  std::string::size_type rv = 0;
+  rpn.stack.push_double(p->_mc.jogFeed());
   return rv;
 }
 
-NATIVE_WORD_IMPL(JOG_MA) {
+NATIVE_WORD_DECL(cnc, set_FEED) {
+  rpn::WordDefinition::Result rv = rpn::WordDefinition::Result::ok;
   rpn::MachineInterface::Privates *p = dynamic_cast<rpn::MachineInterface::Privates*>(ctx);
-  std::string::size_type rv = 0;
+  double feed = rpn.stack.pop_as_double();
+  p->_mc.setJogFeed(feed);
   return rv;
 }
 
-NATIVE_WORD_IMPL(PROBE) {
+NATIVE_WORD_DECL(cnc, JOG_rel) {
+  rpn::WordDefinition::Result rv = rpn::WordDefinition::Result::ok;
   rpn::MachineInterface::Privates *p = dynamic_cast<rpn::MachineInterface::Privates*>(ctx);
-  std::string::size_type rv = 0;
+  auto obj = rpn.stack.pop();
+  const auto &pos = POP_CAST(StVec3,obj);
+  p->_mc.goRelative(QVector3D(pos._x, pos._y, pos._z));
   return rv;
 }
 
-NATIVE_WORD_IMPL(MODALSTATE_to) {
+NATIVE_WORD_DECL(cnc, JOG_work) {
+  rpn::WordDefinition::Result rv = rpn::WordDefinition::Result::ok;
   rpn::MachineInterface::Privates *p = dynamic_cast<rpn::MachineInterface::Privates*>(ctx);
-  std::string::size_type rv = 0;
+  auto obj = rpn.stack.pop();
+  const auto &pos = POP_CAST(StVec3,obj);
+  p->_mc.goAbsoluteWork(QVector3D(pos._x, pos._y, pos._z));
   return rv;
 }
 
-NATIVE_WORD_IMPL(to_MODALSTATE) {
+NATIVE_WORD_DECL(cnc, JOG_mach) {
+  rpn::WordDefinition::Result rv = rpn::WordDefinition::Result::ok;
   rpn::MachineInterface::Privates *p = dynamic_cast<rpn::MachineInterface::Privates*>(ctx);
-  std::string::size_type rv = 0;
+  auto obj = rpn.stack.pop();
+  const auto &pos = POP_CAST(StVec3,obj);
+  p->_mc.goAbsoluteMachine(QVector3D(pos._x, pos._y, pos._z));
   return rv;
 }
 
-NATIVE_WORD_IMPL(SEND) {
+NATIVE_WORD_DECL(cnc, PROBE) {
+  rpn::WordDefinition::Result rv = rpn::WordDefinition::Result::implementation_error;
   rpn::MachineInterface::Privates *p = dynamic_cast<rpn::MachineInterface::Privates*>(ctx);
-  std::string::size_type rv = 0;
-  printf("instance is %p\n", p);
   return rv;
 }
 
-#define PRIVATE_NATIVE_WORD_FN(sym) NATIVE_WORD_FN(sym), this
+NATIVE_WORD_DECL(cnc, MODALSTATE_push) {
+  rpn::WordDefinition::Result rv = rpn::WordDefinition::Result::implementation_error;
+  rpn::MachineInterface::Privates *p = dynamic_cast<rpn::MachineInterface::Privates*>(ctx);
+  //  QString ms = p->_mc.getModalState();
+  // rpn.stack.push_string(ms.toStdString());
+  return rv;
+}
 
-rpn::MachineInterface::Privates *rpn::MachineInterface::Privates::s_instance = nullptr;
-#endif
+NATIVE_WORD_DECL(cnc, set_MODALSTATE) {
+  rpn::WordDefinition::Result rv = rpn::WordDefinition::Result::implementation_error;
+  rpn::MachineInterface::Privates *p = dynamic_cast<rpn::MachineInterface::Privates*>(ctx);
+  std::string ms = rpn.stack.pop_string();
+  //  p->_mc.setModalState(QString::fromStdString(ms));
+  return rv;
+}
+
+NATIVE_WORD_DECL(cnc, GSEND) {
+  rpn::WordDefinition::Result rv = rpn::WordDefinition::Result::implementation_error;
+  rpn::MachineInterface::Privates *p = dynamic_cast<rpn::MachineInterface::Privates*>(ctx);
+  return rv;
+}
 
 rpn::MachineInterface::Privates::Privates(rpn::Interp &rpn, MachineControl &mc)  : _rpn(rpn), _mc(mc) {
+  rpn.addDefinition("MPOS->", NATIVE_WORD_WDEF(cnc, rpn::StackSizeValidator::zero, MPOS_push, this));
+  rpn.addDefinition("WPOS->", NATIVE_WORD_WDEF(cnc, rpn::StackSizeValidator::zero, WPOS_push, this));
+  rpn.addDefinition("->WPOS", NATIVE_WORD_WDEF(cnc, rpn::StrictTypeValidator::d1_vec3, set_WPOS, this));
+  rpn.addDefinition("SPEED->", NATIVE_WORD_WDEF(cnc, rpn::StackSizeValidator::zero, SPEED_push, this));
+  rpn.addDefinition("->SPEED", NATIVE_WORD_WDEF(cnc, rpn::StrictTypeValidator::d1_vec3, set_SPEED, this));
+  rpn.addDefinition("FEED->", NATIVE_WORD_WDEF(cnc, rpn::StackSizeValidator::zero, FEED_push, this));
+  rpn.addDefinition("->FEED", NATIVE_WORD_WDEF(cnc, rpn::StrictTypeValidator::d1_vec3, set_FEED, this));
+
+  rpn.addDefinition("JOG-REL", NATIVE_WORD_WDEF(cnc, rpn::StrictTypeValidator::d1_vec3, JOG_rel, this));
+  rpn.addDefinition("JOG-WORK", NATIVE_WORD_WDEF(cnc, rpn::StrictTypeValidator::d1_vec3, JOG_work, this));
+  rpn.addDefinition("JOG-MACH", NATIVE_WORD_WDEF(cnc, rpn::StrictTypeValidator::d1_vec3, JOG_mach, this));
+
+  rpn.addDefinition("PROBE", NATIVE_WORD_WDEF(cnc, rpn::StrictTypeValidator::d1_vec3, PROBE, this));
+
+  rpn.addDefinition("MODAL->", NATIVE_WORD_WDEF(cnc, rpn::StackSizeValidator::zero, MODALSTATE_push, this));
+  rpn.addDefinition("->MODAL", NATIVE_WORD_WDEF(cnc, rpn::StrictTypeValidator::d1_string, set_MODALSTATE, this));
+
+  rpn.addDefinition("GSEND", NATIVE_WORD_WDEF(cnc, rpn::StrictTypeValidator::d1_string, GSEND, this));
+
 }
-
-#if 0
-  rpn.addDictionary({
-      //
-      // Machine control words
-      //
-    { "MPOS->", {
-	"Push Machine Position to the stack. ( -- mpos )", {
-	  WORD_PARAMS_0(),
-	    },
-	  PRIVATE_NATIVE_WORD_FN(MPOS_to)
-      } },
-
-    { "WPOS->", {
-	"Push Work Position to the stack. ( -- wpos )", {
-	  WORD_PARAMS_0(),
-	    },
-	  PRIVATE_NATIVE_WORD_FN(WPOS_to)
-      } },
-
-    { "->WPOS", {
-	"Set Work Position ( wpos -- )", {
-	  { { "newpos", st_vec3 } },
-	    },
-	  PRIVATE_NATIVE_WORD_FN(to_WPOS)
-      } },
-
-    { "SPEED->", {
-	"Push Spindle Speed to the stack. ( -- speed )", {
-	  WORD_PARAMS_0(),
-	    },
-	  PRIVATE_NATIVE_WORD_FN(SPEED_to)
-      } },
-
-    { "->SPEED", {
-	"Set Spindle Speed ( speed -- )", {
-	  { { "speed", st_number } },
-	    },
-	  PRIVATE_NATIVE_WORD_FN(to_SPEED)
-      } },
-
-    { "FEED->", {
-	"Push jog feed rate to the stack. ( -- feed )", {
-	  WORD_PARAMS_0(),
-	    },
-	  PRIVATE_NATIVE_WORD_FN(FEED_to)
-      } },
-
-    { "->FEED", {
-	"Set jog feed rate ( feed -- )", {
-	  { { "feed", st_number } },
-	    },
-	  PRIVATE_NATIVE_WORD_FN(to_FEED)
-      } },
-
-    { "JOG-R", {
-	"Jog to relative position ( pos -- )", {
-	  { { "offset", st_vec3 } },
-	    },
-	  PRIVATE_NATIVE_WORD_FN(JOG_R)
-      } },
-
-    { "JOG-WA", {
-	"Jog to absolute work position ( wpos -- )", {
-	  { { "wpos", st_vec3 } },
-	    },
-	  PRIVATE_NATIVE_WORD_FN(JOG_WA)
-      } },
-
-    { "JOG-MA", {
-	"Jog to absolute machine position ( mpos -- )", {
-	  { { "mpos", st_vec3 } },
-	    },
-	  PRIVATE_NATIVE_WORD_FN(JOG_MA)
-      } },
-
-      { "PROBE", {
-	"Probe machine (target feed -- )", {
-	  { { "target", st_vec3 }, { "feed" , st_number } }, // primitive G38.2
-	    },
-	  PRIVATE_NATIVE_WORD_FN(PROBE)
-      } },
-
-      { "MODAL-STATE->", {
-	  "Push machine's modal state on the stack ( -- state )", {
-	    WORD_PARAMS_0(),
-	      },
-	  PRIVATE_NATIVE_WORD_FN(MODALSTATE_to)
-	} },
-
-    { "->MODAL-STATE", {
-	"Send modal state to the machine ( state -- )", {
-	  { { "state", st_string } },
-	    },
-	  PRIVATE_NATIVE_WORD_FN(to_MODALSTATE)
-      } },
-
-
-    { "SEND", {
-	"Send command", {
-	  { { "g-code", st_string } },
-	    },
-	  PRIVATE_NATIVE_WORD_FN(SEND)
-      } }
-    });
-}
-#endif
 
 /* end of Candle/src/rpn-lang/rpn-cnc.cpp */

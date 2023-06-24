@@ -187,6 +187,7 @@ namespace rpn {
       param_error, // parameters not right for the word
       eval_error, // eval went awry
       compile_error, // error in compiling
+      implementation_error, // not implmemented or similar
     };
     //    std::string description;
     const StackValidator &validator;
@@ -228,7 +229,8 @@ namespace rpn {
   };
 }
 
-#define OBJECT_CAST(obtype)  dynamic_cast<obtype&>
+#define PEEK_CAST(obtype,ob)  dynamic_cast<obtype&>(ob)
+#define POP_CAST(obtype,ob)  dynamic_cast<obtype&>(*ob.get())
 #define OBJECTP_CAST(obtype)  dynamic_cast<obtype*>
 
 template<typename T>
@@ -241,11 +243,11 @@ class TStackObject : public rpn::Stack::Object {
     return (rhs !=nullptr && _v.val() == rhs->_v.val());
   }
   virtual bool operator>(const Object &orhs) const override {
-    auto &rhs = OBJECT_CAST(const TStackObject<T>)(orhs);
+    auto &rhs = PEEK_CAST(const TStackObject<T>,orhs);
     return (_v.val() > rhs._v.val());
   }
   virtual bool operator<(const Object &orhs) const override {
-    auto &rhs = OBJECT_CAST(const TStackObject<T>)(orhs);
+    auto &rhs = PEEK_CAST(const TStackObject<T>,orhs);
     return (_v.val() < rhs._v.val());
   }
   virtual ~TStackObject() {}
@@ -398,7 +400,7 @@ public:
   StVec3(const double &x=std::nan(""), const double &y=std::nan(""), const double &z=std::nan("")) : _x(x), _y(y), _z(z) {};
   virtual ~StVec3() {};
   virtual bool operator==(const Object &orhs) const override {
-    const StVec3 &rhs = OBJECT_CAST(const StVec3)(orhs);
+    const StVec3 &rhs = PEEK_CAST(const StVec3,orhs);
     // we might need to include some abs epsilon calculation here
     return (((_x == rhs._x) || (std::isnan(_x) && std::isnan(rhs._x))) &&
 	    ((_y == rhs._y) || (std::isnan(_y) && std::isnan(rhs._y))) &&

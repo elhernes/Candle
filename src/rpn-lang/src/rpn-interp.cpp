@@ -51,7 +51,7 @@ public:
   }
 
   virtual bool operator==(const Object &orhs) const override {
-    auto &rhs = OBJECT_CAST(const Progn)(orhs);
+    auto &rhs = PEEK_CAST(const Progn,orhs);
     return ((_type == rhs._type) &&
 	    (_wordlist == rhs._wordlist) &&
 	    (_locals == rhs._locals));
@@ -507,6 +507,11 @@ rpn::Interp::Privates::eval(rpn::Interp &rpn, const std::string &word, std::stri
     }
       break;
 
+    case rpn::WordDefinition::Result::implementation_error: {
+      msg = "implementation error";
+    }
+      break;
+
     case rpn::WordDefinition::Result::eval_error: {
       msg = "eval error";
       if (rest.size()>0) msg += (std::string(" '") + rest + "'");
@@ -750,6 +755,7 @@ const size_t rpn::StrictTypeValidator::v_anytype = typeid(rpn::Stack::Object).ha
 const rpn::StrictTypeValidator rpn::StrictTypeValidator::d1_double({typeid(StDouble).hash_code()});
 const rpn::StrictTypeValidator rpn::StrictTypeValidator::d1_integer({typeid(StInteger).hash_code()});
 const rpn::StrictTypeValidator rpn::StrictTypeValidator::d1_boolean({typeid(StBoolean).hash_code()});
+const rpn::StrictTypeValidator rpn::StrictTypeValidator::d1_string({typeid(StString).hash_code()});
 const rpn::StrictTypeValidator rpn::StrictTypeValidator::d1_vec3({typeid(StVec3).hash_code()});
 const rpn::StrictTypeValidator rpn::StrictTypeValidator::d1_object({typeid(StObject).hash_code()});
 const rpn::StrictTypeValidator rpn::StrictTypeValidator::d1_array({typeid(StArray).hash_code()});
