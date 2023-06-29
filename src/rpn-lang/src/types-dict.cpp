@@ -316,16 +316,18 @@ rpn::Interp::addTypeWords() {
   addDefinition("->VEC3", NATIVE_WORD_WDEF(vec3, rpn::StrictTypeValidator::d3_integer_integer_double, to_vec3, nullptr));
 
   addDefinition("->VEC3x", NATIVE_WORD_WDEF(vec3, rpn::StrictTypeValidator::d1_double, to_vec3x, nullptr));
-  addDefinition("->VEC3x", NATIVE_WORD_WDEF(vec3, rpn::StrictTypeValidator::d1_integer, to_vec3x, nullptr));
+  addDefinition("->{x}", NATIVE_WORD_WDEF(vec3, rpn::StrictTypeValidator::d1_integer, to_vec3x, nullptr));
   addDefinition("->VEC3y", NATIVE_WORD_WDEF(vec3, rpn::StrictTypeValidator::d1_double, to_vec3y, nullptr));
-  addDefinition("->VEC3y", NATIVE_WORD_WDEF(vec3, rpn::StrictTypeValidator::d1_integer, to_vec3y, nullptr));
+  addDefinition("->{y}", NATIVE_WORD_WDEF(vec3, rpn::StrictTypeValidator::d1_integer, to_vec3y, nullptr));
   addDefinition("->VEC3z", NATIVE_WORD_WDEF(vec3, rpn::StrictTypeValidator::d1_double, to_vec3z, nullptr));
-  addDefinition("->VEC3z", NATIVE_WORD_WDEF(vec3, rpn::StrictTypeValidator::d1_integer, to_vec3z, nullptr));
+  addDefinition("->{z}", NATIVE_WORD_WDEF(vec3, rpn::StrictTypeValidator::d1_integer, to_vec3z, nullptr));
   addDefinition("VEC3->", NATIVE_WORD_WDEF(vec3, rpn::StrictTypeValidator::d1_vec3, vec3_to, nullptr));
 
-  std:: string line = ": VEC3->xy ( <v3> <v3'> ) VEC3-> DROP ->VEC3y SWAP ->VEC3x + ;";
+  std:: string line = ": VEC3->{xy} ( <v3> <v3'> ) VEC3-> DROP ->{y} SWAP ->{x} + ;";
+  line = ": VEC3->{xy} ( <v3> -- <v3'> ) VEC3-> DROP ->{y} SWAP ->{x} + ;";
   auto st = parse(line);
-
+  line = ": ->{xy} ( x y --  <v3'> ) ->{x} SWAP ->{y} + ;";
+   st = parse(line);
 }
 
 /* end of qinc/rpn-lang/src/types-dict.cpp */

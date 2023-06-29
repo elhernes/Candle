@@ -27,8 +27,8 @@ class MachineControl {
   void onNoCommandsPending();
 
   // pure virtual methods
-  virtual QString storeModalState() =0;;
-  virtual void restoreModalState() =0;
+  virtual QString getModalState() =0;;
+  virtual void setModalState(const QString &state) =0;
 
   virtual QVector3D workPos() =0;
   virtual void setWorkPos(const QVector3D &pos) =0;

@@ -984,7 +984,7 @@ void frmMain::onSerialPortReadyRead()
                     m_processingFile = false;
                     m_fileProcessedCommandIndex = 0;
                     m_lastDrawnLineIndex = 0;
-                    m_storedModalStatus.clear();
+                    m_modalState.clear();
 
                     updateControlsState();
 
@@ -1018,7 +1018,7 @@ void frmMain::onSerialPortReadyRead()
                         if (!m_processingFile && m_resetCompleted) {
                             m_aborting = false;
                             restoreOffsets();
-                            restoreModalState();
+                            setModalState(m_modalState);
                             return;
                         }
                         break;
@@ -1209,7 +1209,9 @@ void frmMain::onSerialPortReadyRead()
                         ui->glwVisualizer->setParserStatus(response.left(response.indexOf("; ")));
 
                         // Store parser status
-                        if (m_processingFile) storeModalState();
+                        if (m_processingFile) {
+			  m_modalState = getModalState();
+			}
 
                         // Spindle speed
                         QRegExp rx(".*S([\\d\\.]+)");
@@ -1813,6 +1815,8 @@ void frmMain::closeEvent(QCloseEvent *ce)
 
     if (m_keypad) {
       m_keypad->close();
+      m_keypad = nullptr;
+      m_mi.setKeypad(m_keypad);
     }
 
 }
@@ -2112,7 +2116,7 @@ void frmMain::on_cmdFileSend_clicked()
     ui->chkKeyboardControl->setChecked(false);
 
     if (!ui->chkTestMode->isChecked()) storeOffsets(); // Allready stored on check
-    storeModalState();
+    m_modalState = getModalState();
 
 #ifdef WINDOWS
     if (QSysInfo::windowsVersion() >= QSysInfo::WV_WINDOWS7) {
@@ -2220,7 +2224,7 @@ void frmMain::onActSendFromLineTriggered()
     ui->chkKeyboardControl->setChecked(false);
 
     if (!ui->chkTestMode->isChecked()) storeOffsets(); // Allready stored on check
-    storeModalState();
+    m_modalState = getModalState();
 
 #ifdef WINDOWS
     if (QSysInfo::windowsVersion() >= QSysInfo::WV_WINDOWS7) {
@@ -2250,16 +2254,18 @@ void frmMain::on_cmdFileAbort_clicked()
     }
 }
 
-QString frmMain::storeModalState()
+QString frmMain::getModalState()
 {    
-    m_storedModalStatus = ui->glwVisualizer->parserStatus().remove(
+  QString modalState = ui->glwVisualizer->parserStatus().remove(
                 QRegExp("GC:|\\[|\\]|G[01234]\\s|M[0345]+\\s|\\sF[\\d\\.]+|\\sS[\\d\\.]+"));
-    return m_storedModalStatus;
+    return modalState;
 }
 
-void frmMain::restoreModalState()
+void frmMain::setModalState(const QString &modalState)
 {
-    if (!m_storedModalStatus.isEmpty()) sendCommand(m_storedModalStatus, -1, m_settings->showUICommands());
+  if (modalState != "") {
+    sendCommand(m_modalState, -1, m_settings->showUICommands());
+  }
 }
 
 void frmMain::storeOffsets()
@@ -2676,6 +2682,7 @@ void frmMain::on_cmdKeypad_clicked()
   if (m_keypad == nullptr) {
     m_keypad = new rpn::KeypadController(m_rpn);
     m_keypad->show();
+    m_mi.setKeypad(m_keypad);
   }
 }
 
@@ -2745,7 +2752,7 @@ void frmMain::on_chkTestMode_clicked(bool checked)
 {
     if (checked) {
         storeOffsets();
-        storeModalState();
+        m_modalState = getModalState();
         sendCommand("$C", -1, m_settings->showUICommands());
     } else {
         m_aborting = true;

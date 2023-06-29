@@ -47,6 +47,7 @@ struct MacroProcessor::Privates {
   unsigned cmdNumber;
   bool debug;
   QStringList list;
+  QString modalState;
   std::mutex mx;
 };
 
@@ -115,12 +116,13 @@ static const std::map<std::string,std::function<QString(MacroProcessor::Privates
     } },
 
   { "%save-modal-state", [](MacroProcessor::Privates &p, const QStringList &) -> QString {
-      QString ps = p.mc->storeModalState();
-      return "; save-modal-state {" + ps + "}";
+      p.modalState = p.mc->getModalState();
+      return "; save-modal-state {" + p.modalState + "}";
     } },
 
   { "%restore-modal-state", [](MacroProcessor::Privates &p, const QStringList &) -> QString {
-      p.mc->restoreModalState();
+      
+      p.mc->setModalState(p.modalState);
       return "; modal-parser-state";
     } },
 

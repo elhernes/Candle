@@ -655,7 +655,12 @@ rpn::Interp::status() {
 bool
 rpn::Interp::addDefinition(const std::string &word, const WordDefinition &def) {
   m_p->_rtDictionary.emplace(word, def);
-  return false;
+  return true;
+}
+
+bool
+rpn::Interp::removeDefinition(const std::string &word) {
+  m_p->_rtDictionary.erase(word);
 }
 
 std::multimap<std::string,rpn::WordDefinition>::iterator

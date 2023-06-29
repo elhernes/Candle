@@ -26,8 +26,8 @@ class TestMC : public QObject, public MachineControl {
   ~TestMC();
 
   // public methods for macro processor
-  virtual QString storeModalState() override;
-  virtual void restoreModalState() override;
+  virtual QString getModalState() override;
+  virtual void setModalState() override;
 
   virtual QVector3D workPos() override;
   virtual void setWorkPos(const QVector3D &pos) override;

@@ -61,9 +61,9 @@ SOURCES += main.cpp\
     parser/gcodeviewparse.cpp \
     parser/linesegment.cpp \
     parser/pointsegment.cpp \
+    rpn-cnc.cpp \
     rpn-lang/src/logic-dict.cpp \
     rpn-lang/src/math-dict.cpp \
-    rpn-lang/src/rpn-cnc.cpp \
     rpn-lang/src/rpn-interp.cpp \
     rpn-lang/src/rpn-stack.cpp \
     rpn-lang/src/stack-dict.cpp \

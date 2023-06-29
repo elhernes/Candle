@@ -24,8 +24,11 @@ public:
     KeypadController(Interp &rpn, QWidget* parent = nullptr);
     ~KeypadController();
 
-    void assignButton(unsigned column, unsigned row, const std::string &rpnword, const QString &label);
-private slots:
+    void assignButton(unsigned column, unsigned row, const std::string &rpnword, const QString &label="");
+    void assignMenu(const QString &menu, const std::string &rpnword, const QString &label="");
+    void clearAssignedKeys();
+
+    private slots:
     void on_button_0_clicked();
     void on_button_1_clicked();
     void on_button_2_clicked();
@@ -50,6 +53,8 @@ private slots:
     void on_programmable_button_clicked();
 
     void on_file_open();
+    void on_file_save_stack();
+    void on_file_restore_stack();
 
  public:
     struct Privates;

@@ -203,6 +203,7 @@ namespace rpn {
     rpn::WordDefinition::Result parseFile(const std::string &path);
 
     bool addDefinition(const std::string &word, const WordDefinition &def);
+    bool removeDefinition(const std::string &word);
     bool addCompiledWord(const std::string &word, const std::string &def, const StackValidator &v = StackSizeValidator::zero);
 
     bool validateWord(const std::string &word);

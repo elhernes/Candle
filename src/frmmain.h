@@ -45,7 +45,7 @@
 
 #include "machinecontrol.h"
 #include "rpn-lang/rpn.h"
-#include "rpn-lang/rpn-cnc.h"
+#include "rpn-cnc.h"
 
 namespace rpn { class KeypadController; };
 
@@ -95,8 +95,8 @@ public:
     double toolZPosition();
 
     // public methods for macro processor
-    virtual QString storeModalState() override;
-    virtual void restoreModalState() override;
+    virtual QString getModalState() override;
+    virtual void setModalState(const QString &state) override;
 
     virtual QVector3D workPos() override;
     virtual void setWorkPos(const QVector3D &pos) override;
@@ -312,7 +312,6 @@ private:
     double m_storedX = 0;
     double m_storedY = 0;
     double m_storedZ = 0;
-    QString m_storedModalStatus;
 
     // Console window
     int m_storedConsoleMinimumHeight;
@@ -424,6 +423,7 @@ private:
     rpn::Interp m_rpn;
     rpn::KeypadController *m_keypad;
     rpn::MachineInterface m_mi;
+    QString m_modalState;
 };
 
 #endif // FRMMAIN_H

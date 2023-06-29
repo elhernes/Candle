@@ -35,12 +35,12 @@ TestMC::~TestMC() {
 }
 
 QString
-TestMC::storeModalState() {
+TestMC::getModalState() {
   return "stored modal state";
 }
 
 void
-TestMC::restoreModalState() {
+TestMC::setModalState(const QString &state) {
 }
 
 QVector3D
