@@ -1,0 +1,32 @@
+: probe-dx 20 ;
+: probe-dy 20 ;
+: probe-feed-f 150 ;
+: probe-feed-s 50 ;
+: hole-depth 10 ;
+: plate-thickness 5 ;
+
+MODAL->  
+
+." G91" GSEND
+." G21" GSEND
+." G10 L20 X Y0" SEND
+
+0 0 ->{xy} ->WPOS
+1 ->{x} probe-distance ->{y} + probe-feed-f PROBE DROP ( coarse probe )
+-1 ->{y} probe-feed-s JOG
+3 ->{y} probe-feed-s PROBE ( fine probe )
+
+
+0 0 ->{xy} JOG_WORK
+1 ->{y} probe-distance ->{x} + probe-feed-f PROBE
+
+
+WPOS->
+
+." ma = (p2y - p1y) / (p2x - p1x)" EVAL
+." mb = (p3y - p2y) / (p3x - p2x)" EVAL
+." cx = (ma * mb * (p1y - p3y) + mb * (p1x + p2x) - ma * (p2x + p3x)) / (2 * (mb - ma))" EVAL
+." cy = (-1 / ma) * (cx - (p1x + p2x) * 0.5) + (p1y + p2y) * 0.5" EVAL
+
+
+->MODAL
