@@ -1,0 +1,62 @@
+: probe_distance ( -- distance ) 20 ;  
+: probe_feed_f ( -- feed_f ) 150 ;
+: probe_feed_s ( -- feed_s ) 50 ;
+: hole_depth ( -- depth ) 10 ;
+: plate_thickness ( -- thickness) 5 ;
+
+: test ( v -- )
+ DROP
+;
+
+:
+ test2 ( v1 v2 -- )
+ DROP
+ DROP
+;
+
+.S
+
+MODAL-STATE->  
+
+." ABCDE"
+." FGHIJ"
+CONCAT
+.S
+
+." G91" SEND
+." G21" SEND
+." G10 L20 X0 Y0" SEND
+." test dup"
+.S
+DUP
+.S
+
+DROP
+.S
+
+1 ->{X} probe_distance ->{Y} + probe_feed_f PROBE
+
+WPOS->
+
+." ma = (p2y - p1y) / (p2x - p1x)" EVAL
+." mb = (p3y - p2y) / (p3x - p2x)" EVAL
+." cx = (ma * mb * (p1y - p3y) + mb * (p1x + p2x) - ma * (p2x + p3x)) / (2 * (mb - ma))" EVAL
+." cy = (-1 / ma) * (cx - (p1x + p2x) * 0.5) + (p1y + p2y) * 0.5" EVAL
+
+
+->MODAL-STATE
+.S
+
+WPOS->
+
+.S
+
+SPEED->
+
+.S
+
+SWAP
+
+->WPOS
+
+.D
