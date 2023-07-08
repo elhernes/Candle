@@ -1,7 +1,0 @@
-<RCC>
-    <qresource prefix="/">
-        <file>etc/digital-7-font/Digital7Mono-Yz9J4.ttf</file>
-        <file>etc/hydrogentype/hydrogen.ttf</file>
-        <file>etc/led-counter-7/led_counter-7.ttf</file>
-    </qresource>
-</RCC>
