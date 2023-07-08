@@ -1,0 +1,5 @@
+<RCC>
+    <qresource prefix="/">
+        <file>etc/led-counter-7/led_counter-7.ttf</file>
+    </qresource>
+</RCC>
