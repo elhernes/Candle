@@ -236,10 +236,10 @@ NATIVE_WORD_DECL(vec3, sub_vec3_num) {
 // 3 numbers to a vec3
 NATIVE_WORD_DECL(vec3, to_vec3) {
   rpn::WordDefinition::Result rv = rpn::WordDefinition::Result::ok;
-  double n1 = rpn.stack.pop_as_double();
-  double n2 = rpn.stack.pop_as_double();
-  double n3 = rpn.stack.pop_as_double();
-  rpn.stack.push(StVec3(n1,n2,n3));
+  double z = rpn.stack.pop_as_double();
+  double y = rpn.stack.pop_as_double();
+  double x = rpn.stack.pop_as_double();
+  rpn.stack.push(StVec3(x,y,z));
   return rv;
 }
 
@@ -286,8 +286,10 @@ rpn::Interp::addTypeWords() {
 
   addDefinition("->OBJECT", NATIVE_WORD_WDEF(t_object, rpn::StrictTypeValidator::d2_string_any, to_object, nullptr));
   addDefinition("OBJECT->", NATIVE_WORD_WDEF(t_object, rpn::StrictTypeValidator::d1_object, object_to, nullptr));
+  addDefinition("OBJ->", NATIVE_WORD_WDEF(t_object, rpn::StrictTypeValidator::d1_object, object_to, nullptr));
   addDefinition("->ARRAY", NATIVE_WORD_WDEF(t_array, rpn::StackSizeValidator::ntos, to_array, nullptr));
   addDefinition("ARRAY->", NATIVE_WORD_WDEF(t_array, rpn::StrictTypeValidator::d1_array, array_to, nullptr));
+  addDefinition("OBJ->", NATIVE_WORD_WDEF(t_array, rpn::StrictTypeValidator::d1_array, array_to, nullptr));
 
   addDefinition("+", NATIVE_WORD_WDEF(t_object, rpn::StrictTypeValidator::d3_object_string_any, add_object_string_any, nullptr));
   addDefinition("+", NATIVE_WORD_WDEF(t_object, rpn::StrictTypeValidator::d3_string_any_object, add_string_any_object, nullptr));
@@ -322,6 +324,7 @@ rpn::Interp::addTypeWords() {
   addDefinition("->VEC3z", NATIVE_WORD_WDEF(vec3, rpn::StrictTypeValidator::d1_double, to_vec3z, nullptr));
   addDefinition("->{z}", NATIVE_WORD_WDEF(vec3, rpn::StrictTypeValidator::d1_integer, to_vec3z, nullptr));
   addDefinition("VEC3->", NATIVE_WORD_WDEF(vec3, rpn::StrictTypeValidator::d1_vec3, vec3_to, nullptr));
+  addDefinition("OBJ->", NATIVE_WORD_WDEF(vec3, rpn::StrictTypeValidator::d1_vec3, vec3_to, nullptr));
 
   //  std:: string line = ": VEC3->{xy} ( <v3> <v3'> ) VEC3-> DROP ->{y} SWAP ->{x} + ;";
   //  line = ": VEC3->{xy} ( <v3> -- <v3'> ) VEC3-> DROP ->{y} SWAP ->{x} + ;";

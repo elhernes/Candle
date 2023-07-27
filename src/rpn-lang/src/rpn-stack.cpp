@@ -151,10 +151,10 @@ rpn::Stack::pop_as_boolean() {
     val = bp->val();
 
   } else if (ip) {
-    val = (ip->val()!=0);
+    val = (((int)ip->val())!=0);
 
   } else if (dp) {
-    val = (dp->val() != 0.);
+    val = (((double)dp->val()) != 0.);
 
   } else if (sp) {
     val = (std::string(sp->val())!="");
