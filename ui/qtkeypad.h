@@ -12,21 +12,19 @@ QT_BEGIN_NAMESPACE
 namespace Ui { class RpnKeypad; }
 QT_END_NAMESPACE
 
-namespace rpn {
+#include "rpn-lang/rpn.h"
 
-class Interp;
-
-class KeypadController : public QWidget
+class QtKeypadController : public QWidget, public rpn::KeypadController
 {
     Q_OBJECT
 
 public:
-    KeypadController(Interp &rpn, QWidget* parent = nullptr);
-    ~KeypadController();
+    QtKeypadController(rpn::Interp &rpn, QWidget* parent = nullptr);
+    ~QtKeypadController();
 
-    void assignButton(unsigned column, unsigned row, const std::string &rpnword, const QString &label="");
-    void assignMenu(const QString &menu, const std::string &rpnword, const QString &label="");
-    void clearAssignedKeys();
+    virtual void assignButton(unsigned column, unsigned row, const std::string &rpnword, const std::string &label="") override;
+    virtual void assignMenu(const std::string &menu, const std::string &rpnword, const std::string &label="") override;
+    virtual void clearAssignedButtons() override;
 
     private slots:
     void on_button_0_clicked();
@@ -64,4 +62,3 @@ public:
     Privates *_p;
 };
 
-}

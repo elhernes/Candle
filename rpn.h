@@ -162,6 +162,9 @@ namespace rpn {
     static const StrictTypeValidator d3_object_string_any;
     static const StrictTypeValidator d3_string_any_object;
 
+    static const StrictTypeValidator d4_double_double_double_integer;
+    static const StrictTypeValidator d4_integer_double_double_double;
+
     static const size_t v_anytype;
     //    static const size_t v_numbertype;  // is harder than it sounds...
 
@@ -237,7 +240,18 @@ namespace rpn {
     Privates *m_p;
   };
 
-  class KeypadController;
+
+  class KeypadController : public WordContext {
+  public:
+    KeypadController();
+    virtual void assignButton(unsigned column, unsigned row, const std::string &rpnword, const std::string &label="") =0;
+    virtual void assignMenu(const std::string &menu, const std::string &rpnword, const std::string &label="") =0;
+    virtual void clearAssignedButtons() =0;
+
+  protected:
+    void add_words(rpn::Interp &rpn);
+    void remove_words(rpn::Interp &rpn);
+  };
 }
 
 #define PEEK_CAST(obtype,ob)  dynamic_cast<obtype&>(ob)

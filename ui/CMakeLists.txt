@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.24)
 project(rpn-test-ui)
-include(${CMAKE_CURRENT_SOURCE_DIR}/../rpn-lang.cmake)
+include(${CMAKE_CURRENT_SOURCE_DIR}/../libs/rpn-lang.cmake)
 
 # set(CMAKE_VERBOSE_MAKEFILE ON)
 
@@ -35,9 +35,9 @@ include_directories(${RPN_LANG_DIR})
 #endif()
 
 add_executable(rpn-test-ui ${RPN_LANG_SRCS}
-  rpnkeypad.cpp main.cpp
-  rpnkeypad.ui
-  rpnkeypad.h
+  qtkeypad.cpp main.cpp
+  qtkeypad.ui
+  qtkeypad.h
   rpn-ui.qrc
   )
 set_target_properties(rpn-test-ui PROPERTIES
