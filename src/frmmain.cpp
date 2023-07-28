@@ -42,7 +42,7 @@
 #define AnyTerritory AnyCountry
 #include "ui_frmmain.h"
 
-#include "rpn-lang/ui/rpnkeypad.h"
+#include "rpn-lang/ui/qtkeypad.h"
 
 #include "macros/macroprocessor.h"
 
@@ -147,9 +147,11 @@ frmMain::frmMain(QWidget *parent) :
     ui->cmdHeightMapMode->setMinimumHeight(ui->cmdFileOpen->sizeHint().height());
 
     ui->cboJogStep->setValidator(new QDoubleValidator(0, 10000, 2));
-    ui->cboJogFeed->setValidator(new QIntValidator(0, 100000));
+    ui->cboXYJogFeed->setValidator(new QIntValidator(0, 100000));
+    ui->cboZJogFeed->setValidator(new QIntValidator(0, 100000));
     connect(ui->cboJogStep, &ComboBoxKey::currentTextChanged, [=] (QString) {updateJogTitle();});
-    connect(ui->cboJogFeed, &ComboBoxKey::currentTextChanged, [=] (QString) {updateJogTitle();});
+    connect(ui->cboXYJogFeed, &ComboBoxKey::currentTextChanged, [=] (QString) {updateJogTitle();});
+    connect(ui->cboZJogFeed, &ComboBoxKey::currentTextChanged, [=] (QString) {updateJogTitle();});
 
     // Prepare "Send"-button
     ui->cmdFileSend->setMinimumWidth(qMax(ui->cmdFileSend->width(), ui->cmdFileOpen->width()));
@@ -299,7 +301,8 @@ frmMain::frmMain(QWidget *parent) :
     this->installEventFilter(this);
     ui->tblProgram->installEventFilter(this);
     ui->cboJogStep->installEventFilter(this);
-    ui->cboJogFeed->installEventFilter(this);
+    ui->cboXYJogFeed->installEventFilter(this);
+    ui->cboZJogFeed->installEventFilter(this);
     ui->splitPanels->installEventFilter(this);
 
     connect(&m_timerConnection, SIGNAL(timeout()), this, SLOT(onTimerConnection()));
@@ -475,8 +478,10 @@ void frmMain::loadSettings()
 
     ui->cboJogStep->setItems(set.value("jogSteps").toStringList());
     ui->cboJogStep->setCurrentIndex(ui->cboJogStep->findText(set.value("jogStep").toString()));
-    ui->cboJogFeed->setItems(set.value("jogFeeds").toStringList());
-    ui->cboJogFeed->setCurrentIndex(ui->cboJogFeed->findText(set.value("jogFeed").toString()));
+    ui->cboXYJogFeed->setItems(set.value("xyJogFeeds").toStringList());
+    ui->cboXYJogFeed->setCurrentIndex(ui->cboXYJogFeed->findText(set.value("xyJogFeed").toString()));
+    ui->cboXYJogFeed->setItems(set.value("zJogFeeds").toStringList());
+    ui->cboXYJogFeed->setCurrentIndex(ui->cboXYJogFeed->findText(set.value("zJogFeed").toString()));
 
     ui->txtHeightMapBorderX->setValue(set.value("heightmapBorderX", 0).toDouble());
     ui->txtHeightMapBorderY->setValue(set.value("heightmapBorderY", 0).toDouble());
@@ -606,8 +611,10 @@ void frmMain::saveSettings()
 
     set.setValue("jogSteps", ui->cboJogStep->items());
     set.setValue("jogStep", ui->cboJogStep->currentText());
-    set.setValue("jogFeeds", ui->cboJogFeed->items());
-    set.setValue("jogFeed", ui->cboJogFeed->currentText());
+    set.setValue("xyJogFeeds", ui->cboXYJogFeed->items());
+    set.setValue("xyJogFeed", ui->cboXYJogFeed->currentText());
+    set.setValue("zJogFeeds", ui->cboZJogFeed->items());
+    set.setValue("zJogFeed", ui->cboZJogFeed->currentText());
 
     set.setValue("heightmapBorderX", ui->txtHeightMapBorderX->value());
     set.setValue("heightmapBorderY", ui->txtHeightMapBorderY->value());
@@ -742,9 +749,11 @@ void frmMain::updateControlsState() {
     ui->grpHeightMapSettings->setEnabled(!m_processingFile && !ui->chkKeyboardControl->isChecked());
 
     ui->cboJogStep->setEditable(!ui->chkKeyboardControl->isChecked());
-    ui->cboJogFeed->setEditable(!ui->chkKeyboardControl->isChecked());
+    ui->cboXYJogFeed->setEditable(!ui->chkKeyboardControl->isChecked());
+    ui->cboZJogFeed->setEditable(!ui->chkKeyboardControl->isChecked());
     ui->cboJogStep->setStyleSheet(QString("font-size: %1").arg(m_settings->fontSize()));
-    ui->cboJogFeed->setStyleSheet(ui->cboJogStep->styleSheet());
+    ui->cboXYJogFeed->setStyleSheet(ui->cboJogStep->styleSheet());
+    ui->cboZJogFeed->setStyleSheet(ui->cboJogStep->styleSheet());
 
     ui->chkTestMode->setVisible(!m_heightMapMode);
     ui->chkAutoScroll->setVisible(ui->splitter->sizes()[1] && !m_heightMapMode);
@@ -918,7 +927,7 @@ void frmMain::onSerialPortReadyRead()
 				    ui->txtMPosX->text().toDouble(),
 				    ui->txtMPosY->text().toDouble(),
 				    ui->txtMPosZ->text().toDouble(),
-				    ui->cboJogFeed->currentText().toInt(),
+                              ui->cboXYJogFeed->currentText().toInt(),
 				    ui->slbSpindle->value());
 		}
 
@@ -1060,7 +1069,8 @@ void frmMain::onSerialPortReadyRead()
 				ui->txtWPosX->value(),
 				ui->txtWPosY->value(),
 				ui->txtWPosZ->value(),
-				ui->cboJogFeed->currentText().toInt(),
+				// XXX-ELH: should probably predicate this on the axis selected
+                                  ui->cboXYJogFeed->currentText().toInt(),
 				ui->slbSpindle->value());
 	    }
 
@@ -1594,17 +1604,25 @@ double frmMain::spindle() {
   return ui->slbSpindle->value();
 }
 
-void frmMain::setJogFeed(double feed) {
-  ui->cboJogFeed->setCurrentText(QString::number(feed));
+void frmMain::setXYJogFeed(double feed) {
+  ui->cboXYJogFeed->setCurrentText(QString::number(feed));
 }
 
-double frmMain::jogFeed() {
-  return ui->cboJogFeed->currentText().toDouble();
+double frmMain::xyJogFeed() {
+  return ui->cboXYJogFeed->currentText().toDouble();
+}
+
+void frmMain::setZJogFeed(double feed) {
+  ui->cboZJogFeed->setCurrentText(QString::number(feed));
+}
+
+double frmMain::zJogFeed() {
+  return ui->cboZJogFeed->currentText().toDouble();
 }
 
 void frmMain::goAbsoluteWork(const QVector3D &pos, bool jogp) {
   // with goAbsolute, we need a way to not jog irrelevant axes
-  int speed = ui->cboJogFeed->currentText().toInt();
+  int speed = ui->cboXYJogFeed->currentText().toInt();
   QString xp = (!std::isnan(pos.x())) ? QString("X%1").arg(pos.x(), 0, 'g', 4) : "";
   QString yp = (!std::isnan(pos.y())) ? QString("Y%1").arg(pos.y(), 0, 'g', 4) : "";
   QString zp = (!std::isnan(pos.z())) ? QString("Z%1").arg(pos.z(), 0, 'g', 4) : "";
@@ -1623,8 +1641,10 @@ void frmMain::goAbsoluteMachine(const QVector3D &mp, bool jogp) {
   QVector3D m = machinePos();
   QVector3D pos = mp - m + w;
 
+  // XXX-ELH: need to decide xy-feed or z-feed
+
   // with goAbsolute, we need a way to not jog irrelevant axes
-  int speed = ui->cboJogFeed->currentText().toInt();
+  int speed = ui->cboXYJogFeed->currentText().toInt();
   QString xp = (!std::isnan(pos.x())) ? QString("X%1").arg(pos.x(), 0, 'g', 4) : "";
   QString yp = (!std::isnan(pos.y())) ? QString("Y%1").arg(pos.y(), 0, 'g', 4) : "";
   QString zp = (!std::isnan(pos.z())) ? QString("Z%1").arg(pos.z(), 0, 'g', 4) : "";
@@ -1638,7 +1658,8 @@ void frmMain::goAbsoluteMachine(const QVector3D &mp, bool jogp) {
 }
 
 void frmMain::goRelative(const QVector3D &pos, bool jogp) {
-  int speed = ui->cboJogFeed->currentText().toInt();
+  // XXX-ELH: need to decide xy-feed or z-feed
+  int speed = ui->cboXYJogFeed->currentText().toInt();
   sendCommand(QString("%1G21G91X%2Y%3Z%4F%5")
 	      .arg(jogp ? "$J=" : "")
 	      .arg(pos.x(), 0, 'g', 4)
@@ -2680,7 +2701,7 @@ void frmMain::on_cmdKeypad_clicked()
   }
 
   if (m_keypad == nullptr) {
-    m_keypad = new rpn::KeypadController(m_rpn);
+    m_keypad = new QtKeypadController(m_rpn);
     m_keypad->show();
     m_mi.setKeypad(m_keypad);
   }
@@ -3066,7 +3087,7 @@ void frmMain::on_grpSpindle_toggled(bool checked)
 bool frmMain::eventFilter(QObject *obj, QEvent *event)
 {
     // Main form events
-    if (obj == this || obj == ui->tblProgram || obj == ui->cboJogStep || obj == ui->cboJogFeed) {
+    if (obj == this || obj == ui->tblProgram || obj == ui->cboJogStep || obj == ui->cboXYJogFeed || obj == ui->cboZJogFeed) {
 
         // Jog on keyboard control
         if (!m_processingFile && ui->chkKeyboardControl->isChecked() &&
@@ -3109,9 +3130,9 @@ bool frmMain::eventFilter(QObject *obj, QEvent *event)
                 } else if (keyEvent->key() == Qt::Key_1) {
                     ui->cboJogStep->setCurrentNext();
                 } else if (keyEvent->key() == Qt::Key_Minus) {
-                    ui->cboJogFeed->setCurrentPrevious();
+                    ui->cboXYJogFeed->setCurrentPrevious();
                 } else if (keyEvent->key() == Qt::Key_Plus) {
-                    ui->cboJogFeed->setCurrentNext();
+                    ui->cboXYJogFeed->setCurrentNext();
                 } else if (keyEvent->key() == Qt::Key_5) {
                     on_cmdStop_clicked();
                 } else if (keyEvent->key() == Qt::Key_0) {
@@ -3242,12 +3263,13 @@ void frmMain::on_chkKeyboardControl_toggled(bool checked)
 
 void frmMain::updateJogTitle()
 {
+  // XXX-ELH: determine xy-jog or z-jog
     if (ui->grpJog->isChecked() || !ui->chkKeyboardControl->isChecked()) {
         ui->grpJog->setTitle(tr("Jog"));
     } else if (ui->chkKeyboardControl->isChecked()) {
         ui->grpJog->setTitle(tr("Jog") + QString(tr(" (%1/%2)"))
                              .arg(ui->cboJogStep->currentText().toDouble() > 0 ? ui->cboJogStep->currentText() : tr("C"))
-                             .arg(ui->cboJogFeed->currentText()));
+                                             .arg(ui->cboXYJogFeed->currentText()));
     }
 }
 
@@ -4201,10 +4223,10 @@ void frmMain::updateOverride(SliderBox *slider, int value, char command)
 void frmMain::jogStep()
 {
     if (m_jogVector.length() == 0) return;
-
+  // XXX-ELH: determine xy-jog or z-jog
     if (ui->cboJogStep->currentText().toDouble() == 0) {
         const double acc = m_settings->acceleration();              // Acceleration mm/sec^2
-        int speed = ui->cboJogFeed->currentText().toInt();          // Speed mm/min
+        int speed = ui->cboXYJogFeed->currentText().toInt();          // Speed mm/min
         double v = (double)speed / 60;                              // Rapid speed mm/sec
         int N = 15;                                                 // Planner blocks
         double dt = qMax(0.01, sqrt(v) / (2 * acc * (N - 1)));      // Single jog command time
@@ -4220,7 +4242,7 @@ void frmMain::jogStep()
                     .arg(vec.z(), 0, 'g', 4)
                     .arg(speed), -2, m_settings->showUICommands());
     } else {
-        int speed = ui->cboJogFeed->currentText().toInt();          // Speed mm/min
+        int speed = ui->cboXYJogFeed->currentText().toInt();          // Speed mm/min
         QVector3D vec = m_jogVector * ui->cboJogStep->currentText().toDouble();
 
         sendCommand(QString("$J=G21G91X%1Y%2Z%3F%4")
@@ -4495,7 +4517,9 @@ void frmMain::on_pendant_event(quint8 button1, quint8 button2, quint8 axis, quin
 
     /*
      * I wonder if we should use the UI Jog settings for this.
+     * XXX-ELH: determine xy-jog or z-jog
      */
+
     QVector3D jv;
     
     static const std::map<uint8_t,double> skStepConMultiplier = {
@@ -4512,7 +4536,7 @@ void frmMain::on_pendant_event(quint8 button1, quint8 button2, quint8 axis, quin
       // hmmm...
     }
     double distance = scmi->second * count;
-    int speed = ui->cboJogFeed->currentText().toInt();
+    int speed = ui->cboXYJogFeed->currentText().toInt();
     switch (axis) {
     case WHB04B::axis_off: {
     }

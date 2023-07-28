@@ -41,8 +41,10 @@ class MachineControl {
 
   virtual void setSpindle(double speed) =0;
   virtual double spindle() =0;
-  virtual void setJogFeed(double feed) =0;
-  virtual double jogFeed() =0;
+  virtual void setXYJogFeed(double feed) =0;
+  virtual double xyJogFeed() =0;
+  virtual void setZJogFeed(double feed) =0;
+  virtual double zJogFeed() =0;
 
     /*
      * name is:

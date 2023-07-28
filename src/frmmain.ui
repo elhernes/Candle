@@ -1896,7 +1896,7 @@ padding-right: 8;</string>
             <x>0</x>
             <y>0</y>
             <width>393</width>
-            <height>642</height>
+            <height>675</height>
            </rect>
           </property>
           <property name="sizePolicy">
@@ -2260,6 +2260,67 @@ padding-right: 8;</string>
                    <property name="verticalSpacing">
                     <number>7</number>
                    </property>
+                   <item row="3" column="0">
+                    <widget class="QLabel" name="label_22">
+                     <property name="text">
+                      <string>Z Feed:</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="2" column="0">
+                    <widget class="QLabel" name="label_23">
+                     <property name="text">
+                      <string>XY Feed:</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="3" column="1">
+                    <widget class="ComboBoxKey" name="cboZJogFeed">
+                     <property name="editable">
+                      <bool>true</bool>
+                     </property>
+                     <property name="insertPolicy">
+                      <enum>QComboBox::NoInsert</enum>
+                     </property>
+                     <item>
+                      <property name="text">
+                       <string>10</string>
+                      </property>
+                     </item>
+                     <item>
+                      <property name="text">
+                       <string>50</string>
+                      </property>
+                     </item>
+                     <item>
+                      <property name="text">
+                       <string>100</string>
+                      </property>
+                     </item>
+                     <item>
+                      <property name="text">
+                       <string>500</string>
+                      </property>
+                     </item>
+                     <item>
+                      <property name="text">
+                       <string>1000</string>
+                      </property>
+                     </item>
+                     <item>
+                      <property name="text">
+                       <string>2000</string>
+                      </property>
+                     </item>
+                    </widget>
+                   </item>
+                   <item row="0" column="0">
+                    <widget class="QLabel" name="label_20">
+                     <property name="text">
+                      <string>Step:</string>
+                     </property>
+                    </widget>
+                   </item>
                    <item row="0" column="1">
                     <widget class="ComboBoxKey" name="cboJogStep">
                      <property name="editable">
@@ -2305,22 +2366,8 @@ padding-right: 8;</string>
                      </item>
                     </widget>
                    </item>
-                   <item row="0" column="0">
-                    <widget class="QLabel" name="label_20">
-                     <property name="text">
-                      <string>Step:</string>
-                     </property>
-                    </widget>
-                   </item>
-                   <item row="1" column="0">
-                    <widget class="QLabel" name="label_22">
-                     <property name="text">
-                      <string>Feed:</string>
-                     </property>
-                    </widget>
-                   </item>
-                   <item row="1" column="1">
-                    <widget class="ComboBoxKey" name="cboJogFeed">
+                   <item row="2" column="1">
+                    <widget class="ComboBoxKey" name="cboXYJogFeed">
                      <property name="editable">
                       <bool>true</bool>
                      </property>

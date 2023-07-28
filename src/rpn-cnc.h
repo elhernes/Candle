@@ -15,7 +15,7 @@
 #pragma once
 
 #include "rpn-lang/rpn.h"
-#include "rpn-lang/ui/rpnkeypad.h"
+#include "rpn-lang/ui/qtkeypad.h"
 #include "machinecontrol.h"
 
 // machine control wrapper / adapter

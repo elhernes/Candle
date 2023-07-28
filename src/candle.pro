@@ -68,7 +68,8 @@ SOURCES += main.cpp\
     rpn-lang/src/rpn-stack.cpp \
     rpn-lang/src/stack-dict.cpp \
     rpn-lang/src/types-dict.cpp \
-    rpn-lang/ui/rpnkeypad.cpp \
+    rpn-lang/src/keypad-dict.cpp \
+    rpn-lang/ui/qtkeypad.cpp \
     tables/gcodetablemodel.cpp \
     tables/heightmaptablemodel.cpp \
     widgets/colorpicker.cpp \
@@ -124,7 +125,7 @@ HEADERS  += frmmain.h \
     parser/linesegment.h \
     parser/pointsegment.h \
     pendant/whb04b.h \
-    rpn-lang/ui/rpnkeypad.h \
+    rpn-lang/ui/qtkeypad.h \
     tables/gcodetablemodel.h \
     tables/heightmaptablemodel.h \
     utils/interpolation.h \
@@ -144,7 +145,7 @@ HEADERS  += frmmain.h \
 FORMS    += frmmain.ui \
     frmsettings.ui \
     frmabout.ui \
-    rpn-lang/ui/rpnkeypad.ui \
+    rpn-lang/ui/qtkeypad.ui \
     widgets/sliderbox.ui
 
 DEFINES += _USE_MATH_DEFINES

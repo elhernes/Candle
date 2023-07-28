@@ -109,8 +109,10 @@ public:
 
     virtual void setSpindle(double speed) override;
     virtual double spindle() override;
-    virtual void setJogFeed(double feed) override;
-    virtual double jogFeed() override;
+    virtual void setXYJogFeed(double feed) override;
+    virtual double xyJogFeed() override;
+    virtual void setZJogFeed(double feed) override;
+    virtual double zJogFeed() override;
 
     /*
      * name is:
@@ -421,7 +423,7 @@ private:
     WHB04B m_pendant;
     class MacroProcessor *m_macroproc;
     rpn::Interp m_rpn;
-    rpn::KeypadController *m_keypad;
+    QtKeypadController *m_keypad;
     rpn::MachineInterface m_mi;
     QString m_modalState;
 };
