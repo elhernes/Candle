@@ -12,7 +12,7 @@ QT_BEGIN_NAMESPACE
 namespace Ui { class RpnKeypad; }
 QT_END_NAMESPACE
 
-#include "rpn-lang/rpn.h"
+#include "../rpn.h"
 
 class QtKeypadController : public QWidget, public rpn::KeypadController
 {
@@ -25,6 +25,7 @@ public:
     virtual void assignButton(unsigned column, unsigned row, const std::string &rpnword, const std::string &label="") override;
     virtual void assignMenu(const std::string &menu, const std::string &rpnword, const std::string &label="") override;
     virtual void clearAssignedButtons() override;
+    virtual void enable(bool pred) override;
 
     private slots:
     void on_button_0_clicked();
@@ -53,6 +54,11 @@ public:
     void on_file_open();
     void on_file_save_stack();
     void on_file_restore_stack();
+
+    void on_rpn_completed();
+
+ signals:
+    void signal_rpn_complete();
 
  public:
     struct Privates;

@@ -332,8 +332,8 @@ rpn::Interp::addTypeWords() {
   //  line = ": ->{xy} ( x y --  <v3'> ) ->{x} SWAP ->{y} + ;";
   //   st = parse(line);
 
-  auto st = eval(": VEC3->{xy} ( <v3> <v3'> ) VEC3-> DROP ->{y} SWAP ->{x} + ;");
-  st = eval(": ->{xy} ( x y --  <v3'> ) ->{x} SWAP ->{y} + ;");
+  auto st = sync_eval(": VEC3->{xy} ( <v3> <v3'> ) VEC3-> DROP ->{y} SWAP ->{x} + ;");
+  st = sync_eval(": ->{xy} ( x y --  <v3'> ) ->{x} SWAP ->{y} + ;");
 }
 
 /* end of qinc/rpn-lang/src/types-dict.cpp */

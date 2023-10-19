@@ -208,10 +208,11 @@ namespace rpn {
   public:
     Interp();
     ~Interp();
-    rpn::WordDefinition::Result parse(std::string &line);
-    rpn::WordDefinition::Result eval(std::string line) { return parse(line); };
+    static void nullCompletionHandler(rpn::WordDefinition::Result) {};
 
-    rpn::WordDefinition::Result parseFile(const std::string &path);
+    rpn::WordDefinition::Result sync_eval(std::string line);
+    void eval(std::string line, std::function<void(rpn::WordDefinition::Result)>completionHandler=nullCompletionHandler);
+    void parseFile(const std::string &path, std::function<void(rpn::WordDefinition::Result)>completionHandler=nullCompletionHandler);
 
     bool addDefinition(const std::string &word, const WordDefinition &def);
     bool removeDefinition(const std::string &word);
@@ -233,6 +234,7 @@ namespace rpn {
 
     struct Privates;
   private:
+    rpn::WordDefinition::Result parse(std::string &line);
     void addStackWords();
     void addMathWords();
     void addLogicWords();
@@ -247,6 +249,7 @@ namespace rpn {
     virtual void assignButton(unsigned column, unsigned row, const std::string &rpnword, const std::string &label="") =0;
     virtual void assignMenu(const std::string &menu, const std::string &rpnword, const std::string &label="") =0;
     virtual void clearAssignedButtons() =0;
+    virtual void enable(bool pred) =0; // enables/disables the keypad buttons
 
   protected:
     void add_words(rpn::Interp &rpn);

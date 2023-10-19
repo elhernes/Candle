@@ -161,6 +161,15 @@ NATIVE_WORD_DECL(keypad, TYPE_KEYS) {
   return rv;
 }
 
+#include <chrono>
+#include <thread>
+using namespace std::chrono_literals;
+
+NATIVE_WORD_DECL(long_word, LOGIC_KEYS) {
+  std::this_thread::sleep_for(3s);
+  return rpn::WordDefinition::Result::ok;
+}
+
 rpn::KeypadController::KeypadController() {
 }
 
@@ -171,6 +180,7 @@ rpn::KeypadController::add_words(rpn::Interp &rpn) {
   rpn.addDefinition("stack-keys", { rpn::StackSizeValidator::zero, NATIVE_WORD_FN(keypad, STACK_KEYS), this });
   rpn.addDefinition("logic-keys", { rpn::StackSizeValidator::zero, NATIVE_WORD_FN(keypad, LOGIC_KEYS), this });
   rpn.addDefinition("type-keys", { rpn::StackSizeValidator::zero, NATIVE_WORD_FN(keypad, TYPE_KEYS), this });
+  rpn.addDefinition("long-word", { rpn::StackSizeValidator::zero, NATIVE_WORD_FN(long_word, LOGIC_KEYS), this });
   clearAssignedButtons();
 }
 

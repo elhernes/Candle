@@ -15,14 +15,14 @@
 #include <QApplication>
 #include <QStack>
 #include "rpn.h"
-#include "rpnkeypad.h"
+#include "qtkeypad.h"
 
 int
 main(int ac, char **av) {
   QApplication app(ac, av);
 
   rpn::Interp rpn;
-  rpn::KeypadController keypad(rpn);
+  QtKeypadController keypad(rpn);
   keypad.assignButton(10,4, "DROP", "DROP");
   keypad.show();
   return app.exec();

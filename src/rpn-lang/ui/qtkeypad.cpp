@@ -31,12 +31,14 @@ struct QtKeypadController::Privates {
     _mFile->addAction(action);
     connect(action, &QAction::triggered, _rpnd, &QtKeypadController::on_file_restore_stack);
 
+    connect(_rpnd, &QtKeypadController::signal_rpn_complete, _rpnd, &QtKeypadController::on_rpn_completed);
+
     _mKeys = menubar->addMenu("&Keys");
 
     _ui->textEdit->setReadOnly(true);
     _ui->textEdit->setAlignment(Qt::AlignRight);
 
-    for(auto *w : programmableButtons()) {
+    for(auto *w : programmable_buttons()) {
       QPushButton *b = dynamic_cast<QPushButton*>(w);
       b->setProperty("rpn-word", ""); // QString(QString::fromStdString(btn)));
       b->setFixedWidth(75);
@@ -56,7 +58,7 @@ struct QtKeypadController::Privates {
   }
 
   void clear_assigned_buttons() {
-    for(auto *w : programmableButtons()) {
+    for(auto *w : programmable_buttons()) {
       QPushButton *b = dynamic_cast<QPushButton*>(w);
       b->setText("");
       b->setEnabled(false);
@@ -72,19 +74,26 @@ struct QtKeypadController::Privates {
     assign_button(0,10, "SWAP");
   }
 
-  rpn::WordDefinition::Result pushEntry() {
+  rpn::WordDefinition::Result push_entry() {
     rpn::WordDefinition::Result rv = rpn::WordDefinition::Result::ok;
     std::string line = _ui->lineEdit->text().toStdString();
     if (line != "") {
-      rv = _rpn.parse(line);
+      rpn_eval(line);
       _ui->lineEdit->clear();
     }
     return rv;
   }
 
-  QList<QWidget*> programmableButtons() {
+  QList<QWidget*> programmable_buttons() {
     QRegularExpression exp("^pb_");
     return _rpnd->findChildren<QWidget *>(exp);
+  }
+
+  void rpn_eval(const std::string &wordlist) {
+    _rpnd->setEnabled(false);
+    _rpn.eval(wordlist, [this](rpn::WordDefinition::Result) {
+	emit _rpnd->signal_rpn_complete();
+      });
   }
 
   rpn::Interp &_rpn;
@@ -93,7 +102,7 @@ struct QtKeypadController::Privates {
   QMenu *_mKeys;
   QMenu *_mFile;
 
-  void redraw_display();
+  void redraw_display() const;
   void assign_button(unsigned column, unsigned row, const std::string &rpnword, const QString &label="");
   void assign_menu(const QString &menu, const std::string &rpnword, const QString &label="");
 
@@ -131,6 +140,11 @@ QtKeypadController::clearAssignedButtons() {
   _p->clear_assigned_buttons();
 }
 
+void
+QtKeypadController::enable(bool pred) {
+  setEnabled(pred);
+}
+
 bool
 QtKeypadController::eventFilter(QObject *watched, QEvent *event) {
   if(event->type() == QKeyEvent::KeyPress) {
@@ -149,8 +163,9 @@ QtKeypadController::on_file_open() {
   QString fileName = QFileDialog::getOpenFileName(this,
 						  "Open RPN Script", "", "RPN Files (*.rpn *.4th *.4nc)");
   if (fileName != "") {
-    _p->_rpn.parseFile(fileName.toStdString());
-    _p->redraw_display();
+    _p->_rpn.parseFile(fileName.toStdString(), [this](rpn::WordDefinition::Result rv) {
+	_p->redraw_display();
+      });
   }
 }
 
@@ -191,12 +206,10 @@ void QtKeypadController::on_button_dot_clicked() { _p->_ui->lineEdit->insert("."
 void
 QtKeypadController::on_button_enter_clicked() {
   if (_p->_ui->lineEdit->text() == "") {
-    std::string line = "DUP";
-    _p->_rpn.parse(line);
+    _p->rpn_eval("DUP");
   } else {
-    _p->pushEntry();
+    _p->push_entry();
   }
-  _p->redraw_display();
 }
 
 void
@@ -204,10 +217,8 @@ QtKeypadController::on_button_back_clicked() {
   if (_p->_ui->lineEdit->text() != "") {
     _p->_ui->lineEdit->backspace();
   } else {
-    std::string line = "DROP";
-    _p->_rpn.parse(line);
+    _p->rpn_eval("DROP");
   }
-  _p->redraw_display();
 }
 
 void
@@ -216,42 +227,38 @@ QtKeypadController::on_button_chs_clicked() {
     float val = _p->_ui->lineEdit->text().toFloat() * -1.;
     _p->_ui->lineEdit->setText(QString::number(val));
   } else {
-    std::string line = "CHS";
-    _p->_rpn.parse(line);
+    _p->rpn_eval("CHS");
   }
-  _p->redraw_display();
 }
 
 void QtKeypadController::on_button_add_clicked() {
-  if (_p->pushEntry()==rpn::WordDefinition::Result::ok) {
-      std::string line = "+";
-      _p->_rpn.parse(line);
+  if (_p->push_entry()==rpn::WordDefinition::Result::ok) {
+      _p->rpn_eval("+");
     }
-  _p->redraw_display();
 }
 
 void QtKeypadController::on_button_subtract_clicked() {
-  if (_p->pushEntry()==rpn::WordDefinition::Result::ok) {
-      std::string line = "-";
-      _p->_rpn.parse(line);
+  if (_p->push_entry()==rpn::WordDefinition::Result::ok) {
+      _p->rpn_eval("-");
     }
-  _p->redraw_display();
 }
 
 void QtKeypadController::on_button_multiply_clicked() {
-  if (_p->pushEntry()==rpn::WordDefinition::Result::ok) {
-      std::string line = "*";
-      _p->_rpn.parse(line);
+  if (_p->push_entry()==rpn::WordDefinition::Result::ok) {
+      _p->rpn_eval("*");
     }
-  _p->redraw_display();
 }
 
 void QtKeypadController::on_button_divide_clicked() {
-  if (_p->pushEntry()==rpn::WordDefinition::Result::ok) {
-      std::string line = "/";
-      _p->_rpn.parse(line);
+  if (_p->push_entry()==rpn::WordDefinition::Result::ok) {
+      _p->rpn_eval("/");
     }
+}
+
+void
+QtKeypadController::on_rpn_completed() {
   _p->redraw_display();
+  setEnabled(true);
 }
 
 /******************************** application programmable buttons ********************************/
@@ -282,22 +289,21 @@ QtKeypadController::Privates::assign_menu(const QString &menu, const std::string
 }
 
 void QtKeypadController::on_programmable_button_clicked() {
-  if (_p->pushEntry()==rpn::WordDefinition::Result::ok) {
+  if (_p->push_entry()==rpn::WordDefinition::Result::ok) {
     QObject *b = this->sender();
     QString qword = b->property("rpn-word").toString();
     if (qword != "") {
       std::string word=qword.toStdString();
-      _p->_rpn.parse(word);
+      _p->rpn_eval(word);
     }
   }
-  _p->redraw_display();
 }
 
 
 /******************************** Stack display  ********************************/
 
 void
-QtKeypadController::Privates::redraw_display() {
+QtKeypadController::Privates::redraw_display() const {
   _ui->textEdit->clear();
   _ui->textEdit->setAlignment(Qt::AlignRight);
   

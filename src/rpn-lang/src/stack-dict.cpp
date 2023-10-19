@@ -86,7 +86,7 @@ rpn::Interp::addStackWords() {
   ADD_STACK_OP(rpn, "REVERSE", zero, reverse);
   ADD_STACK_OP(rpn, "REVERSEn", ntos, reversen);
 
-  auto st = rpn.eval(R"(
+  auto st = rpn.sync_eval(R"(
 : DUP2 2 DUPn ;
 : DROP2 DROP DROP ;
 )");
