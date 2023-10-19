@@ -30,7 +30,7 @@ class MacroProcessor : public QObject {
   bool setVariable(const QString &symbol, double value);
   double getVariable(const QString &symbol);
 
-  void onNoCommandsPending();
+  void onControllerIdle();
 
   struct Privates;
 

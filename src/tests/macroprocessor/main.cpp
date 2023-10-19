@@ -29,8 +29,8 @@ main(int ac, char **av) {
       exit(0);
     });
 
-  QObject::connect(&tmc, &TestMC::noCommandsPending,
-		   [&mproc]() {  mproc.onNoCommandsPending(); } );
+  QObject::connect(&tmc, &TestMC::controllerIdle,
+		   [&mproc]() {  mproc.onControllerIdle(); } );
 
   QVector3D mpos = tmc.machinePos();
   mproc.setVariable("mposx", mpos.x());

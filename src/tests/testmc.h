@@ -51,7 +51,7 @@ class TestMC : public QObject, public MachineControl {
 
   struct Privates;
  signals:
-  void noCommandsPending();
+  void controllerIdle();
 
  private:
   Privates *m_p;

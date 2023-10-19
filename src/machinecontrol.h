@@ -24,7 +24,7 @@
 class MachineControl {
  public:
   // pseudo-slots, called on events from outside
-  void onNoCommandsPending();
+  void onControllerIdle();
 
   // pure virtual methods
   virtual QString getModalState() =0;;

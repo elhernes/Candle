@@ -322,6 +322,8 @@ frmMain::frmMain(QWidget *parent) :
 
     m_pendant.start();
 
+    connect(this, &frmMain::controllerIdle,
+	    [this]() { m_mi.onControllerIdle(); } );
 }
 
 frmMain::~frmMain()
@@ -481,7 +483,7 @@ void frmMain::loadSettings()
     ui->cboXYJogFeed->setItems(set.value("xyJogFeeds").toStringList());
     ui->cboXYJogFeed->setCurrentIndex(ui->cboXYJogFeed->findText(set.value("xyJogFeed").toString()));
     ui->cboXYJogFeed->setItems(set.value("zJogFeeds").toStringList());
-    ui->cboXYJogFeed->setCurrentIndex(ui->cboXYJogFeed->findText(set.value("zJogFeed").toString()));
+    ui->cboXYJogFeed->setCurrentIndex(ui->cboZJogFeed->findText(set.value("zJogFeed").toString()));
 
     ui->txtHeightMapBorderX->setValue(set.value("heightmapBorderX", 0).toDouble());
     ui->txtHeightMapBorderY->setValue(set.value("heightmapBorderY", 0).toDouble());
@@ -1197,7 +1199,7 @@ void frmMain::onSerialPortReadyRead()
                     // Take command from buffer
                     CommandAttributes ca = m_commands.takeFirst();
 		    if (m_commands.isEmpty()) {
-		      emit noCommandsPending();
+		      emit controllerIdle();
 		    }
                     QTextBlock tb = ui->txtConsole->document()->findBlockByNumber(ca.consoleIndex);
                     QTextCursor tc(tb);
@@ -4161,8 +4163,8 @@ void frmMain::sendMacro(const QString &macroText) {
   connect(m_macroproc, SIGNAL(finished()),
 	  this, SLOT(on_macro_finished()));
 
-  connect(this, &frmMain::noCommandsPending,
-      [this]() { if (m_macroproc) m_macroproc->onNoCommandsPending(); } );
+  connect(this, &frmMain::controllerIdle,
+      [this]() { if (m_macroproc) m_macroproc->onControllerIdle(); } );
 
   if (m_codeDrawer) {
     QVector3D axisMin = m_codeDrawer->getMinimumExtremes();

@@ -132,7 +132,7 @@ public:
 
  signals:
     void grblStatusChanged(const QString &newStatus);
-    void noCommandsPending();
+    void controllerIdle();
 
 private slots:
     void updateHeightMapInterpolationDrawer(bool reset = false);

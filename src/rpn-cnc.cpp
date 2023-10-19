@@ -41,6 +41,19 @@ rpn::MachineInterface::setKeypad(rpn::KeypadController *keypad) {
   }
 }
 
+void
+rpn::MachineInterface::onControllerIdle() {
+}
+
+NATIVE_WORD_DECL(cnc, PROBE_single) {
+  rpn::WordDefinition::Result rv = rpn::WordDefinition::Result::ok;
+  rpn::MachineInterface::Privates *p = dynamic_cast<rpn::MachineInterface::Privates*>(ctx);
+  if (p->_keypad != nullptr) {
+    p->_keypad->enable(false);
+  }
+  return rv;
+}
+
 NATIVE_WORD_DECL(cnc, MPOS_push) {
   rpn::WordDefinition::Result rv = rpn::WordDefinition::Result::ok;
   rpn::MachineInterface::Privates *p = dynamic_cast<rpn::MachineInterface::Privates*>(ctx);
@@ -186,7 +199,7 @@ NATIVE_WORD_DECL(cnc, JOG_KEYS) {
     p->_keypad->assignButton(2,2, "JOG-MAC", "JOG-M");
     p->_keypad->assignButton(2,3, "MODAL->", "MODL->");
     p->_keypad->assignButton(2,4, "->MODL", "->MODL");
-    p->_keypad->assignButton(2,5, "GSEND");
+    p->_keypad->assignButton(2,8, "GSEND");
   }
   return rv;
 }
@@ -206,6 +219,7 @@ NATIVE_WORD_DECL(cnc, PROBE_KEYS) {
     p->_keypad->assignButton(1,8, "PROBE-SWo", "↗");  p->_keypad->assignButton(2,8, "PROBE-So", "⬆");  p->_keypad->assignButton(3,8, "PROBE-SEo", "↖");
 #endif
     p->_keypad->assignButton(4,2, "PROBE-XYZ", "P->XYZ");
+    p->_keypad->assignButton(4,3, "PROBE", "PROBE");
 
     p->_keypad->assignButton(1,1, "PROBE-NWi", "↖");  p->_keypad->assignButton(2,1, "PROBE-NEi", "↗");
     p->_keypad->assignButton(1,2, "PROBE-SWi", "↙");  p->_keypad->assignButton(2,2, "PROBE-SEi", "↘");
@@ -248,6 +262,8 @@ rpn::MachineInterface::Privates::Privates(rpn::Interp &rpn, MachineControl &mc) 
 
   _rpn.addDefinition("jog-keys", NATIVE_WORD_WDEF(cnc, rpn::StackSizeValidator::zero, JOG_KEYS, this));
   _rpn.addDefinition("probe-keys", NATIVE_WORD_WDEF(cnc, rpn::StackSizeValidator::zero, PROBE_KEYS, this));
+
+  _rpn.addDefinition("PROBE", NATIVE_WORD_WDEF(cnc, rpn::StackSizeValidator::d1_vec3, PROBE_single, this));
 
   _rpn.eval(R"(
 

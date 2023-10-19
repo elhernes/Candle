@@ -108,7 +108,7 @@ TestMC::commandsPending() {
 void
 TestMC::sendCommand(QString command, int tableIndex, bool showInConsole) {
   qDebug()  << "sendCommand: '" << command << "' (" << tableIndex << ")";
-  emit noCommandsPending();
+  emit onControllerIdle();
 }
 
 

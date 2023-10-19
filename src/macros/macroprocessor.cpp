@@ -88,16 +88,16 @@ MacroProcessor::MacroProcessor(MachineControl *mc) : m_p(new Privates) {
   m_p->cmdNumber = 0;
   m_p->debug = false;
 #if 0
-  connect(m_p->mc, SIGNAL(noCommandsPending()),
-	  this, SLOT(onNoCommandsPending()));
+  connect(m_p->mc, SIGNAL(controllerIdle()),
+	  this, SLOT(onControllerIdle()));
 #endif
 }
 
 
 MacroProcessor::~MacroProcessor() {
 #if 0
-  disconnect(m_p->mc, SIGNAL(noCommandsPending()),
-	     this, SLOT(onNoCommandsPending()));
+  disconnect(m_p->mc, SIGNAL(controllerIdle()),
+	     this, SLOT(onControllerIdle()));
 #endif
   if (m_p) {
     delete m_p;
@@ -159,13 +159,13 @@ MacroProcessor::process(const QString &macroText) {
   }
 
   m_p->list = text.split("\n");
-  onNoCommandsPending();
+  onControllerIdle();
 
   return true;
 }
 
 void
-MacroProcessor::onNoCommandsPending() {
+MacroProcessor::onControllerIdle() {
   if (m_p != nullptr) {
     bool aborted=false;
     if(auto lock = std::unique_lock<std::mutex>(m_p->mx, std::try_to_lock)) {
