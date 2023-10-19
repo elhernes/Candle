@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.24)
 project(rpn-test-ui)
-include(${CMAKE_CURRENT_SOURCE_DIR}/../libs/rpn-lang.cmake)
+include(${CMAKE_CURRENT_SOURCE_DIR}/../rpn-lang.cmake)
 
 # set(CMAKE_VERBOSE_MAKEFILE ON)
 

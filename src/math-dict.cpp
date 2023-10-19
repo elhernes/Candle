@@ -163,6 +163,13 @@ MATH_UNARY_FUNC(log10);
 MATH_GENERATE(pi, M_PI);
 MATH_GENERATE(e, M_E);
 MATH_GENERATE(rand, rand());
+
+#ifdef WIN32
+double drand48() {
+  return (double)rand()/32767.;
+}
+#endif
+
 MATH_GENERATE(rand48, drand48());
 
 static double change_sign(double x) {
