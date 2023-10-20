@@ -263,7 +263,7 @@ rpn::MachineInterface::Privates::Privates(rpn::Interp &rpn, MachineControl &mc) 
   _rpn.addDefinition("jog-keys", NATIVE_WORD_WDEF(cnc, rpn::StackSizeValidator::zero, JOG_KEYS, this));
   _rpn.addDefinition("probe-keys", NATIVE_WORD_WDEF(cnc, rpn::StackSizeValidator::zero, PROBE_KEYS, this));
 
-  _rpn.addDefinition("PROBE", NATIVE_WORD_WDEF(cnc, rpn::StackSizeValidator::d1_vec3, PROBE_single, this));
+  _rpn.addDefinition("PROBE", NATIVE_WORD_WDEF(cnc, rpn::StrictTypeValidator::d1_vec3, PROBE_single, this));
 
   _rpn.eval(R"(
 

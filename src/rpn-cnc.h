@@ -26,6 +26,8 @@ namespace rpn {
     ~MachineInterface();
     void setKeypad(rpn::KeypadController *keypad);
 
+    void onControllerIdle();
+
     struct Privates;
   private:
     Privates *m_p;
