@@ -291,7 +291,7 @@ Progn::eval_lambda(rpn::Interp &rpn) {
 
 rpn::WordDefinition::Result
 Progn::eval_mathexpr(rpn::Interp &rpn) {
-  rpn::WordDefinition::Result rv = rpn::WordDefinition::Result::ok;
+  rpn::WordDefinition::Result rv = rpn::WordDefinition::Result::implementation_error;
   return rv;
 }
 

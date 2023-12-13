@@ -14,6 +14,10 @@
 
 #include "rpn-cnc.h"
 
+#include <thread>
+#include <chrono>
+using namespace std::chrono_literals;
+
 struct rpn::MachineInterface::Privates : public WordContext {
   Privates(rpn::Interp &rpn, MachineControl &mc);
 
@@ -51,6 +55,7 @@ NATIVE_WORD_DECL(cnc, PROBE_single) {
   if (p->_keypad != nullptr) {
     p->_keypad->enable(false);
   }
+  std::this_thread::sleep_for(5s);
   return rv;
 }
 
@@ -174,8 +179,10 @@ NATIVE_WORD_DECL(cnc, set_MODALSTATE) {
 }
 
 NATIVE_WORD_DECL(cnc, GSEND) {
-  rpn::WordDefinition::Result rv = rpn::WordDefinition::Result::implementation_error;
+  rpn::WordDefinition::Result rv = rpn::WordDefinition::Result::ok;
   rpn::MachineInterface::Privates *p = dynamic_cast<rpn::MachineInterface::Privates*>(ctx);
+  std::string gcode = rpn.stack.pop_string();
+  p->_mc.sendCommand(QString::fromStdString(gcode));
   return rv;
 }
 
@@ -214,9 +221,9 @@ NATIVE_WORD_DECL(cnc, PROBE_KEYS) {
     p->_keypad->assignButton(1,3, "PROBE-Wi", "⬅");   p->_keypad->assignButton(2,3, "PROBE-C", "X");  p->_keypad->assignButton(3,3, "PROBE-Ei", "➡");
     p->_keypad->assignButton(1,4, "PROBE-SWi", "↙");  p->_keypad->assignButton(2,4, "PROBE-Si", "⬇");  p->_keypad->assignButton(3,4, "PROBE-SEi", "↘");
 
-    p->_keypad->assignButton(1,6, "PROBE-NWo", "↘");  p->_keypad->assignButton(2,6, "PROBE-No", "⬇");  p->_keypad->assignButton(3,6, "PROBE-NEo", "↙");
-    p->_keypad->assignButton(1,7, "PROBE-Wo", "➡");   p->_keypad->assignButton(2,7, "PROBE-C", "X");   p->_keypad->assignButton(3,7, "PROBE-Eo", "⬅");
-    p->_keypad->assignButton(1,8, "PROBE-SWo", "↗");  p->_keypad->assignButton(2,8, "PROBE-So", "⬆");  p->_keypad->assignButton(3,8, "PROBE-SEo", "↖");
+    p->_keypad->assignButton(1,6, "PROBE-NWe", "↘");  p->_keypad->assignButton(2,6, "PROBE-Ne", "⬇");  p->_keypad->assignButton(3,6, "PROBE-NEe", "↙");
+    p->_keypad->assignButton(1,7, "PROBE-We", "➡");   p->_keypad->assignButton(2,7, "PROBE-C", "X");   p->_keypad->assignButton(3,7, "PROBE-Ee", "⬅");
+    p->_keypad->assignButton(1,8, "PROBE-SWe", "↗");  p->_keypad->assignButton(2,8, "PROBE-Se", "⬆");  p->_keypad->assignButton(3,8, "PROBE-SEe", "↖");
 #endif
     p->_keypad->assignButton(4,2, "PROBE-XYZ", "P->XYZ");
     p->_keypad->assignButton(4,3, "PROBE", "PROBE");
@@ -224,8 +231,8 @@ NATIVE_WORD_DECL(cnc, PROBE_KEYS) {
     p->_keypad->assignButton(1,1, "PROBE-NWi", "↖");  p->_keypad->assignButton(2,1, "PROBE-NEi", "↗");
     p->_keypad->assignButton(1,2, "PROBE-SWi", "↙");  p->_keypad->assignButton(2,2, "PROBE-SEi", "↘");
 
-    p->_keypad->assignButton(1,4, "PROBE-NWo", "↘");  p->_keypad->assignButton(2,4, "PROBE-NEo", "↙");
-    p->_keypad->assignButton(1,5, "PROBE-SWo", "↗");  p->_keypad->assignButton(2,5, "PROBE-SEo", "↖");
+    p->_keypad->assignButton(1,4, "PROBE-NWe", "↘");  p->_keypad->assignButton(2,4, "PROBE-NEe", "↙");
+    p->_keypad->assignButton(1,5, "PROBE-SWe", "↗");  p->_keypad->assignButton(2,5, "PROBE-SEe", "↖");
 
                                                        p->_keypad->assignButton(2,7, "PROBE-N", "⬆");
     p->_keypad->assignButton(1,8, "PROBE-W", "⬅");   p->_keypad->assignButton(2,8, "PROBE-Z", "Z");  p->_keypad->assignButton(3,8, "PROBE-E", "➡");
@@ -273,10 +280,10 @@ rpn::MachineInterface::Privates::Privates(rpn::Interp &rpn, MachineControl &mc) 
 : PROBE-NEi ;
 : PROBE-SWi ;
 : PROBE-SEi ;
-: PROBE-NWo ;
-: PROBE-NEo ;
-: PROBE-SWo ;
-: PROBE-SEo ;
+: PROBE-NWe ;
+: PROBE-NEe ;
+: PROBE-SWe ;
+: PROBE-SEe ;
 
 : PROBE-N ;
 : PROBE-W ;
